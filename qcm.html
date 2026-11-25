@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QCM — Aérodynamique &amp; Hydrodynamique du Catamaran</title>
+<meta name="description" content="Teste tes connaissances sur le catamaran : QCM de 5 questions sur la voile, le vent apparent, les coques, les foils et la stabilité, plus un QCM général de 10 questions.">
+<link rel="stylesheet" href="style.css">
+<style>
+  .qcm{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:var(--ombre);padding:24px 22px;margin-bottom:26px}
+  .qcm>summary{cursor:pointer;font-weight:800;color:var(--marine);font-size:1.15rem;list-style:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .qcm>summary::-webkit-details-marker{display:none}
+  .qcm>summary .chev{transition:.15s}
+  .qcm[open]>summary .chev{transform:rotate(90deg)}
+  .qcm .soustitre{font-size:.9rem;color:var(--gris);font-weight:500;flex-basis:100%}
+  .quest{margin:18px 0 6px;font-weight:600;color:#0f172a}
+  .reponse{display:block;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer;transition:.12s;font-size:.95rem}
+  .reponse:hover{border-color:var(--bleu);background:var(--fond)}
+  .reponse input{margin-right:8px;accent-color:var(--bleu)}
+  .qcm corrige .reponse.ok{border-color:var(--vert);background:#ecfdf5;font-weight:600}
+  .qcm corrige .reponse.ko{border-color:var(--corail);background:#fff1f2}
+  .expl{display:none;font-size:.88rem;color:var(--gris);background:var(--fond);border-left:4px solid var(--cyan);border-radius:8px;padding:10px 14px;margin:8px 0}
+  .qcm corrige .expl{display:block}
+  .actions-qcm{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
+  .btn{background:var(--bleu);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-weight:700;font-size:.95rem;cursor:pointer}
+  .btn:hover{background:#1e40af}
+  .btn.gris{background:#64748b}
+  .score{font-weight:800;font-size:1rem}
+  .score.partiel{color:var(--corail)} .score.plein{color:var(--vert)} .score.zero{color:var(--marine)}
+</style>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>QCM : teste tes connaissances</h1>
+  <p>5 questions par partie, et un QCM général de 10 questions sur tout le site. Réponds, clique « Corriger » : les bonnes réponses apparaissent en vert, avec une explication.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="aero.html">La voile</a></li>
+    <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+    <li><a href="hydro.html">Les coques</a></li>
+    <li><a href="foils.html">Les foils</a></li>
+    <li><a href="stabilite.html">Stabilité</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur" id="qcms"></main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#93c5fd">← Retour à l'accueil</a>
+</footer>
+
+<script>
+const QCMS = [
+  {id:'voile', titre:'QCM 1 — La voile, une aile dressée', lien:'aero.html', questions:[
+    {q:"Une voile moderne produit principalement sa force par…", rep:["la poussée directe du vent sur la toile","une différence de pression entre ses deux faces","le poids de l'équipage en trapèze"], ok:1,
+     exp:"La voile fonctionne comme une aile d'avion : dépression sur l'extrados, surpression à l'intrados → portance."},
+    {q:"La portance est orientée…", rep:["dans le sens du vent apparent","perpendiculairement à l'écoulement du vent apparent","vers l'arrière du bateau"], ok:1,
+     exp:"La portance est perpendiculaire à l'écoulement ; la traînée, elle, est dans l'axe de cet écoulement."},
+    {q:"La « finesse » d'une voile est le rapport…", rep:["portance / traînée","vitesse du bateau / vitesse du vent","largeur / longueur"], ok:0,
+     exp:"f = L/D. Plus f est grand, plus la voile est efficace (≈ 4 à 6 pour une voile bien réglée)."},
+    {q:"Si l'angle d'attaque devient trop grand, il y a…", rep:["toujours plus de portance","décrochage : la portance s'effondre et la traînée explose","aucun changement"], ok:1,
+     exp:"L'écoulement se décolle : la voile « faseye » et le bateau ralentit. Il faut border juste assez."},
+    {q:"Le vrillage des voiles sert à…", rep:["adapter le haut des voiles à la rotation du vent en altitude","rendre la voile plus solide","augmenter le poids du gréement"], ok:0,
+     exp:"Le vent tourne (on dit qu'il est « roté ») quand on monte : on choque le haut pour garder le même angle d'attaque sur toute la hauteur."}
+  ]},
+  {id:'vent', titre:'QCM 2 — Le vent apparent', lien:'aero.html#vent-apparent', questions:[
+    {q:"Le vent apparent est…", rep:["le vent donné par la météo","la somme vectorielle du vent réel et du vent créé par la vitesse du bateau","un courant d'air qui ne dépend pas du bateau"], ok:1,
+     exp:"Dans le repère du bateau : vent apparent = vent réel − vitesse du bateau."},
+    {q:"Quand le catamaran accélère, le vent apparent…", rep:["tourne vers l'avant et grossit","faiblit jusqu'à disparaître","tourne vers l'arrière"], ok:0,
+     exp:"C'est le cercle vertueux : plus c'est rapide, plus le vent apparent s'établit et plus la voile peut être puissante."},
+    {q:"Sous 15 nd de vent réel, un catamaran qui file 10 nd ressent un vent apparent d'environ…", rep:["5 nd","18 nd","25 nd"], ok:1,
+     exp:"Le triangle des vitesses donne ≈ 18 nd, plus franc (plus tendu vers l'avant) que le vent réel."},
+    {q:"Grâce au vent apparent, le barreur peut…", rep:["resserrer la route tout en gardant de la puissance","choquer toutes les voiles","s'arrêter de border"], ok:0,
+     exp:"Le vent apparent remontant, la voile reste efficace à une allure plus proche du vent."},
+    {q:"Le cercle vertueux de la vitesse s'arrête quand…", rep:["l'équipage est fatigué","la traînée hydrodynamique équilibre la force vélique","le soleil se couche"], ok:1,
+     exp:"Le bateau se stabilise à la vitesse où la force aéro (utile) égale la résistance de l'eau."}
+  ]},
+  {id:'coques', titre:'QCM 3 — Les coques et la traînée', lien:'hydro.html', questions:[
+    {q:"Le frottement est proportionnel à…", rep:["la surface mouillée","la hauteur du mât","le nombre d'équipiers"], ok:0,
+     exp:"Frottement ≈ surface mouillée × v¹,⁸ : dominant à basse vitesse, d'où l'intérêt de limiter la surface mouillée."},
+    {q:"La résistance de vagues devient très forte…", rep:["à l'approche de la « vitesse de carène »","uniquement par gros vent arrière","quand la mer est plate"], ok:0,
+     exp:"La coque fabrique son propre système de vagues ; près du plafond, presque toute la puissance y est engloutie."},
+    {q:"La vitesse de carène se calcule comme…", rep:["v ≈ 1,34 × √(longueur de flottaison en m)","v = longueur en m × 2","v = 10 + longueur en m"], ok:0,
+     exp:"Un voilier de 10 m plafonne vers 9,5 nd en mode déplacement ; des coques fines écartent ce plafond."},
+    {q:"À déplacement égal, deux demi-carènes élancées traînent moins car…", rep:["elles produisent moins de vagues et moins de frottement","elles sont plus lourdes","elles sont plus larges"], ok:0,
+     exp:"Coques fines : surface mouillée réduite et vagues résiduelles faibles."},
+    {q:"Une demi-carène élancée a typiquement un rapport longueur/largeur…", rep:["inférieur à 5","supérieur à 10","exactement 1"], ok:1,
+     exp:"Plus le rapport est grand, plus la génération de vagues est repoussée à haute vitesse."}
+  ]},
+  {id:'foils', titre:'QCM 4 — Les foils et le décollage', lien:'foils.html', questions:[
+    {q:"Un foil est…", rep:["une aile immergée qui produit une portance verticale","un type de grand-voile","un safran incliné"], ok:0,
+     exp:"Aile dans l'eau : sa portance remplace la poussée d'Archimède et soulève les coques."},
+    {q:"La portance d'un foil croît avec…", rep:["le carré de la vitesse","la profondeur d'immersion","la température de l'eau"], ok:0,
+     exp:"L = ½ ρ V² S C_L : doubler la vitesse quadruple la portance."},
+    {q:"Le décollage se produit…", rep:["au croisement des courbes de traînée coque et foil","à marée haute","quand la mer devient creuse"], ok:0,
+     exp:"À partir de ce point, voler traîne moins que nager : le bateau « vole »."},
+    {q:"À basse vitesse, un foil…", rep:["traîne plus qu'une coque sage","n'existait pas encore","traîne moins"], ok:0,
+     exp:"Il faut de la vitesse (ou du vent) pour décoller, ou des foils rétractables."},
+    {q:"L'eau est environ… fois plus dense que l'air", rep:["2","8","800"], ok:2,
+     exp:"≈ 800 × : une petite surface de foil porte une portance énorme."}
+  ]},
+  {id:'stabilite', titre:'QCM 5 — Stabilité & équilibre', lien:'stabilite.html', questions:[
+    {q:"La stabilité d'un catamaran vient…", rep:["du lest profond","de la géométrie : la largeur entre coques","des safrans"], ok:1,
+     exp:"Pas de quille lestée : la largeur b sert directement de bras de levier."},
+    {q:"Le couple de redressement vaut approximativement…", rep:["P × b","P / b","b / P"], ok:0,
+     exp:"M ≈ P × b, d'où un couple 2 à 4 fois supérieur à un monocoque à poids égal."},
+    {q:"Quand le couple de redressement est dépassé, le catamaran…", rep:["gîte progressivement","peut chavirer d'un coup","freine tout seul"], ok:1,
+     exp:"Pas de gîte progressive qui prévient : d'où le depower et le riflement des lattes."},
+    {q:"Vriller le haut des voiles permet…", rep:["moins de couple de gîte à portance égale","d'aller plus vite au près qu'au reaching","que le mât soit plus léger"], ok:0,
+     exp:"Moins de force en haut du mât = moins de couple de gîte, et la coque au vent peut rester à l'eau."},
+    {q:"Sur la polaire d'un catamaran de sport, le ratio vitesse/vent maximum se situe vers…", rep:["30° du vent","90–110° du vent","180° (vent arrière pur)"], ok:1,
+     exp:"Au reaching latéral, un catamaran peut doubler la vitesse du vent ; au vent arrière, il ralentit."}
+  ]},
+  {id:'general', titre:'QCM Général — 10 questions sur tout le site', lien:'index.html', questions:[
+    {q:"Les deux fluides qui s'affrontent autour d'un catamaran sont…", rep:["l'air et l'eau","le ketchup et la mayonnaise","l'air et le vent choisi"], ok:0,
+     exp:"L'air pousse (force vélique), l'eau freine (traînée hydro) ; la vitesse limite est leur équilibre."},
+    {q:"Le Centre de poussée vélique et le Centre de déprive doivent être…", rep:["l'un le plus éloigné possible de l'autre sur la même verticale","proches et alignés sur la même verticale","l'un à l'avant, l'autre à l'arrière"], ok:1,
+     exp:"Alignement C.E./C.D. : le bateau file droit, sans dérapage excessif ni empannage intempestif."},
+    {q:"La force anti-dérive est produite par…", rep:["les coques seules","les dérives ou les foils","la grand-voile bordée"], ok:1,
+     exp:"Les appendices verticaux travaillent comme des profils sous l'eau pour empêcher le dérapage latéral."},
+    {q:"Un monocoque de 10 m plafonne vers 9,5 nd ; un catamaran passe ce plafond grâce…", rep:["à son moteur","à ses coques fines, à sa puissance vélique et à ses foils","à son lest"], ok:1,
+     exp:"Coques élancées + beaucoup de toile + déjaugeage : la vitesse de carène est repoussée, pas abolie."},
+    {q:"L'eau est environ 800 fois plus dense que l'air. Ce chiffre explique…", rep:["pourquoi les foils portent tellement","pourquoi un catamaran coule vite","pourquoi le vent est lent"], ok:0,
+     exp:"Pour une même vitesse et surface, une aile dans l'eau produit une portance colossale par rapport à l'air."},
+    {q:"Border « juste assez » est essentiel car…", rep:["au-delà, la voile décroche et perd sa portance","plus on borde, plus la traînée hydro augmente","la voile peut se déchirer"], ok:0,
+     exp:"Mauvais angle d'attaque = décrochage = fin de la portance et explosion de la traînée aéro."},
+    {q:"Le vent apparent d'un catamaran rapide…", rep:["se redresse vers l'avant et grossit avec la vitesse","redevient identique au vent réel","tourne vers l'arrière"], ok:0,
+     exp:"Le bateau fabrique lui-même une partie du vent qu'il exploite : moteur auto-entretenu."},
+    {q:"Le creux de performance d'un catamaran s'observe…", rep:["au reaching","au vent arrière pur","au près à 50°"], ok:1,
+     exp:"Vent arrière pur : vent apparent faible, on y tire des bords."},
+    {q:"La vitesse de déjaugeage est celle où…", rep:["la portance du foil devient plus efficace que la portance d'Archimède","le vent apparent s'annule","la coque touche le fond"], ok:0,
+     exp:"Croisement des deux courbes de traînée : au-delà, voler coûte moins que nager."},
+    {q:"L'essentiel de la performance d'un catamaran de course tient à…", rep:["préserver un équilibre étroit entre puissance aéro et traînée hydro","embarquer un maximum d'équipiers","monter le plus grand mât possible"], ok:0,
+     exp:"Tout le « game » : voile au bord du décrochage, foil à l'altitude de vol, flotteur au vent léger."}
+  ]}
+];
+
+function render(){
+  const root = document.getElementById('qcms');
+  QCMS.forEach((qcm, qi) => {
+    const d = document.createElement('details');
+    d.className = 'qcm'; d.id = qcm.id;
+    let html = '<summary><span class="chev">▸</span> ' + qcm.titre +
+      ' <span class="soustitre">' + qcm.questions.length + ' questions — détail sur <a href="' + qcm.lien + '">cette page</a></span></summary>';
+    qcm.questions.forEach((q, i) => {
+      html += '<div class="quest">' + (i+1) + '. ' + q.q + '</div>';
+      q.rep.forEach((r, j) => {
+        html += '<label class="reponse"><input type="radio" name="' + qcm.id + '-' + i + '" value="' + j + '">' + r + '</label>';
+      });
+      html += '<div class="expl">💡 ' + q.exp + '</div>';
+    });
+    html += '<div class="actions-qcm"><button class="btn">Corriger</button>' +
+            '<button class="btn gris" type="button">Recommencer</button>' +
+            '<span class="score"></span></div>';
+    d.innerHTML = html;
+    root.appendChild(d);
+
+    const [btnCorriger, btnReset] = d.querySelectorAll('button');
+    const score = d.querySelector('.score');
+    btnCorriger.addEventListener('click', () => {
+      if (d.classList.contains('corrige')) return;
+      let nbOk = 0;
+      qcm.questions.forEach((q, i) => {
+        const inputs = d.querySelectorAll('input[name="' + qcm.id + '-' + i + '"]');
+        const labels = d.querySelectorAll('.reponse');
+        inputs.forEach(inp => { inp.disabled = true; });
+        q.rep.forEach((r, j) => {
+          const lab = labels[i*q.rep.length + j];
+          if (j === q.ok) lab.classList.add('ok');
+          if (inp.checked) { if (Number(inp.value) === q.ok) nbOk++; else lab.classList.add('ko'); }
+        });
+      });
+      d.classList.add('corrige');
+      const n = qcm.questions.length;
+      score.textContent = ' Score : ' + nbOk + ' / ' + n +
+        (nbOk === n ? ' — parfait ! 🏆' : nbOk >= n*0.6 ? ' — bien joué 👍' : ' — relis la page détaillée 😉');
+      score.className = 'score ' + (nbOk === n ? 'plein' : nbOk/ n >= 0.6 ? 'partiel' : 'zero');
+    });
+    btnReset.addEventListener('click', () => {
+      d.classList.remove('corrige');
+      score.textContent = ''; score.className = 'score';
+      d.querySelectorAll('input').forEach(inp => { inp.checked = false; inp.disabled = false; });
+      d.querySelectorAll('.reponse').forEach(l => l.classList.remove('ok','ko'));
+    });
+  });
+}
+render();
+</script>
+
+</body>
+</html>
