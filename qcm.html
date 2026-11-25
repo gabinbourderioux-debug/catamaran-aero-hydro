@@ -17,10 +17,10 @@
   .reponse{display:block;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer;transition:.12s;font-size:.95rem}
   .reponse:hover{border-color:var(--bleu);background:var(--fond)}
   .reponse input{margin-right:8px;accent-color:var(--bleu)}
-  .qcm corrige .reponse.ok{border-color:var(--vert);background:#ecfdf5;font-weight:600}
-  .qcm corrige .reponse.ko{border-color:var(--corail);background:#fff1f2}
+  .qcm.corrige .reponse.ok{border-color:var(--vert);background:#ecfdf5;font-weight:600}
+  .qcm.corrige .reponse.ko{border-color:var(--corail);background:#fff1f2}
   .expl{display:none;font-size:.88rem;color:var(--gris);background:var(--fond);border-left:4px solid var(--cyan);border-radius:8px;padding:10px 14px;margin:8px 0}
-  .qcm corrige .expl{display:block}
+  .qcm.corrige .expl{display:block}
   .actions-qcm{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
   .btn{background:var(--bleu);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-weight:700;font-size:.95rem;cursor:pointer}
   .btn:hover{background:#1e40af}
@@ -170,11 +170,14 @@ function render(){
       qcm.questions.forEach((q, i) => {
         const inputs = d.querySelectorAll('input[name="' + qcm.id + '-' + i + '"]');
         const labels = d.querySelectorAll('.reponse');
-        inputs.forEach(inp => { inp.disabled = true; });
+        let chosen = null;
+        inputs.forEach(inp => { inp.disabled = true; if (inp.checked) chosen = inp; });
         q.rep.forEach((r, j) => {
           const lab = labels[i*q.rep.length + j];
           if (j === q.ok) lab.classList.add('ok');
-          if (inp.checked) { if (Number(inp.value) === q.ok) nbOk++; else lab.classList.add('ko'); }
+          if (chosen && chosen === labels[i*q.rep.length + j].querySelector('input')) {
+            if (j === q.ok) nbOk++; else lab.classList.add('ko');
+          }
         });
       });
       d.classList.add('corrige');
