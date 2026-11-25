@@ -22,11 +22,8 @@
   header.hero p{max-width:720px;margin:14px auto 0;font-size:1.1rem;color:#c7e3f5}
   .badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
     border-radius:999px;padding:4px 14px;font-size:.85rem;margin-bottom:18px;letter-spacing:.06em;text-transform:uppercase}
-  nav.sommaire{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:10;
+  nav.sommaire{background:#fff;border-bottom:1px solid #e2e8f0;
     box-shadow:0 2px 10px rgba(0,0,0,.05)}
-  nav.sommaire .barre{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:8px 20px;max-width:1100px;margin:0 auto}
-  nav.sommaire .auteur{font-weight:800;color:var(--marine);font-size:.95rem;margin-right:auto;white-space:nowrap}
-  nav.sommaire .auteur small{display:block;font-weight:600;color:var(--gris);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
   nav.sommaire a{text-decoration:none;color:var(--marine);font-weight:600;font-size:.9rem;
     padding:6px 12px;border-radius:8px;transition:.15s}
   nav.sommaire a:hover{background:var(--bleu-clair);color:var(--bleu)}
@@ -58,6 +55,8 @@
   .pastille{width:14px;height:4px;border-radius:2px;display:inline-block}
   footer{background:var(--marine);color:#94a3b8;text-align:center;padding:28px 20px;font-size:.9rem}
   footer b{color:#e2e8f0}
+  footer .auteur{font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:6px}
+  footer .auteur-sous{font-size:.92rem;margin-bottom:14px}
   @media(max-width:640px){section.carteforce{padding:24px 16px}}
 </style>
 </head>
@@ -71,9 +70,7 @@
 </header>
 
 <nav class="sommaire" aria-label="Sommaire">
-  <div class="barre">
-    <span class="auteur">Gabin Bourderioux<small>Aérodynamique &amp; hydrodynamique du catamaran</small></span>
-    <ul>
+  <ul>
     <li><a href="#vue-ensemble">1. Vue d'ensemble</a></li>
     <li><a href="#aero">2. Aéro : la voile</a></li>
     <li><a href="#vent-apparent">3. Vent apparent</a></li>
@@ -82,8 +79,7 @@
     <li><a href="#stabilite">6. Stabilité</a></li>
     <li><a href="#couplage">7. L'équilibre aéro-hydro</a></li>
     <li><a href="#chiffres">8. Chiffres clés</a></li>
-    </ul>
-  </div>
+  </ul>
 </nav>
 
 <main>
@@ -613,8 +609,8 @@
 </main>
 
 <footer>
-  <b>Aérodynamique &amp; Hydrodynamique du catamaran</b> — page pédagogique illustrée par
-  <b>Gabin Bourderioux</b>.<br>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
   Les schémas sont volontairement simplifiés : l'objet ici est la compréhension des mécanismes, pas le calcul exact des coefficients.
 </footer>
 
