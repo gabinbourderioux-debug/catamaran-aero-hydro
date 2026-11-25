@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aérodynamique &amp; Hydrodynamique du Catamaran — Comprendre la vitesse en multicoque</title>
+<meta name="description" content="Explications et schémas détaillés sur l'aérodynamique des voiles et l'hydrodynamique des coques et foils de catamaran : portance, traînée, vent apparent, stabilité, déjaugeage.">
+<style>
+  :root{
+    --bleu:#1d4ed8; --bleu-clair:#dbeafe; --marine:#0b1e33; --cyan:#0891b2;
+    --corail:#e11d48; --vert:#059669; --gris:#475569; --fond:#f8fafc;
+    --ombre:0 6px 24px rgba(11,30,51,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#0f172a;background:var(--fond);line-height:1.65}
+  header.hero{
+    background:linear-gradient(160deg,#0b1e33 0%,#123a5c 55%,#0891b2 130%);
+    color:#fff;padding:64px 20px 48px;text-align:center;
+  }
+  header.hero h1{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em}
+  header.hero p{max-width:720px;margin:14px auto 0;font-size:1.1rem;color:#c7e3f5}
+  .badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+    border-radius:999px;padding:4px 14px;font-size:.85rem;margin-bottom:18px;letter-spacing:.06em;text-transform:uppercase}
+  nav.sommaire{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:10;
+    box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  nav.sommaire ul{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:4px;padding:8px 12px}
+  nav.sommaire a{text-decoration:none;color:var(--marine);font-weight:600;font-size:.9rem;
+    padding:6px 12px;border-radius:8px;transition:.15s}
+  nav.sommaire a:hover{background:var(--bleu-clair);color:var(--bleu)}
+  main{max-width:980px;margin:0 auto;padding:40px 20px 80px}
+  section.carteforce{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:34px 30px;margin-bottom:44px}
+  h2{font-size:1.6rem;color:var(--marine);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  h2 .num{background:var(--bleu);color:#fff;width:36px;height:36px;border-radius:10px;display:inline-flex;
+    align-items:center;justify-content:center;font-size:1.05rem;flex:0 0 auto}
+  h3{color:var(--bleu);margin:26px 0 10px;font-size:1.15rem}
+  p{margin:10px 0;color:#1e293b}
+  .figure{margin:26px 0;background:var(--fond);border:1px solid #e2e8f0;border-radius:14px;padding:18px;overflow-x:auto}
+  .figure svg{display:block;max-width:100%;height:auto;margin:0 auto}
+  .figure figcaption{font-size:.9rem;color:var(--gris);text-align:center;margin-top:10px;font-style:italic}
+  .lexique{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
+  .carte{background:var(--fond);border-left:4px solid var(--cyan);border-radius:10px;padding:14px 16px}
+  .carte b{color:var(--marine)}
+  .formule{background:#0b1e33;color:#a5f3fc;text-align:center;border-radius:10px;padding:14px;
+    font-family:'Cambria Math',Georgia,serif;font-size:1.15rem;margin:16px 0;letter-spacing:.03em}
+  .formule small{display:block;color:#7dd3fc;font-family:inherit;font-size:.85rem;margin-top:6px}
+  .encadre{border-left:5px solid var(--corail);background:#fff1f2;border-radius:10px;padding:14px 18px;margin:18px 0}
+  .encadre.vert{border-color:var(--vert);background:#ecfdf5}
+  .encadre.bleu{border-color:var(--bleu);background:var(--bleu-clair)}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.95rem}
+  th{background:var(--marine);color:#fff;padding:10px;text-align:left}
+  td{padding:10px;border-bottom:1px solid #e2e8f0}
+  tr:nth-child(even) td{background:#f1f5f9}
+  .legende{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:8px;font-size:.85rem;color:var(--gris)}
+  .legende span{display:inline-flex;align-items:center;gap:6px}
+  .pastille{width:14px;height:4px;border-radius:2px;display:inline-block}
+  footer{background:var(--marine);color:#94a3b8;text-align:center;padding:28px 20px;font-size:.9rem}
+  footer b{color:#e2e8f0}
+  @media(max-width:640px){section.carteforce{padding:24px 16px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="badge">Voile • Multicoques • Physique</div>
+  <h1>L'aérodynamique &amp; l'hydrodynamique du catamaran</h1>
+  <p>Pourquoi un catamaran vole-t-il sur l'eau ? Comprendre, schémas à l'appui, comment les forces
+  du vent et de l'eau se combinent pour faire vivre (et décoller) un multicoque.</p>
+</header>
+
+<nav class="sommaire" aria-label="Sommaire">
+  <ul>
+    <li><a href="#vue-ensemble">1. Vue d'ensemble</a></li>
+    <li><a href="#aero">2. Aéro : la voile</a></li>
+    <li><a href="#vent-apparent">3. Vent apparent</a></li>
+    <li><a href="#hydro">4. Hydro : les coques</a></li>
+    <li><a href="#foils">5. Foils &amp; décollage</a></li>
+    <li><a href="#stabilite">6. Stabilité</a></li>
+    <li><a href="#couplage">7. L'équilibre aéro-hydro</a></li>
+    <li><a href="#chiffres">8. Chiffres clés</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ============ 1. VUE D'ENSEMBLE ============ -->
+<section class="carteforce" id="vue-ensemble">
+  <h2><span class="num">1</span> Vue d'ensemble : une bataille entre deux fluides</h2>
+  <p>Un catamaran qui navigue est le siège d'un conflit permanent entre deux fluides : <b>l'air</b>
+  au-dessus de la surface et <b>l'eau</b> en dessous. L'air pousse (la voile transforme l'énergie du
+  vent en force vélique), l'eau freine (les coques et les appendices opposent une résistance).
+  Le bateau accélère jusqu'à l'équilibre entre les deux.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 820 480" role="img" aria-label="Vue de dessus : forces aérodynamiques et hydrodynamiques sur un catamaran">
+      <defs>
+        <marker id="fle" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="820" height="480" fill="#eff6ff"/>
+      <!-- echelle de grad -->
+      <text x="26" y="34" font-size="16" font-weight="bold" fill="#0b1e33">Vue de dessus</text>
+
+      <!-- coques -->
+      <rect x="240" y="100" width="36" height="290" rx="18" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>
+      <rect x="544" y="100" width="36" height="290" rx="18" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>
+      <!-- plateforme -->
+      <rect x="276" y="128" width="268" height="234" fill="#e2e8f0" opacity=".6" stroke="#94a3b8" stroke-dasharray="4 4"/>
+      <text x="410" y="392" font-size="13" fill="#64748b" text-anchor="middle">trampoline</text>
+
+      <!-- centre de gravity et CL -->
+      <circle cx="410" cy="245" r="7" fill="#059669"/>
+      <text x="410" y="270" font-size="13" fill="#059669" text-anchor="middle" font-weight="bold">C.E. / C.D.</text>
+
+      <!-- mat + voile bombee -->
+      <line x1="410" y1="245" x2="410" y2="126" stroke="#0b1e33" stroke-width="5"/>
+      <circle cx="410" cy="126" r="8" fill="#0b1e33"/>
+      <path d="M410,132 C 470,160 470,230 410,258" fill="none" stroke="#e11d48" stroke-width="7" stroke-linecap="round"/>
+      <text x="482" y="205" font-size="14" fill="#e11d48" font-weight="bold">voile</text>
+
+      <!-- vent reel -->
+      <line x1="760" y1="150" x2="600" y2="170" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fle)"/>
+      <line x1="780" y1="230" x2="620" y2="230" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fle)"/>
+      <line x1="760" y1="310" x2="600" y2="300" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fle)"/>
+      <text x="742" y="135" font-size="15" fill="#1d4ed8" font-weight="bold">Vent réel</text>
+
+      <!-- force velique -->
+      <line x1="450" y1="195" x2="250" y2="120" stroke="#e11d48" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="300" y="86" font-size="15" fill="#e11d48" font-weight="bold" text-anchor="middle">Force vélique Fᵥ (pousse vers l'avant-gauche)</text>
+
+      <!-- trainee hydro (opposee a l'avance) -->
+      <line x1="410" y1="245" x2="410" y2="330" stroke="#0891b2" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="410" y="352" font-size="14" fill="#0891b8" font-weight="bold" text-anchor="middle">Traînée hydro R (vers l'arrière)</text>
+
+      <!-- direction avance -->
+      <line x1="410" y1="245" x2="410" y2="60" stroke="#059669" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="410" y="48" font-size="15" fill="#059669" font-weight="bold" text-anchor="middle">Route du bateau</text>
+
+      <!-- derivation anti-derive -->
+      <line x1="290" y1="245" x2="180" y2="245" stroke="#7c3aed" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="170" y="240" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="end">Force anti-dérive (dérive/foil)</text>
+
+      <!-- fils d'ecoulement eau -->
+      <path d="M120,440 C 240,430 340,420 410,420 C 480,420 580,430 700,440" fill="none" stroke="#0891b2" stroke-width="1.6" opacity=".45"/>
+      <path d="M120,455 C 240,447 340,440 410,440 C 480,440 580,447 700,455" fill="none" stroke="#0891b2" stroke-width="1.6" opacity=".45"/>
+    </svg>
+    <figcaption>Fig. 1 — Équilibre des forces en vue de dessus : la force vélique (rouge) est compensée par
+    la traînée hydrodynamique (cyan) et la force anti-dérive (violet). Le bateau file droit quand la résultante s'annule.</figcaption>
+    <div class="legende">
+      <span><span class="pastille" style="background:#1d4ed8"></span>Vent réel</span>
+      <span><span class="pastille" style="background:#e11d48"></span>Forces aérodynamiques</span>
+      <span><span class="pastille" style="background:#0891b2"></span>Forces hydrodynamiques</span>
+      <span><span class="pastille" style="background:#059669"></span>Mouvement</span>
+    </div>
+  </div>
+
+  <div class="lexique">
+    <div class="carte"><b>F. vélique</b> — force totale que le gréement (voiles + mât) extrait du vent.</div>
+    <div class="carte"><b>Traînée hydro</b> — résistance de l'eau : frottement sur la surface mouillée + résistance de vagues + traînée induite des appendices.</div>
+    <div class="carte"><b>Anti-dérive</b> — produite par les dérives ou foils, elle s'oppose au dérapage latéral sous l'effet du vent.</div>
+    <div class="carte"><b>C.E. / C.D.</b> — Centre de poussée vélique (haut du gréement) et Centre de déprive (sous la coque) : leur alignement évite le dérapage et l'empannage sauvage.</div>
+  </div>
+</section>
+
+<!-- ============ 2. AERODYNAMIQUE ============ -->
+<section class="carteforce" id="aero">
+  <h2><span class="num">2</span> Aérodynamique : la voile est une aile dressée</h2>
+  <p>Contrairement à l'idée reçue du bateau « poussé par le vent », une voile moderne fonctionne
+  comme <b>l'aile d'un avion à la verticale</b>. Le vent s'écoule sur ses deux faces : accéléré sur
+  l'extrados (face au vent, la plus bombée) → <b>dépression</b> ; ralenti sur l'intrados (face sous
+  le vent) → <b>surpression</b>. La différence de pression crée la <b>portance</b>, orientée
+  perpendiculairement à l'écoulement du vent apparent.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 470" role="img" aria-label="Profil de voile : écoulement, portance, traînée, angle d'attaque">
+      <defs>
+        <marker id="fle2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="840" height="470" fill="#eff6ff"/>
+
+      <!-- lignes de courant -->
+      <path d="M40,140 C 200,95 420,90 800,170" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#fle2)" opacity=".7"/>
+      <path d="M40,190 C 190,150 330,140 560,210 C 640,232 720,244 800,252" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#fle2)" opacity=".7"/>
+      <path d="M40,255 C 150,250 240,255 330,278 C 430,303 620,305 800,308" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#fle2)" opacity=".7"/>
+      <path d="M40,320 C 180,320 340,330 800,345" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#fle2)" opacity=".7"/>
+
+      <!-- zone depression (extrados) -->
+      <ellipse cx="400" cy="195" rx="150" ry="18" fill="#1d4ed8" opacity=".12"/>
+      <text x="400" y="108" font-size="15" fill="#1d4ed8" font-weight="bold" text-anchor="middle">− Dépression sur l'extrados (face au vent)</text>
+      <text x="430" y="358" font-size="15" fill="#b91c1c" font-weight="bold" text-anchor="middle">+ Surpression à l'intrados (face sous le vent)</text>
+      <ellipse cx="400" cy="322" rx="150" ry="16" fill="#b91c1c" opacity=".10"/>
+
+      <!-- profil de voile -->
+      <path d="M170,260 C 300,140 520,165 640,252" fill="none" stroke="#0b1e33" stroke-width="7" stroke-linecap="round"/>
+      <path d="M170,260 C 300,300 520,308 640,252" fill="none" stroke="#0b1e33" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="170" cy="260" r="6" fill="#0b1e33"/>
+      <text x="160" y="290" font-size="13" fill="#0b1e33">guindant (mât)</text>
+      <text x="648" y="238" font-size="13" fill="#0b1e33">écoute</text>
+
+      <!-- corde + incidence -->
+      <line x1="170" y1="260" x2="640" y2="252" stroke="#0b1e33" stroke-width="1.5" stroke-dasharray="7 6"/>
+      <line x1="170" y1="260" x2="40" y2="352" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <path d="M 83,310 A 55,55 0 0 1 106,332" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+      <text x="52" y="386" font-size="15" fill="#7c3aed" font-weight="bold">angle d'attaque α</text>
+
+      <!-- portance et trainee -->
+      <line x1="405" y1="240" x2="405" y2="88" stroke="#e11d48" stroke-width="5" marker-end="url(#fle2)"/>
+      <text x="415" y="80" font-size="16" fill="#e11d48" font-weight="bold">Portance L</text>
+      <line x1="405" y1="240" x2="590" y2="240" stroke="#0f766e" stroke-width="5" marker-end="url(#fle2)"/>
+      <text x="600" y="246" font-size="16" fill="#0f766e" font-weight="bold">Traînée D</text>
+      <!-- resultante -->
+      <line x1="405" y1="240" x2="540" y2="108" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#fle2)"/>
+      <text x="548" y="105" font-size="15" fill="#7c3aed" font-weight="bold">Résultante F</text>
+
+      <!-- vortex marginal -->
+      <path d="M645,250 c 30,8 44,22 40,38 c -3,13 -18,15 -24,4 c -5,-9 4,-16 12,-12" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 4"/>
+      <text x="700" y="312" font-size="13" fill="#64748b">tourbillon marginal</text>
+
+      <!-- vent apparent -->
+      <text x="600" y="432" font-size="14" fill="#334155">Écoulement = vent apparent</text>
+    </svg>
+    <figcaption>Fig. 2 — Section d'une voile (profil creux) : la circulation de l'air crée une
+    portance perpendiculaire au vent apparent et une traînée dans l'axe de cet écoulement.</figcaption>
+  </div>
+
+  <h3>Le rapport cd/cl... la « finesse »</h3>
+  <p>La qualité d'un profile s'apprécie par sa <b>finesse</b>, c'est le rapport portance/traînée :</p>
+  <div class="formule">f = L / D
+    <small>L = portance (Lift) &nbsp;•&nbsp; D = traînée (Drag). Une voile bien réglée atteint f ≈ 4 à 6, une voile mal bordée tombe sous 2.</small>
+  </div>
+  <p>Toute la finesse d'un coureur de catamaran consiste à <b>border juste assez</b> pour garder un
+  écoulement attaché : si l'angle d'attaque est trop grand, le flux <b>décroche</b>, la portance
+  s'effondre et la traînée explose — la voile « faseye » et le bateau ralentit.</p>
+
+  <div class="encadre vert">
+    <b>Réglages qui pilotent l'aéro :</b> la tension de bordure (camber), le bord d'attaque, la
+    tension d'écoute, le <b>vrillage</b> (choquer le haut des voiles pour suivre la rotation du vent
+    en altitude) et l'angle d'attaque global réglé par l'écoute. Sur un catamaran de sport, le
+    trapexe du barreur et du régleur sert aussi à contrer le couple de gîte (voir §6).
+  </div>
+</section>
+
+<!-- ============ 3. VENT APPARENT ============ -->
+<section class="carteforce" id="vent-apparent">
+  <h2><span class="num">3</span> Le vent apparent : le turbo du multicoque</h2>
+  <p>C'est <b>le</b> secret de la vitesse des catamarans. Ce que ressent la voile n'est pas le vent
+  réel, mais la <b>somme vectorielle</b> du vent réel et du « vent virtuel » créé par la vitesse du
+  bateau lui-même. Plus le catamaran accélère, plus le vent apparent <b>remonte et grossit</b> :
+  le bateau nourrit son propre moteur.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 820 480" role="img" aria-label="Triangle des vitesses : vent réel, vitesse du bateau, vent apparent">
+      <defs>
+        <marker id="fle3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="820" height="480" fill="#eff6ff"/>
+      <text x="26" y="36" font-size="16" font-weight="bold" fill="#0b1e33">Triangle des vitesses</text>
+
+      <!-- route -->
+      <line x1="140" y1="300" x2="700" y2="300" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="8 7"/>
+      <line x1="140" y1="300" x2="800" y2="300" stroke="#059669" stroke-width="0" />
+      <line x1="700" y1="300" x2="800" y2="300" stroke="#059669" stroke-width="3.5" marker-end="url(#fle3)"/>
+      <text x="760" y="330" font-size="14" fill="#059669" font-weight="bold">route</text>
+
+      <!-- vitesse bateau -->
+      <line x1="140" y1="300" x2="440" y2="300" stroke="#059669" stroke-width="5" marker-end="url(#fle3)"/>
+      <text x="290" y="326" font-size="15" fill="#059669" font-weight="bold" text-anchor="middle">Vitesse bateau = 10 nd</text>
+      <polygon points="140,300 130,282 150,282" fill="#059669"/>
+
+      <!-- vent apparent -->
+      <line x1="440" y1="300" x2="330" y2="96" stroke="#7c3aed" stroke-width="5" marker-end="url(#fle3)"/>
+      <text x="470" y="170" font-size="15" fill="#7c3aed" font-weight="bold">Vent apparent ≈ 18 nd</text>
+
+      <!-- vent reel -->
+      <line x1="140" y1="300" x2="330" y2="96" stroke="#1d4ed8" stroke-width="5" marker-end="url(#fle3)"/>
+      <text x="120" y="120" font-size="15" fill="#1d4ed8" font-weight="bold">Vent réel = 15 nd</text>
+
+      <!-- angle -->
+      <path d="M 300,300 A 40,40 0 0 1 291,271" fill="none" stroke="#0f172a" stroke-width="2"/>
+      <text x="255" y="285" font-size="13" fill="#0f172a" font-weight="bold">vent apparent plus debout</text>
+
+      <text x="410" y="420" font-size="14" fill="#475569" text-anchor="middle">Vecteur apparent = vent réel − vitesse du bateau (somme vectorielle dans le repère du bateau)</text>
+    </svg>
+    <figcaption>Fig. 3 — Exemple chiffré : sous 15 nd de vent réel, un catamaran à 10 nd crée son propre
+    vent apparent de ≈ 18 nd, plus <b>franch</b> (plus orienté vers l'avant) que le vent réel.</figcaption>
+  </div>
+
+  <div class="encadre bleu">
+    <b>Conséquence clé :</b> plus le bateau va vite, plus le vent apparent tourne vers l'avant.
+    Le barreur peut donc <b>resserrer la route</b> (choisir une allure plus près du vent) tout en
+    gardant de la puissance. C'est pour cela qu'un catamaran de sport remonte au près à plus de
+    45° du vent réel tout en naviguant à 1,5 à 2 fois la vitesse du vent. Ce cercle vertueux
+    s'arrête quand la traînée hydrodynamique équilibre la force vélique.
+  </div>
+</section>
+
+<!-- ============ 4. HYDRODYNAMIQUE ============ -->
+<section class="carteforce" id="hydro">
+  <h2><span class="num">4</span> Hydrodynamique : deux coques fines valent mieux qu'une carène large</h2>
+  <p>Sous la ligne de flottaison, trois sources de résistance dominent :</p>
+  <div class="lexique">
+    <div class="carte"><b>1. Frottement</b> — proportionnel à la surface mouillée et à v<sup>1,8</sup>. Dominant à basse vitesse.</div>
+    <div class="carte"><b>2. Résistance de vagues</b> — la coque fabrique son propre système de vagues ; elle croît très vite près de la « vitesse de carène ».</div>
+    <div class="carte"><b>3. Traînée induite</b> — le prix payé pour la force anti-dérive des dérives et safrans.</div>
+  </div>
+
+  <p>La vitesse maximale d'un bateau en <b>mode déplacement</b> est plafonnée par sa longueur :</p>
+  <div class="formule">v (nd) ≈ 1,34 × √(longueur flottaison, m)
+    <small>Un monocoque de 10 m est bloqué vers 9,5 nd ; deux coques de 8 m ne le sont qu'à ≈ 11 nd chacune — et surtout, elles se partagent le travail.</small>
+  </div>
+
+  <p>Le catamaran gagne sur trois tableaux : deux <b>demi-carènes élancées</b> (longueur/grande largeur
+  &gt; 10) laissent la résistance de vagues à distance ; la <b>surface mouillée totale</b> reste faible
+  car les coques sont fines ; et la <b>grande largeur</b> permet de porter beaucoup de toile sans
+  gîter, donc d'acheter de la vitesse avec de la puissance.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 430" role="img" aria-label="Section transversale : comparaison carène monocoque et deux demi-carènes">
+      <defs><marker id="fle4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="430" fill="#ecfeff"/>
+      <!-- ligne d'eau -->
+      <line x1="30" y1="215" x2="810" y2="215" stroke="#0891b2" stroke-width="2.5"/>
+      <text x="40" y="204" font-size="14" fill="#0e7490">ligne de flottaison</text>
+
+      <!-- monocoque -->
+      <path d="M150,215 C 150,265 165,300 235,300 C 305,300 320,265 320,215 Z" fill="#cbd5e1" stroke="#0b1e33" stroke-width="3"/>
+      <text x="235" y="345" font-size="15" fill="#0b1e33" text-anchor="middle" font-weight="bold">Monocoque : 1 carène large</text>
+      <text x="235" y="368" font-size="13" fill="#334155" text-anchor="middle">grande surface mouillée + grosses vagues</text>
+
+      <!-- catamaran -->
+      <path d="M545,215 C 545,252 558,285 595,285 C 632,285 645,252 645,215 Z" fill="#cbd5e1" stroke="#0b1e33" stroke-width="3"/>
+      <path d="M670,215 C 670,252 683,285 720,285 C 757,285 770,252 770,215 Z" fill="#cbd5e1" stroke="#0b1e33" stroke-width="3"/>
+      <text x="658" y="345" font-size="15" fill="#0b1e33" text-anchor="middle" font-weight="bold">Catamaran : 2 demi-carènes fines</text>
+      <text x="658" y="368" font-size="13" fill="#334155" text-anchor="middle">– surface mouillée, vagues résiduelles faibles</text>
+
+      <!-- parties a comparer -->
+      <path d="M545,215 A 50,50 0 0 0 645,215" fill="#0891b2" opacity=".25"/>
+      <path d="M550,175 A 55,10 0 0 0 660,175" fill="none"/>
+      <text x="595" y="160" font-size="13" fill="#0e7490" text-anchor="middle">surface mouillée par coque</text>
+
+      <text x="420" y="410" font-size="14" fill="#475569" text-anchor="middle">À déplacement égal, les deux coques fines traînent bien moins qu'une seule carène large</text>
+    </svg>
+    <figcaption>Fig. 4 — Comparaison des carènes vues en coupe : le découpage du volume en deux coques
+    élancées réduit la traînée de vagues (la composante qui explose en vitesse).</figcaption>
+  </div>
+</section>
+
+<!-- ============ 5. FOILS ============ -->
+<section class="carteforce" id="foils">
+  <h2><span class="num">5</span> Les foils : transformer la traînée en portance, puis voler</h2>
+  <p>Un <b>foil</b> est une aile immergée. En accélérant, il produit une portance verticale qui
+  <b>soulève les coques hors de l'eau</b>. L'eau est 800 fois plus dense que l'air : une petite
+  surface de foil rapidly portée suffit à substituer une faible traînée d'aile à la forte traînée de
+  coque. C'est le décollage (« le vol »).</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 470" role="img" aria-label="Profil de foil : portance, traînée induite, tourbillon marginal, déjaugeage">
+      <defs><marker id="fle5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="470" fill="#ecfeff"/>
+      <!-- eau -->
+      <line x1="0" y1="120" x2="840" y2="120" stroke="#0891b2" stroke-width="2.5"/>
+      <text x="22" y="110" font-size="14" fill="#0e7490">surface</text>
+
+      <!-- coque soulevee -->
+      <rect x="120" y="30" width="260" height="46" rx="23" fill="#cbd5e1" stroke="#0b1e33" stroke-width="3"/>
+      <text x="250" y="58" font-size="13" fill="#0b1e33" text-anchor="middle">coque sortie de l'eau</text>
+      <line x1="250" y1="78" x2="250" y2="240" stroke="#0b1e33" stroke-width="8"/>
+      <!-- foil J -->
+      <path d="M250,240 C 250,300 258,330 330,348" fill="none" stroke="#0b1e33" stroke-width="9" stroke-linecap="round"/>
+
+      <!-- profil foil -->
+      <path d="M300,352 C 360,318 480,322 540,352 C 480,372 360,376 300,352 Z" fill="#e2e8f0" stroke="#0b1e33" stroke-width="4"/>
+      <line x1="300" y1="352" x2="540" y2="352" stroke="#0b1e33" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+      <!-- ecoulement -->
+      <path d="M120,335 C 210,325 250,330 295,340" fill="none" stroke="#1d4ed8" stroke-width="2.2" marker-end="url(#fle5)"/>
+      <path d="M120,365 C 210,370 250,368 295,360" fill="none" stroke="#1d4ed8" stroke-width="2.2" marker-end="url(#fle5)"/>
+      <path d="M545,345 C 620,352 700,364 790,376" fill="none" stroke="#1d4ed8" stroke-width="2.2" marker-end="url(#fle5)" opacity=".8"/>
+      <text x="70" y="312" font-size="14" fill="#1d4ed8" font-weight="bold">écoulement</text>
+      <text x="765" y="400" font-size="13" fill="#1d4ed8">aval dévié vers le bas (downwash)</text>
+
+      <!-- portance -->
+      <line x1="420" y1="330" x2="420" y2="205" stroke="#e11d48" stroke-width="5" marker-end="url(#fle5)"/>
+      <text x="432" y="212" font-size="16" fill="#e11d48" font-weight="bold">Portance du foil</text>
+      <line x1="420" y1="362" x2="560" y2="362" stroke="#0f766e" stroke-width="4" marker-end="url(#fle5)"/>
+      <text x="568" y="368" font-size="14" fill="#0f766e" font-weight="bold">traînée</text>
+
+      <!-- vortex de safran -->
+      <path d="M545,352 c 26,4 38,16 34,30 c -3,11 -15,12 -20,3 c -4,-8 4,-13 10,-10" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="600" y="318" font-size="12" fill="#64748b">tourbillon marginal</text>
+
+      <text x="420" y="446" font-size="14" fill="#334155" text-anchor="middle">La portance ½ ρ V² S C_L croît avec le carré de la vitesse : dès que V est assez grand, le bateau « vole ».</text>
+    </svg>
+    <figcaption>Fig. 5 — Un foil en J porté par la coque : sa portance verticale remplace la portance
+    d'Archimède ; la surface mouillée chute et la vitesse grimpe d'un cran.</figcaption>
+  </div>
+
+  <h3>Vitesse de décollage : la course entre deux traînées</h3>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 420" role="img" aria-label="Courbe de traînée : mode déplacement contre mode vol, point de déjaugeage">
+      <defs><marker id="fle6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="420" fill="#fff"/>
+      <!-- axes -->
+      <line x1="80" y1="350" x2="800" y2="350" stroke="#0f172a" stroke-width="2.5"/>
+      <line x1="80" y1="350" x2="80" y2="40" stroke="#0f172a" stroke-width="2.5"/>
+      <text x="770" y="386" font-size="15" fill="#0f172a" font-weight="bold">Vitesse →</text>
+      <text x="36" y="46" font-size="15" fill="#0f172a" font-weight="bold">Traînée</text>
+
+      <!-- grille temps horizontale -->
+      <line x1="80" y1="270" x2="800" y2="270" stroke="#e2e8f0"/>
+      <line x1="80" y1="190" x2="800" y2="190" stroke="#e2e8f0"/>
+      <line x1="80" y1="110" x2="800" y2="110" stroke="#e2e8f0"/>
+
+      <!-- trajectoire displacement -->
+      <path d="M90,344 C 200,336 300,326 360,300 C 420,268 450,180 470,80" fill="none" stroke="#1d4ed8" stroke-width="4.5"/>
+      <text x="478" y="72" font-size="14" fill="#1d4ed8" font-weight="bold">Traînée des coques (déplacement) : mur au-delà de la vitesse de carène</text>
+
+      <!-- trajectoire foil -->
+      <path d="M90,344 C 220,332 340,306 470,268 C 580,238 680,224 790,218" fill="none" stroke="#e11d48" stroke-width="4.5"/>
+      <text x="680" y="256" font-size="14" fill="#e11d48" font-weight="bold">Traînée en mode « vol » : beaucoup plus plate</text>
+
+      <!-- croisement -->
+      <line x1="410" y1="350" x2="410" y2="270" stroke="#059669" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <circle cx="410" cy="276" r="8" fill="#059669"/>
+      <text x="410" y="390" font-size="15" fill="#059669" font-weight="bold" text-anchor="middle">vitesse de décollage</text>
+      <text x="410" y="408" font-size="13" fill="#059669" text-anchor="middle">l'hydrofoil devient plus efficace que la coque</text>
+    </svg>
+    <figcaption>Fig. 6 — Courbes de traînée : en déplacement la résistance explose (mur de vitesse) ;
+    en vol elle ne croît que lentement. Le décollage se produit au croisement des deux modes.</figcaption>
+  </div>
+
+  <div class="encadre">
+    <b>Le compromis du foil :</b> à basse vitesse, un foil traîne plus qu'une coque sage
+    (il pèse et il produit sa propre traînée). Il faut donc soit de la vitesse ou du vent pour
+    décoller, soit des foils rétractables qui rentrent dans la coque. Le réglage (angle d'incidence, position
+    longitudinale) décide de la vitesse de décollage et de l'altitude de vol — donc de la stabilité
+    en tangage.
+  </div>
+</section>
+
+<!-- ============ 6. STABILITE ============ -->
+<section class="carteforce" id="stabilite">
+  <h2><span class="num">6</span> Stabilité : la largeur comme bras de levier</h2>
+  <p>Sur un monocoque, la stabilité vient du <b> lest</b> : une quille lourde tire vers le bas sous
+  la coque. Sur un catamaran, pas de lest profond : la stabilité vient de la <b>géométrie</b>. Deux
+  coques distantes de la largeur <i>b</i> forment un gigantesque bras de levier : quand le bateau
+  gîte, un flotteur s'enfonce (poussée d'Archimède accrue) et l'autre se soulève (poids restant
+  appliqué côté au vent). Le couple de redressement est :</p>
+  <div class="formule">M ≈ P × b
+    <small>P = déplacement (poids du bateau) • b = largeur. À poids égal, un catamaran a un couple de redressement 2 à 4 fois supérieur à celui d'un monocoque.</small>
+  </div>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 480" role="img" aria-label="Vue de face : couple de redressement du catamaran qui gîte">
+      <defs><marker id="fle7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="480" fill="#eff6ff"/>
+      <!-- eau -->
+      <line x1="0" y1="330" x2="840" y2="330" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="0" y="330" width="840" height="150" fill="#a5f3fc" opacity=".5"/>
+
+      <!-- bateau gisant legerement -->
+      <!-- coque au vent (soulevee) -->
+      <rect x="200" y="296" width="120" height="34" rx="17" fill="#cbd5e1" stroke="#0b1e33" stroke-width="3"/>
+      <!-- coque sous le vent (enfoncee) -->
+      <rect x="520" y="318" width="120" height="34" rx="17" fill="#cbd5e1" stroke="#0b1e33" stroke-width="3"/>
+      <!-- trampoline -->
+      <line x1="320" y1="310" x2="520" y2="330" stroke="#0b1e33" stroke-width="5"/>
+      <!-- mat -->
+      <line x1="420" y1="322" x2="470" y2="70" stroke="#0b1e33" stroke-width="8"/>
+      <!-- voile -->
+      <path d="M472,86 C 560,180 560,260 468,308" fill="none" stroke="#e11d48" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- force velique -->
+      <line x1="540" y1="180" x2="720" y2="140" stroke="#e11d48" stroke-width="5" marker-end="url(#fle7)"/>
+      <text x="726" y="130" font-size="15" fill="#e11d48" font-weight="bold">Fᵥ (fait gîter)</text>
+
+      <!-- poids / poussees -->
+      <line x1="260" y1="270" x2="260" y2="182" stroke="#0f172a" stroke-width="4.5" marker-end="url(#fle7)"/>
+      <text x="262" y="168" font-size="14" fill="#0f172a" font-weight="bold">Poids P (au vent)</text>
+      <line x1="580" y1="380" x2="580" y2="462" stroke="#059669" stroke-width="4.5" marker-end="url(#fle7)"/>
+      <text x="582" y="478" font-size="14" fill="#059669" font-weight="bold">Poussée d'Archimède (sous le vent)</text>
+
+      <!-- bras de levier -->
+      <line x1="260" y1="215" x2="580" y2="215" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="8 6" marker-start="url(#fle7)" marker-end="url(#fle7)"/>
+      <text x="420" y="204" font-size="15" fill="#7c3aed" font-weight="bold" text-anchor="middle">bras de levier b ≈ largeur</text>
+
+      <text x="420" y="460" font-size="0" fill="#000"> </text>
+    </svg>
+    <figcaption>Fig. 7 — Vue de face en gîte : poids d'un côté, poussée d'Archimède de l'autre, séparés
+    par la largeur — le couple qui redresse le bateau. La force vélique (rouge) tente de l'emporter.</figcaption>
+  </div>
+
+  <div class="encadre vert">
+    <b>La contrepartie :</b> pas de lest profond, donc quand le couple de redressement est dépassé
+    (rafale violente + voiles trop bâchées), un catamaran peut chavirer <b>d'un coup</b> — il n'y a
+    pas de gîte progressive qui prévienne, comme sur un monocoque. D'où l'importance du
+    <b>riflement des lattes (border au maximum)</b>, des limites d'orientation au près et du « depower »
+    (réduction de camber) par mauvais temps.
+  </div>
+</section>
+
+<!-- ============ 7. COUPLAGE ============ -->
+<section class="carteforce" id="couplage">
+  <h2><span class="num">7</span> L'équilibre aéro-hydro : le bateau comme système couplé</h2>
+  <p>La vérité d'un catamaran est un <b>couplage permanent</b> entre l'air et l'eau. Chaque réglage
+  aéro modifie l'équilibre hydro, et réciproquement :</p>
+  <table>
+    <tr><th>Action aéro</th><th>Réaction hydro</th></tr>
+    <tr><td>Border plus (plus de camber, plus de puissance)</td><td>La vitesse augmente → la traînée de coque aussi → l'équilibre se cherche plus loin</td></tr>
+    <tr><td>Choquer (réduire l'angle d'attaque)</td><td>La force vélique baisse instantanément, souvent avant que la vitesse ne retombe</td></tr>
+    <tr><td>Vriller le haut des voiles</td><td>Moins de couple de gîte pour la même portance → coque au vent qui peut être remontée</td></tr>
+    <tr><td>Caler le foil (incidence ↓)</td><td>Portance hydro ↓ → vitesse de décollage ↑ mais risque de retour en mode déplacement</td></tr>
+    <tr><td>Assiette arrière (équipage reculé)</td><td>Cavalage limité (coques sèches) → moins de surface mouillée mais risque de dérapage du safran</td></tr>
+  </table>
+
+  <p>Là où les meilleurs équipages de course font la différence, c'est dans leur capacité à naviguer
+  <b>en permanence sur le fil</b> : garder le flotteur au vent juste au-dessus de l'eau, la voile
+  juste en dessous du décrochage, le foil juste à l'altitude de vol. Tout le « game » consiste à
+  maximiser la finesse globale du système {voiles + appendices + carènes}, l'ensemble étant
+  toujours limité par la plus grande des deux traînées (aéro ou hydro).</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 400" role="img" aria-label="Polaire de vitesse typique d'un catamaran de sport">
+      <rect width="840" height="400" fill="#fff"/>
+      <defs><marker id="fle8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <!-- cercles -->
+      <circle cx="340" cy="200" r="50" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+      <circle cx="340" cy="200" r="100" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+      <circle cx="340" cy="200" r="150" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+      <circle cx="340" cy="200" r="190" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <text x="346" y="166" font-size="11" fill="#94a3b8">ratio 0.33</text>
+      <text x="346" y="116" font-size="11" fill="#94a3b8">ratio 0.67</text>
+      <text x="346" y="66" font-size="11" fill="#94a3b8">ratio 1.0</text>
+
+      <!-- lignes angulaires -->
+      <g stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4 5">
+        <line x1="340" y1="200" x2="435" y2="35"/>
+        <line x1="340" y1="200" x2="473" y2="93"/>
+        <line x1="340" y1="200" x2="503" y2="125"/>
+        <line x1="340" y1="200" x2="530" y2="200"/>
+        <line x1="340" y1="200" x2="503" y2="275"/>
+        <line x1="340" y1="200" x2="473" y2="307"/>
+        <line x1="340" y1="200" x2="435" y2="365"/>
+        <line x1="340" y1="200" x2="340" y2="390"/>
+      </g>
+      <!-- labels angles -->
+      <text x="447" y="30" font-size="12" fill="#64748b">30°</text>
+      <text x="484" y="86" font-size="12" fill="#64748b">45°</text>
+      <text x="513" y="118" font-size="12" fill="#64748b">60°</text>
+      <text x="540" y="204" font-size="12" fill="#64748b">90°</text>
+      <text x="513" y="284" font-size="12" fill="#64748b">120°</text>
+      <text x="484" y="316" font-size="12" fill="#64748b">135°</text>
+      <text x="445" y="376" font-size="12" fill="#64748b">150°</text>
+
+      <!-- polaire -->
+      <path d="M 385,153 L 406,148 L 430,155 L 477,170 L 497,178 L 493,200 L 461,231 L 400,251 L 360,252 L 318,215" fill="none" stroke="#e11d48" stroke-width="4" stroke-linejoin="round"/>
+
+      <!-- zone degueul -->
+      <path d="M 340,200 L 356,166 A 40,40 0 0 1 331,160 Z" fill="#fecaca" opacity=".8"/>
+      <text x="352" y="52" font-size="12" fill="#b91c1c" font-weight="bold">zone interdite</text>
+      <text x="352" y="66" font-size="11" fill="#b91c1c">(près trop serré)</text>
+      <!-- fleche vent -->
+      <line x1="255" y1="120" x2="315" y2="172" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fle8)"/>
+      <text x="200" y="112" font-size="13" fill="#1d4ed8" font-weight="bold">vent</text>
+
+      <text x="586" y="130" font-size="13" fill="#0f172a">Ratio vitesse du bateau / vitesse du vent</text>
+      <text x="586" y="150" font-size="13" fill="#334155">en fonction de l'angle au vent réel.</text>
+      <text x="586" y="200" font-size="12" fill="#475569">Pic ≈ 90-110° : un catamaran y double</text>
+      <text x="586" y="216" font-size="12" fill="#475569">la vitesse du vent réel. Le près serré</text>
+      <text x="586" y="232" font-size="12" fill="#475569">et le vent arrière pur sont bloqués.</text>
+    </svg>
+    <figcaption>Fig. 8 — Polaire de vitesse typique d'un catamaran de sport : le bateau dépasse la
+    vitesse du vent au reaching et le creux du vent arrière impose de tirer des bords.</figcaption>
+  </div>
+</section>
+
+<!-- ============ 8. CHIFFRES ============ -->
+<section class="carteforce" id="chiffres">
+  <h2><span class="num">8</span> Chiffres clés &amp; synthèse</h2>
+  <table>
+    <tr><th>Grandeur</th><th>Catamaran de sport (type F18)</th><th>Catamaran de course volant (type AC75-like*)</th><th>Remarque</th></tr>
+    <tr><td>Largeur</td><td>2,7 m</td><td>4 m et plus</td><td>Détermine le couple P×b</td></tr>
+    <tr><td>Poids</td><td>180-220 kg</td><td>plusieurs tonnes</td><td>Toujours minimisé</td></tr>
+    <tr><td>Surface de voile</td><td>~20 m² (+ gennaker)</td><td>sans cesse optimisée / foils</td><td>Limitée par la stabilité disponible</td></tr>
+    <tr><td>Vitesse max</td><td>20-25 nd</td><td>50 nd et plus</td><td>Ratio 2-4×</td></tr>
+    <tr><td>Vitesse du vent de navigation</td><td>3-25 nd</td><td>6-25 nd</td><td>Fenêtre de puissance</td></tr>
+  </table>
+  <p style="font-size:.85rem;color:#64748b">* les AC75 sont des monocoques à foils, comparés ici
+  parce qu'ils reprennent les mêmes concepts physiques ; les trimarans géants de la classe Ultim,
+  à la pointe de la course au large, exploitent les mêmes principes à plus grande échelle.</p>
+
+  <h3>L'essentiel en 5 points</h3>
+  <div class="lexique">
+    <div class="carte"><b>1.</b> La voile est une aile : la portance naît d'une différence de pression, pas du vent qui « pousse ».</div>
+    <div class="carte"><b>2.</b> Le vent apparent gagne en force et se redresse vers l'avant à mesure que le bateau accélère : moteur auto-entretenu du multicoque.</div>
+    <div class="carte"><b>3.</b> Deux coques fines minimisent surface mouillée et traînée de vagues ; la vitesse de carène est repoussée, pas abolie.</div>
+    <div class="carte"><b>4.</b> Les foils échangent de la surface mouillée contre de la portance : décollage au croisement des courbes de traînée.</div>
+    <div class="carte"><b>5.</b> La stabilité vient de la largeur (P × b), pas du lest : plus rapide, mais chavirement brutal possible.</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <b>Aérodynamique &amp; Hydrodynamique du catamaran</b> — page pédagogique illustrée.<br>
+  Les schémas sont volontairement simplifiés : l'objet ici est la compréhension des mécanismes, pas le calcul exact des coefficients.
+</footer>
+
+</body>
+</html>
