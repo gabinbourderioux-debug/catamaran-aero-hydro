@@ -57,7 +57,7 @@
   arrive de droit devant (le vent que le bateau fabrique en avançant), les deux reportés en
   <b>pointillés gris</b> se croisent, et le <b style="color:#7c3aed">vent apparent</b> va du
   <b>croisement des reportés</b> jusqu'au bateau. <b>Bonus : tire sur le rond bleu du vent réel
-  pour changer sa direction</b> — le triangle se recalcule tout seul.</p>
+  pour changer sa direction, de face à 0° jusqu’au vent arrière à 180°</b> — le triangle se recalcule tout seul.</p>
 
   <div class="curseurs">
     <label for="inVR">Vent réel : <output id="oVR">15</output> nd</label>
@@ -101,11 +101,9 @@ let DIR_R = [0.301, -0.953];
 let dernierW = null;
 
 function normaliserDir(dx, dy){
-  const L = Math.hypot(dx, dy) || 1;
-  let ux = dx / L, uy = dy / L;
-  if(uy > -0.08){ uy = -0.08; ux = Math.sqrt(1 - uy * uy); }
-  if(ux < 0.05){ ux = 0.05; uy = -Math.sqrt(1 - ux * ux); }
-  return [ux, uy];
+  const L = Math.hypot(dx, dy);
+  if(L < 1) return DIR_R.slice();
+  return [dx / L, -Math.abs(dy / L)];
 }
 
 function ligne(a, b, col, w, marker, dash){
@@ -164,12 +162,14 @@ function dessiner(){
     g += texte(C[0], C[1] - 12, 'le croisement des reportés', '#475569', 11, 'middle');
   }
   g += texte(30, 24, 'La construction de la figure 3, en direct', '#1C2430', 15, null, true);
-  g += texte(30, 620, 'Échelle : 12 px = 1 nd — tire sur le rond bleu pour tourner le vent réel.', '#64748b', 11.5);
+  g += texte(30, 620, 'Échelle : 12 px = 1 nd — tire sur le rond bleu pour tourner le vent réel, du vent de face au vent arrière.', '#64748b', 11.5);
 
   document.getElementById('dessin').innerHTML =
     '<svg viewBox="0 0 920 640" role="img" aria-label="Triangle des vitesses interactif">' + defs + g + '</svg>';
 
   const angR = vr > 0 ? Math.round(Math.acos(Math.max(-1, Math.min(1, DIR_R[0]))) * 180 / Math.PI) : 0;
+  const ecart = va - vr;
+  const fmt = () => (ecart >= 0 ? '+' + ecart.toFixed(1) : '\u2212' + Math.abs(ecart).toFixed(1));
   let msg = 'Vent apparent estimé : ';
   if(vr === 0 && vb === 0) msg += '<b>0 nd';
   else if(vb === 0) msg += '<b>' + vr + ' nd</b> (le vent réel, sans effet de vitesse)';
@@ -179,9 +179,9 @@ function dessiner(){
   if(vb === 0 && vr === 0) suite = 'Tout est calme… gonfle les curseurs !';
   else if(vb === 0) suite = 'Bateau arrêté : tu sens exactement le vent réel.';
   else if(vr === 0) suite = 'Plus aucun vrai vent : il ne reste que le vent que tu fabriques — utile pour rentrer au moteur, pas pour briller.';
-  else if(va - vr >= 0.5) suite = 'Plus fort que le réel (+' + (va - vr).toFixed(1) + ' nd), le vrai vent venant de ~' + angR + '\u00b0 de la route : le turbo du catamaran ! Et plus tu vas vite, plus le vent apparent remonte vers l\u2019avant.';
-  else if(va - vr <= -0.5) suite = 'Moins fort que le réel : ça arrive quand la route \u00ab fuit \u00bb sous le vent du vent réel.';
-  else suite = 'Aux alentours de l\u2019équilibre.';
+  else if(angR < 70) suite = 'Le vrai vent vient de ~' + angR + '\u00b0 de la route (côté près) : ' + fmt() + ' nd sur le réel — le turbo du catamaran ! Plus tu vas vite, plus le vent apparent remonte vers l\u2019avant.';
+  else if(angR <= 110) suite = 'Le vrai vent arrive de ~' + angR + '\u00b0 de la route, presque de travers : ' + fmt() + ' nd sur le réel, et il faiblit dès que tu descends vers le vent arrière.';
+  else suite = 'Vent d\u2019arrière (~' + angR + '\u00b0 de la route) : le bateau fuit devant son propre vent, donc il perd ' + Math.abs(ecart).toFixed(1) + ' nd sur le réel — le régime du grand largue, voiles largues.';
   document.getElementById('verdict').innerHTML = msg + ' ' + suite;
 }
 
