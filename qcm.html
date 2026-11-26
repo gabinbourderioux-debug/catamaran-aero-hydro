@@ -66,7 +66,7 @@
     <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
       <ul>
         <li><a href="meteo.html#vent">La météo en direct</a></li>
-        <li><a href="qcm.html">Le QCM</a></li>
+        <li><a href="topo-meteo.html">Topo météo</a></li>
       </ul>
     </li>
   </ul>
@@ -145,13 +145,13 @@ const QCMS = [
      exp:"Au reaching latéral, un catamaran peut doubler la vitesse du vent ; au vent arrière, il ralentit."}
   ]},
   {id:'meteo', titre:'QCM 6 — La météo du marin : vent, ciel et marées', lien:'meteo.html', questions:[
-    {q:"Sur la carte météo, plus les isobares sont serrées…", rep:["moins il y a de vent","plus il y a de vent","plus la mer est chaude"], ok:1, lien:'meteo.html#vent',
+    {q:"Sur la carte météo, plus les isobares sont serrées…", rep:["moins il y a de vent","plus il y a de vent","plus la mer est chaude"], ok:1, lien:'topo-meteo.html#ciel',
      exp:"Des isobares serrées = fort gradient de pression = vent fort. C'est la règle de base du lecteur de carte météo."},
-    {q:"Dans l'hémisphère nord, le vent tourne autour d'une dépression…", rep:["en sens antihoraire","en sens horaire","il n'y a pas de vent dans une dépression"], ok:0, lien:'meteo.html#ciel',
+    {q:"Dans l'hémisphère nord, le vent tourne autour d'une dépression…", rep:["en sens antihoraire","en sens horaire","il n'y a pas de vent dans une dépression"], ok:0, lien:'topo-meteo.html#ciel',
      exp:"L'air converge vers le centre en tournant en antihoraire et monte : nuages et pluie. Dans l'anticyclone, l'air descend : beau temps mais peu de vent."},
-    {q:"Des fils de nuages blancs très haut et un halo autour du soleil annoncent…", rep:["du beau temps garanti","une dépression dans 24-48 h","une marée haute"], ok:1, lien:'meteo.html#ciel',
+    {q:"Des fils de nuages blancs très haut et un halo autour du soleil annoncent…", rep:["du beau temps garanti","une dépression dans 24-48 h","une marée haute"], ok:1, lien:'topo-meteo.html#ciel',
      exp:"Les cirrus sont les messagers de la perturbation : le front chaud arrive 1 à 2 jours plus tard avec sa pluie fine."},
-    {q:"Le grain brutal d'un front froid vient de…", rep:["l'air chaud qui monte doucement sur l'air froid","l'air froid qui chasse l'air chaud et le jette en altitude","la pluie qui refroidit la voile"], ok:1, lien:'meteo.html#ciel',
+    {q:"Le grain brutal d'un front froid vient de…", rep:["l'air chaud qui monte doucement sur l'air froid","l'air froid qui chasse l'air chaud et le jette en altitude","la pluie qui refroidit la voile"], ok:1, lien:'topo-meteo.html#ciel',
      exp:"L'air froid, plus lourd, passe comme un coin sous l'air chaud : muraille de cumulonimbus, rafales et vent qui peut doubler en moins d'une minute."},
     {q:"Un coefficient de marée très fort (90-120) arrive…", rep:["à la nouvelle ou à la pleine lune","au premier quartier","par temps chaud"], ok:0, lien:'meteo.html#maree',
      exp:"À la nouvelle et à la pleine lune, la lune et le soleil tirent dans le même axe (marées de vives-eaux) : gros coefficients, courants plus forts."}
