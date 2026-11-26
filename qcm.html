@@ -6,6 +6,9 @@
 <title>QCM — Aérodynamique &amp; Hydrodynamique du Catamaran</title>
 <meta name="description" content="Teste tes connaissances sur le catamaran : un QCM de 5 questions sur chaque thème (voile, vent apparent, coques, foils, stabilité, météo) et un QCM général de 10 questions.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="icone-192.png">
 <meta property="og:title" content="QCM — Aérodynamique &amp; Hydrodynamique du Catamaran">
 <meta property="og:description" content="Teste tes connaissances sur le catamaran : un QCM de 5 questions sur chaque thème (voile, vent apparent, coques, foils, stabilité, météo) et un QCM général de 10 questions.">
 <meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
@@ -36,13 +39,16 @@
   .btn.gris{background:#64748b}
   .score{font-weight:800;font-size:1rem}
   .score.partiel{color:var(--corail)} .score.plein{color:var(--vert)} .score.zero{color:var(--titre)}
+  .actions-rev{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 6px}
+  #chrono{font-weight:800;font-size:1.08rem;color:var(--titre);font-variant-numeric:tabular-nums}
+  #record{font-weight:700;color:var(--vert)}
 </style>
 </head>
 <body>
 
 <header class="hero hero--page">
   <h1>QCM : teste tes connaissances</h1>
-  <p>5 questions sur chaque partie (voile, vent apparent, coques, foils, stabilité, météo) et un QCM général de 10 questions. Réponds, clique « Corriger » : les bonnes réponses passent en vert, les mauvaises reçoivent <b>une explication et le lien vers la partie du site</b> à relire.</p>
+  <p>5 questions sur chaque partie (voile, vent apparent, coques, foils, stabilité, météo) et un QCM général de 10 questions. En haut de page, le <b>mode révision</b> tire 20 questions au hasard dans tout le site, chrono lancé. Réponds, clique « Corriger » : les bonnes réponses passent en vert, les mauvaises reçoivent <b>une explication et le lien vers la partie du site</b> à relire.</p>
 </header>
 
 <nav class="sommaire" aria-label="Navigation">
@@ -69,11 +75,24 @@
         <li><a href="topo-meteo.html">Topo météo</a></li>
       </ul>
     </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li>
     <li><a href="qcm.html">QCM</a></li>
   </ul>
 </nav>
 
-<main class="conteneur" id="qcms"></main>
+<main class="conteneur">
+<section class="carteforce" id="revision">
+  <h2><span class="num">R</span> Mode révision : 20 questions au hasard</h2>
+  <p>Le chrono démarre dès que tu cliques et s'arrête à la correction. Les 20 questions sont piochées au hasard dans les 40 du site. Ton record (meilleur score, puis meilleur temps) est gardé dans ce navigateur.</p>
+  <div class="actions-rev">
+    <button class="btn" id="goRev" type="button">Lancer une révision : 20 questions au hasard</button>
+    <span id="chrono">⏱ 00:00</span>
+    <span id="record"></span>
+  </div>
+  <div id="zone-rev"></div>
+</section>
+<div id="qcms"></div>
+</main>
 
 <footer>
   <div class="auteur">Gabin Bourderioux</div>
@@ -181,62 +200,125 @@ const QCMS = [
   ]}
 ];
 
+function buildQcmDom(qcm, conteneur, opts){
+  opts = opts || {};
+  const d = document.createElement('details');
+  d.className = 'qcm'; d.id = qcm.id;
+  if (opts.ouvert) d.open = true;
+  const sous = (opts.soustitre !== undefined) ? opts.soustitre
+    : qcm.questions.length + ' questions \u2014 d\u00e9tail sur <a href="' + qcm.lien + '">cette page</a>';
+  let html = '<summary><span class="chev">\u25b8</span> ' + qcm.titre +
+    ' <span class="soustitre">' + sous + '</span></summary>';
+  qcm.questions.forEach((q, i) => {
+    const lien = q.lien || qcm.lien;
+    html += '<div class="quest">' + (i+1) + '. ' + q.q + '</div>';
+    q.rep.forEach((r, j) => {
+      html += '<label class="reponse"><input type="radio" name="' + qcm.id + '-' + i + '" value="' + j + '">' + r + '</label>';
+    });
+    html += '<div class="expl">\ud83d\udca1 ' + q.exp + ' \u2192 <a href="' + lien + '">relire cette partie</a></div>';
+  });
+  html += '<div class="actions-qcm"><button class="btn">' + (opts.txtCorriger || 'Corriger') + '</button>' +
+          '<button class="btn gris" type="button">' + (opts.txtReset || 'Recommencer') + '</button>' +
+          '<span class="score"></span></div>';
+  d.innerHTML = html;
+  conteneur.appendChild(d);
+
+  const [btnCorriger, btnReset] = d.querySelectorAll('button');
+  const score = d.querySelector('.score');
+  btnCorriger.addEventListener('click', () => {
+    if (d.classList.contains('corrige')) return;
+    let nbOk = 0;
+    const exs = d.querySelectorAll('.expl');
+    const labels = d.querySelectorAll('.reponse');
+    qcm.questions.forEach((q, i) => {
+      const inputs = d.querySelectorAll('input[name="' + qcm.id + '-' + i + '"]');
+      let chosen = null;
+      inputs.forEach(inp => { inp.disabled = true; if (inp.checked) chosen = inp; });
+      q.rep.forEach((r, j) => {
+        const lab = labels[i*q.rep.length + j];
+        if (j === q.ok) lab.classList.add('ok');
+        if (chosen && chosen === lab.querySelector('input')) {
+          if (j === q.ok) nbOk++; else lab.classList.add('ko');
+        }
+      });
+      if (!chosen || chosen !== labels[i*q.rep.length + q.ok].querySelector('input')) exs[i].classList.add('visible');
+    });
+    d.classList.add('corrige');
+    const n = qcm.questions.length;
+    score.textContent = ' Score : ' + nbOk + ' / ' + n +
+      (nbOk === n ? ' \u2014 parfait ! \ud83c\udfc6' : nbOk / n >= 0.6 ? ' \u2014 bien jou\u00e9 \ud83d\udc4d' : ' \u2014 relis la page d\u00e9taill\u00e9e \ud83d\ude09');
+    score.className = 'score ' + (nbOk === n ? 'plein' : nbOk / n >= 0.6 ? 'partiel' : 'zero');
+    if (opts.apresCorrection) opts.apresCorrection(nbOk, n, score);
+  });
+  btnReset.addEventListener('click', () => {
+    if (opts.onReset) { opts.onReset(); return; }
+    d.classList.remove('corrige');
+    score.textContent = ''; score.className = 'score';
+    d.querySelectorAll('input').forEach(inp => { inp.checked = false; inp.disabled = false; });
+    d.querySelectorAll('.reponse').forEach(l => l.classList.remove('ok','ko'));
+    d.querySelectorAll('.expl').forEach(e => e.classList.remove('visible'));
+  });
+  return d;
+}
+
 function render(){
   const root = document.getElementById('qcms');
-  QCMS.forEach((qcm, qi) => {
-    const d = document.createElement('details');
-    d.className = 'qcm'; d.id = qcm.id;
-    let html = '<summary><span class="chev">▸</span> ' + qcm.titre +
-      ' <span class="soustitre">' + qcm.questions.length + ' questions — détail sur <a href="' + qcm.lien + '">cette page</a></span></summary>';
-    qcm.questions.forEach((q, i) => {
-      const lien = q.lien || qcm.lien;
-      html += '<div class="quest">' + (i+1) + '. ' + q.q + '</div>';
-      q.rep.forEach((r, j) => {
-        html += '<label class="reponse"><input type="radio" name="' + qcm.id + '-' + i + '" value="' + j + '">' + r + '</label>';
-      });
-      html += '<div class="expl">💡 ' + q.exp + ' → <a href="' + lien + '">relire cette partie</a></div>';
-    });
-    html += '<div class="actions-qcm"><button class="btn">Corriger</button>' +
-            '<button class="btn gris" type="button">Recommencer</button>' +
-            '<span class="score"></span></div>';
-    d.innerHTML = html;
-    root.appendChild(d);
-
-    const [btnCorriger, btnReset] = d.querySelectorAll('button');
-    const score = d.querySelector('.score');
-    btnCorriger.addEventListener('click', () => {
-      if (d.classList.contains('corrige')) return;
-      let nbOk = 0;
-      const exs = d.querySelectorAll('.expl');
-      qcm.questions.forEach((q, i) => {
-        const inputs = d.querySelectorAll('input[name="' + qcm.id + '-' + i + '"]');
-        const labels = d.querySelectorAll('.reponse');
-        let chosen = null;
-        inputs.forEach(inp => { inp.disabled = true; if (inp.checked) chosen = inp; });
-        q.rep.forEach((r, j) => {
-          const lab = labels[i*q.rep.length + j];
-          if (j === q.ok) lab.classList.add('ok');
-          if (chosen && chosen === labels[i*q.rep.length + j].querySelector('input')) {
-            if (j === q.ok) nbOk++; else lab.classList.add('ko');
-          }
-        });
-        if (!chosen || chosen !== labels[i*q.rep.length + q.ok].querySelector('input')) exs[i].classList.add('visible');
-      });
-      d.classList.add('corrige');
-      const n = qcm.questions.length;
-      score.textContent = ' Score : ' + nbOk + ' / ' + n +
-        (nbOk === n ? ' — parfait ! 🏆' : nbOk >= n*0.6 ? ' — bien joué 👍' : ' — relis la page détaillée 😉');
-      score.className = 'score ' + (nbOk === n ? 'plein' : nbOk/ n >= 0.6 ? 'partiel' : 'zero');
-    });
-    btnReset.addEventListener('click', () => {
-      d.classList.remove('corrige');
-      score.textContent = ''; score.className = 'score';
-      d.querySelectorAll('input').forEach(inp => { inp.checked = false; inp.disabled = false; });
-      d.querySelectorAll('.reponse').forEach(l => l.classList.remove('ok','ko'));
-      d.querySelectorAll('.expl').forEach(e => e.classList.remove('visible'));
-    });
-  });
+  QCMS.forEach(qcm => { buildQcmDom(qcm, root); });
 }
+
+const ALLQ = QCMS.flatMap(c => c.questions.map(q => Object.assign({}, q, {lien: q.lien || c.lien})));
+let chronoInt = null, tChrono = 0;
+
+function fmtTemps(s){
+  const m = Math.floor(s / 60), r = s % 60;
+  return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+}
+function lireRecord(){
+  try { return JSON.parse(localStorage.getItem('recordRev')); } catch (e) { return null; }
+}
+function afficherRecord(){
+  const r = lireRecord();
+  document.getElementById('record').textContent =
+    r ? '\ud83c\udfc6 Record : ' + r.ok + '/20 en ' + fmtTemps(r.temps) : '';
+}
+
+function lancerRevision(){
+  if (chronoInt) clearInterval(chronoInt);
+  tChrono = 0;
+  const chrono = document.getElementById('chrono');
+  chrono.textContent = '\u23f1 00:00';
+  chronoInt = setInterval(() => { tChrono++; chrono.textContent = '\u23f1 ' + fmtTemps(tChrono); }, 1000);
+  const pool = ALLQ.slice();
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+  const tirage = {id:'rev-tirage', titre:'R\u00e9vision \u2014 20 questions au hasard', lien:'qcm.html', questions: pool.slice(0, 20)};
+  const zone = document.getElementById('zone-rev');
+  zone.innerHTML = '';
+  buildQcmDom(tirage, zone, {
+    ouvert: true,
+    soustitre: '20 questions tir\u00e9es dans tout le site \u2014 corrige \u00e0 la fin pour arr\u00eater le chrono',
+    txtCorriger: 'Corriger & arr\u00eater le chrono',
+    txtReset: 'Nouveau tirage',
+    onReset: lancerRevision,
+    apresCorrection: (nbOk, n, scoreEl) => {
+      if (chronoInt) { clearInterval(chronoInt); chronoInt = null; }
+      const r = {ok: nbOk, temps: tChrono};
+      const old = lireRecord();
+      const mieux = !old || r.ok > old.ok || (r.ok === old.ok && r.temps < old.temps);
+      if (mieux && nbOk > 0) {
+        localStorage.setItem('recordRev', JSON.stringify(r));
+        afficherRecord();
+        scoreEl.textContent += ' \u2014 nouveau record ! \ud83c\udfc6';
+      }
+    }
+  });
+  if (zone.scrollIntoView) zone.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+document.getElementById('goRev').addEventListener('click', lancerRevision);
+afficherRecord();
 render();
 </script>
 

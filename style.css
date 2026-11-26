@@ -103,3 +103,8 @@
     nav.sommaire li.deroulant.ouvert > ul,
     nav.sommaire li.deroulant:focus-within > ul{display:flex}
   }
+
+  .sommaire-page{background:var(--figure-fond);border:1px solid var(--bordure);border-radius:12px;
+    padding:10px 16px;margin:0 0 26px;font-size:.95rem;color:var(--gris)}
+  .sommaire-page a{color:var(--bleu);text-decoration:none;font-weight:600}
+  .sommaire-page a:hover{text-decoration:underline}
