@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mode labo — Catamaran</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{color-scheme:light}body{margin:0;background:#f3f6f8;color:#1c2430;font-family:Arial,sans-serif}
+main{max-width:1100px;margin:32px auto;padding:0 20px}.panel{background:white;border:1px solid #dce3e8;border-radius:16px;padding:22px;margin:16px 0}
+h1{margin-bottom:8px}.intro{color:#536273}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+label{display:flex;justify-content:space-between;font-weight:600;margin-bottom:8px}input[type=range]{width:100%;accent-color:#00a6b2}
+.value{font-variant-numeric:tabular-nums;color:#007d88}.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.metric{background:#f2f7f8;padding:16px;border-radius:12px}.metric small{display:block;color:#536273}.metric strong{font-size:1.5rem}
+svg{width:100%;height:auto;max-height:360px;background:#fbfcfd;border:1px solid #e3e9ed;border-radius:12px}
+.note{font-size:.9rem;color:#536273;line-height:1.55}.back{display:inline-block;margin:12px 0;color:#087f8c}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="test.html">← Retour à la zone test</a>
+<h1>Mode labo — aérodynamique simplifiée</h1>
+<p class="intro">Fais varier les paramètres et observe leur influence sur les forces estimées sur une voile.</p>
+<section class="panel controls">
+<div><label for="wind">Vent apparent <span class="value" id="windV">12 m/s</span></label><input id="wind" type="range" min="2" max="35" step=".5" value="12"></div>
+<div><label for="area">Surface de voile <span class="value" id="areaV">25 m²</span></label><input id="area" type="range" min="5" max="60" step="1" value="25"></div>
+<div><label for="angle">Angle d'attaque <span class="value" id="angleV">6°</span></label><input id="angle" type="range" min="-4" max="25" step=".5" value="6"></div>
+</section>
+<section class="panel">
+<h2>Résultats estimés</h2>
+<div class="results">
+<div class="metric"><small>Portance</small><strong id="lift">—</strong><small>newtons</small></div>
+<div class="metric"><small traînée</small><strong id="drag">—</strong><small>newtons</small></div>
+<div class="metric"><small>Coefficient de portance (Cl)</small><strong id="cl">—</strong></div>
+<div class="metric"><small>Coefficient de traînée (Cd)</small><strong id="cd">—</strong></div>
+</div>
+</section>
+<section class="panel">
+<h2>Schéma des forces</h2>
+<svg viewBox="0 0 760 300" role="img" aria-label="Schéma simplifié des forces aérodynamiques">
+<line x1="70" y1="150" x2="690" y2="150" stroke="#9aa8b4" stroke-dasharray="6 6"/>
+<path d="M170 160 Q330 135 510 150 Q350 178 170 160Z" fill="#d9e7eb" stroke="#536273" stroke-width="2"/>
+<line id="liftArrow" x1="350" y1="150" x2="350" y2="55" stroke="#008b95" stroke-width="5"/>
+<polygon id="liftHead" points="350,42 341,60 359,60" fill="#008b95"/>
+<line id="dragArrow" x1="350" y1="150" x2="490" y2="150" stroke="#d97706" stroke-width="5"/>
+<polygon id="dragHead" points="503,150 484,141 484,159" fill="#d97706"/>
+<text x="365" y="52" fill="#008b95" font-size="16">Portance</text>
+<text x="510" y="155" fill="#d97706" font-size="16">Traînée</text>
+<text x="24" y="280" fill="#536273" font-size="13">Schéma pédagogique : directions indicatives, échelles non représentatives.</text>
+</svg>
+</section>
+<section class="panel note">
+<strong>Limites du modèle :</strong> calcul pédagogique fondé sur la pression dynamique q = ½ρV² et des coefficients approximatifs dépendant de l'angle. Il ne représente pas une simulation CFD et ne tient pas compte du profil réel, du vrillage, des effets 3D, des turbulences, du gréement ni des interactions avec les foils. Les résultats ne doivent pas servir au dimensionnement réel d'un bateau.
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function calculer(){
+ const v=+$('wind').value,S=+$('area').value,a=+$('angle').value,rho=1.225;
+ const rad=a*Math.PI/180;
+ const cl=Math.max(-.25,Math.min(1.35,0.12+5.2*rad))*(a>12?Math.max(.35,1-(a-12)*.045):1);
+ const cd=.012+.018*cl*cl+Math.max(0,a-12)*.0025;
+ const q=.5*rho*v*v, L=q*S*cl,D=q*S*cd;
+ $('windV').textContent=v+' m/s';$('areaV').textContent=S+' m²';$('angleV').textContent=a+'°';
+ $('lift').textContent=Math.round(L).toLocaleString('fr-FR');$('drag').textContent=Math.round(D).toLocaleString('fr-FR');
+ $('cl').textContent=cl.toFixed(2);$('cd').textContent=cd.toFixed(3);
+ const scale=Math.min(1,Math.max(.15,Math.abs(L)/(q*S*1.35)));
+ const h=35+95*scale,w=35+Math.min(110,D/Math.max(1,q*S*.04)*110);
+ $('liftArrow').setAttribute('y2',150-h);$('liftHead').setAttribute('points',`350,${137-h} 341,${155-h} 359,${155-h}`);
+ $('dragArrow').setAttribute('x2',350+w);$('dragHead').setAttribute('points',`${363+w},150 ${344+w},141 ${344+w},159`);
+}
+['wind','area','angle'].forEach(id=>$(id).addEventListener('input',calculer));calculer();
+</script>
+</body></html>
