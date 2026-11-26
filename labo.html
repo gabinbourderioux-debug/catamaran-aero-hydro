@@ -5,7 +5,7 @@
 </style></head><body>
 <header class="hero hero--page"><span class="badge">Zone test · Prototype indépendant</span><h1>Laboratoire scientifique</h1><p>Voiles, foils, performances et conditions de navigation. Modèles simplifiés à expérimenter, sans modifier les pages publiques.</p></header>
 <main class="lab-wrap"><a class="retour" href="test.html">← Retour à la zone test</a>
-<nav class="lab-nav" aria-label="Modules du laboratoire"><button class="lab-tab" data-tab="aero" aria-selected="true">A · Voile & foil</button><button class="lab-tab" data-tab="simu" aria-selected="false">B · Catamaran</button><button class="lab-tab" data-tab="meteo" aria-selected="false">C · Navigation</button><button class="lab-tab" data-tab="essais" aria-selected="false">D · Expériences</button></nav>
+<nav class="lab-nav" aria-label="Modules du laboratoire"><button class="lab-tab" data-tab="aero" aria-selected="true">A · Voile & foil</button><button class="lab-tab" data-tab="simu" aria-selected="false">B · Catamaran</button><button class="lab-tab" data-tab="meteo" aria-selected="false">C · Navigation</button><button class="lab-tab" data-tab="3d" aria-selected="false">D · Modèle 3D</button><button class="lab-tab" data-tab="essais" aria-selected="false">E · Expériences</button></nav>
 <section class="lab-panel active" id="panel-aero"><h2><span class="num">A</span> Laboratoire aérodynamique</h2><p>Modifie la forme théorique du profil et l'angle d'incidence. Observe les coefficients et les forces estimées.</p>
 <div class="lab-card lab-grid"><div class="lab-control"><label for="profile">Profil <output id="profileOut">Voile creuse</output></label><select id="profile"><option value="0.08">Profil fin</option><option value="0.16" selected>Voile creuse</option><option value="0.23">Profil très creux</option><option value="0.12">Section de foil</option></select></div><div class="lab-control"><label for="incidence">Angle d'incidence <output id="incidenceOut">6°</output></label><input id="incidence" type="range" min="-5" max="22" step=".5" value="6"></div><div class="lab-control"><label for="speedA">Vent apparent <output id="speedAOut">12 m/s</output></label><input id="speedA" type="range" min="2" max="35" step=".5" value="12"></div><div class="lab-control"><label for="areaA">Surface de référence <output id="areaAOut">25 m²</output></label><input id="areaA" type="range" min="5" max="60" value="25"></div></div>
 <div class="lab-card"><div class="lab-figure"><svg viewBox="0 0 760 280" role="img" aria-label="Profil de voile schématique et vecteurs de forces"><defs><marker id="arrLift" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#059669"/></marker><marker id="arrDrag" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#C79A00"/></marker></defs><line x1="70" y1="150" x2="690" y2="150" stroke="var(--gris)" stroke-dasharray="5 6"/><path id="profileShape" d="M150 150 Q370 100 610 150 Q370 166 150 150Z" fill="#FFCC00" fill-opacity=".35" stroke="#C79A00" stroke-width="3"/><line id="liftVector" x1="370" y1="145" x2="370" y2="55" stroke="#059669" stroke-width="5" marker-end="url(#arrLift)"/><line id="dragVector" x1="370" y1="145" x2="465" y2="145" stroke="#C79A00" stroke-width="5" marker-end="url(#arrDrag)"/><text x="385" y="52" fill="#059669" font-size="16">Portance</text><text x="475" y="150" fill="#C79A00" font-size="16">Traînée</text><text x="24" y="255" fill="var(--gris)" font-size="13">Profil et vecteurs schématiques, non issus d'une CFD.</text></svg></div><div class="lab-metrics" style="margin-top:14px"><div class="lab-metric"><small>Coefficient Cl estimé</small><strong id="clA">—</strong></div><div class="lab-metric"><small>Coefficient Cd estimé</small><strong id="cdA">—</strong></div><div class="lab-metric"><small>Portance estimée</small><strong id="liftA">—</strong><small>N</small></div><div class="lab-metric"><small>Traînée estimée</small><strong id="dragA">—</strong><small>N</small></div></div></div>
@@ -26,6 +26,22 @@
 </div><p class="lab-muted" id="wxTime"></p></div>
 <div class="lab-card"><h3>Prévisions horaires</h3><p class="lab-muted">Vent, rafales, direction, vagues et précipitations. Les heures sont celles du fuseau horaire local du spot.</p><div class="lab-table-wrap"><table><thead><tr><th>Heure</th><th>Vent</th><th>Rafales</th><th>Direction</th><th>Vagues</th><th>Période</th><th>Pluie</th></tr></thead><tbody id="weatherRows"><tr><td colspan="7">En attente des données…</td></tr></tbody></table></div></div>
 <div class="lab-warning">Ce tableau est une aide à la préparation, pas un bulletin de sécurité. Les modèles peuvent être imprécis localement et les données peuvent manquer. Les marées et courants ne sont pas inclus : consulte les prédictions du <a href="https://maree.shom.fr/" target="_blank" rel="noopener">SHOM</a> et les bulletins de <a href="https://meteofrance.com/meteo-marine" target="_blank" rel="noopener">Météo-France Marine</a> avant de naviguer. Vérifie également les conditions sur place.</div>
+</section>
+<section class="lab-panel" id="panel-3d">
+<h2><span class="num">D</span> Modèle 3D interactif du catamaran</h2>
+<p>Vue 3D schématique du multicoque. Fais glisser pour tourner autour du bateau, zoome avec la molette et modifie les réglages pour observer leur effet sur le modèle.</p>
+<div class="lab-card">
+<div class="lab-grid">
+<div class="lab-control"><label for="modelSail">Surface de voile <output id="modelSailOut">28 m²</output></label><input id="modelSail" type="range" min="12" max="45" value="28"></div>
+<div class="lab-control"><label for="modelFoil">Angle des foils <output id="modelFoilOut">0°</output></label><input id="modelFoil" type="range" min="-12" max="18" value="0"></div>
+<div class="lab-control"><label for="modelRudder">Angle des safrans <output id="modelRudderOut">0°</output></label><input id="modelRudder" type="range" min="-30" max="30" value="0"></div>
+<div class="lab-control"><label for="modelWind">Direction du vent <output id="modelWindOut">90°</output></label><input id="modelWind" type="range" min="0" max="180" value="90"></div>
+</div>
+<div class="lab-actions"><button class="action primary" id="modelReset">Réinitialiser la vue</button><span class="lab-muted" id="modelStatus" role="status">Initialisation du modèle 3D…</span></div>
+<div id="catamaran3d" style="height:520px;min-height:360px;margin-top:14px;background:var(--figure-fond);border:1px solid var(--bordure);border-radius:12px;overflow:hidden;position:relative"></div>
+<div class="lab-muted" style="margin-top:10px">Manipulation : clic gauche + déplacement pour tourner · molette pour zoomer · clic droit pour déplacer la vue. Modèle conceptuel, dimensions et proportions non contractuelles.</div>
+</div>
+<div class="lab-warning">Cette visualisation est un modèle géométrique de démonstration. Elle ne représente pas exactement un bateau réel et ne calcule pas sa stabilité, sa résistance structurelle ni ses performances. Les réglages modifient la géométrie affichée, pas une simulation hydrodynamique validée.</div>
 </section>
 <section class="lab-panel" id="panel-essais"><h2><span class="num">D</span> Carnet d'expérimentation</h2><p>Enregistre localement les paramètres de tes essais pour comparer les configurations. Les données restent dans ce navigateur.</p><div class="lab-card lab-grid"><div class="lab-control"><label for="trialName">Nom de l'essai</label><input id="trialName" type="text" maxlength="60" placeholder="Ex. voile creuse, vent 12 nd"></div><div class="lab-control"><label>Configuration actuelle</label><p class="lab-muted" id="trialSummary">Paramètres du simulateur B.</p></div></div><div class="lab-actions"><button class="action primary" id="saveTrial">Enregistrer cette configuration</button><button class="action" id="exportTrials">Exporter les essais (.json)</button><button class="action" id="clearTrials">Effacer le carnet</button></div><div class="lab-card lab-table-wrap"><table><thead><tr><th>Essai</th><th>Vent</th><th>Voile</th><th>Masse</th><th>Vitesse saisie</th><th>Action</th></tr></thead><tbody id="trialRows"><tr><td colspan="6">Aucun essai enregistré.</td></tr></tbody></table></div></section>
 <div class="lab-card lab-muted"><strong>Statut scientifique :</strong> les modules A et B utilisent des coefficients simplifiés et explicitement non validés expérimentalement. Le module C affiche des données externes avec leur heure de référence. Le module D sauvegarde uniquement dans le stockage local du navigateur.</div></main>
@@ -100,4 +116,92 @@ $('spot').addEventListener('change',loadWeather);
 $('forecastDay').addEventListener('change',loadWeather);
 const KEY='catamaranLabTrialsV1';function trials(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}function renderTrials(){const a=trials();$('trialRows').replaceChildren();if(!a.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent='Aucun essai enregistré.';tr.append(td);$('trialRows').append(tr);return;}a.forEach((t,i)=>{const tr=document.createElement('tr');[t.name,t.wind+' nd',t.sail+' m²',t.mass+' kg',t.speed+' nd'].forEach(x=>{const td=document.createElement('td');td.textContent=x;tr.append(td)});const td=document.createElement('td'),b=document.createElement('button');b.textContent='Supprimer';b.addEventListener('click',()=>{const z=trials();z.splice(i,1);localStorage.setItem(KEY,JSON.stringify(z));renderTrials()});td.append(b);tr.append(td);$('trialRows').append(tr);});}
 $('saveTrial').addEventListener('click',()=>{const a=trials();a.push({name:$('trialName').value.trim()||'Essai '+(a.length+1),wind:+$('trueWind').value,sail:+$('sailArea').value,mass:+$('boatMass').value,speed:+$('boatSpeed').value,created:new Date().toISOString()});localStorage.setItem(KEY,JSON.stringify(a));$('trialName').value='';renderTrials()});$('clearTrials').addEventListener('click',()=>{if(confirm('Effacer tous les essais enregistrés dans ce navigateur ?')){localStorage.removeItem(KEY);renderTrials()}});$('exportTrials').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(trials(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='essais-catamaran.json';a.click();URL.revokeObjectURL(url)});renderTrials();loadWeather();
-</script></body></html>
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+const host=document.getElementById('catamaran3d');
+const status=document.getElementById('modelStatus');
+if(host){
+ try{
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0xf4f6f8);
+  const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(8,6,9);
+  const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);
+  renderer.domElement.style.width='100%';renderer.domElement.style.height='100%';renderer.domElement.style.display='block';
+  const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,1.3,0);orbit.minDistance=5;orbit.maxDistance=22;
+  scene.add(new THREE.HemisphereLight(0xffffff,0x8293a5,2));
+  const sun=new THREE.DirectionalLight(0xffffff,2.2);sun.position.set(5,10,7);sun.castShadow=true;scene.add(sun);
+  const floor=new THREE.GridHelper(16,32,0xc0c9d2,0xdce2e8);floor.position.y=-.12;scene.add(floor);
+  const boat=new THREE.Group();scene.add(boat);
+  const hullMat=new THREE.MeshStandardMaterial({color:0x1c2430,roughness:.48,metalness:.12});
+  const deckMat=new THREE.MeshStandardMaterial({color:0xd9e0e7,roughness:.8});
+  const foilMat=new THREE.MeshStandardMaterial({color:0xc79a00,metalness:.45,roughness:.3});
+  const sailMat=new THREE.MeshStandardMaterial({color:0xffcc00,side:THREE.DoubleSide,roughness:.75});
+  const darkMat=new THREE.MeshStandardMaterial({color:0x35475d,roughness:.6});
+  function makeHull(z){
+   const verts=[],indices=[],rings=48,around=20;
+   for(let i=0;i<=rings;i++){
+    const t=i/rings,x=-3.2+6.4*t;
+    const taper=Math.pow(Math.sin(Math.PI*t),.55);
+    const width=.24+.34*taper,height=.19+.13*taper;
+    for(let j=0;j<around;j++){
+     const a=j/around*Math.PI*2;
+     verts.push(x,.2+Math.sin(a)*height,z+Math.cos(a)*width);
+    }
+   }
+   for(let i=0;i<rings;i++)for(let j=0;j<around;j++){
+    const a=i*around+j,b=i*around+(j+1)%around,c=(i+1)*around+(j+1)%around,d=(i+1)*around+j;
+    indices.push(a,b,d,b,c,d);
+   }
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));g.setIndex(indices);g.computeVertexNormals();
+   const mesh=new THREE.Mesh(g,hullMat);mesh.castShadow=true;mesh.receiveShadow=true;boat.add(mesh);
+   const deck=new THREE.Mesh(new THREE.BoxGeometry(5.5,.1,.56),deckMat);deck.position.set(0,.42,z);deck.castShadow=true;boat.add(deck);
+  }
+  makeHull(-1.65);makeHull(1.65);
+  const beam1=new THREE.Mesh(new THREE.BoxGeometry(.24,.18,3.8),darkMat);beam1.position.set(-1.35,.55,0);boat.add(beam1);
+  const beam2=beam1.clone();beam2.position.x=1.35;boat.add(beam2);
+  const tramp=new THREE.Mesh(new THREE.BoxGeometry(2.5,.045,2.75),new THREE.MeshStandardMaterial({color:0x8795a5,roughness:1,transparent:true,opacity:.8}));tramp.position.set(0,.55,0);boat.add(tramp);
+  const mast=new THREE.Mesh(new THREE.CylinderGeometry(.045,.065,6.1,12),darkMat);mast.position.set(-.35,3.55,0);boat.add(mast);
+  const sailGroup=new THREE.Group();boat.add(sailGroup);
+  const sailGeometry=new THREE.BufferGeometry();
+  function updateSail(area){
+   const scale=.72+area/45*.65;
+   const points=[new THREE.Vector3(-.32,6.55,0),new THREE.Vector3(-.32,.68,0),new THREE.Vector3(2.45*scale,.72,0)];
+   sailGeometry.setAttribute('position',new THREE.Float32BufferAttribute(points.flatMap(p=>[p.x,p.y,p.z]),3));sailGeometry.setIndex([0,1,2]);sailGeometry.computeVertexNormals();
+   if(!sailGroup.children.length){const sail=new THREE.Mesh(sailGeometry,sailMat);sail.castShadow=true;sailGroup.add(sail);const boom=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,2.8,8),darkMat);boom.rotation.z=Math.PI/2;boom.position.set(.9,.72,0);sailGroup.add(boom);}
+   else sailGroup.children[1].scale.x=scale;
+  }
+  const foilGroups=[];
+  for(const z of [-1.65,1.65]){
+   const g=new THREE.Group();g.position.set(.45,.25,z);boat.add(g);
+   const strut=new THREE.Mesh(new THREE.BoxGeometry(.075,1.05,.075),foilMat);strut.position.y=-.38;g.add(strut);
+   const wing=new THREE.Mesh(new THREE.BoxGeometry(.95,.075,.22),foilMat);wing.position.set(.05,-.88,0);g.add(wing);foilGroups.push(g);
+  }
+  const rudderGroups=[];
+  for(const z of [-1.65,1.65]){
+   const g=new THREE.Group();g.position.set(2.8,.22,z);boat.add(g);
+   const blade=new THREE.Mesh(new THREE.BoxGeometry(.08,.9,.16),darkMat);blade.position.y=-.42;g.add(blade);rudderGroups.push(g);
+  }
+  const arrows=[];
+  function arrow(color,origin,dir,length){const a=new THREE.ArrowHelper(dir.clone().normalize(),origin,length,color,.22,.14);boat.add(a);arrows.push(a);return a;}
+  const windArrow=arrow(0x3d5a80,new THREE.Vector3(-2,1.4,2.8),new THREE.Vector3(0,0,-1),2.1);
+  const liftArrow=arrow(0x059669,new THREE.Vector3(.5,1.0,0),new THREE.Vector3(0,1,0),1.6);
+  const dragArrow=arrow(0xc79a00,new THREE.Vector3(1.1,.95,0),new THREE.Vector3(1,0,0),1.2);
+  function setControls(){
+   const sail=+document.getElementById('modelSail').value,foil=+document.getElementById('modelFoil').value,rudder=+document.getElementById('modelRudder').value,wind=+document.getElementById('modelWind').value;
+   document.getElementById('modelSailOut').textContent=sail+' m²';document.getElementById('modelFoilOut').textContent=foil+'°';document.getElementById('modelRudderOut').textContent=rudder+'°';document.getElementById('modelWindOut').textContent=wind+'°';
+   updateSail(sail);foilGroups.forEach(g=>g.rotation.z=foil*Math.PI/180);rudderGroups.forEach(g=>g.rotation.y=rudder*Math.PI/180);
+   const rad=wind*Math.PI/180;windArrow.setDirection(new THREE.Vector3(-Math.cos(rad),0,-Math.sin(rad)).normalize());
+   liftArrow.setLength(1.1+sail/45*.8);dragArrow.setLength(.7+sail/45*.7);
+  }
+  ['modelSail','modelFoil','modelRudder','modelWind'].forEach(id=>document.getElementById(id).addEventListener('input',setControls));
+  setControls();
+  function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  const observer=new ResizeObserver(resize);observer.observe(host);resize();
+  document.getElementById('modelReset').addEventListener('click',()=>{camera.position.set(8,6,9);orbit.target.set(0,1.3,0);orbit.update();});
+  function animate(){requestAnimationFrame(animate);orbit.update();renderer.render(scene,camera);}animate();
+  status.textContent='Modèle 3D chargé. Déplace la souris ou le doigt sur le bateau pour le manipuler.';
+ }catch(error){status.textContent='Impossible de créer le modèle 3D : '+error.message;}
+}
+</script>
+</body></html>
