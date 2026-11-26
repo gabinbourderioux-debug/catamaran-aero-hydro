@@ -1,28 +1,28 @@
   :root{
-    --bleu:#1d4ed8; --bleu-clair:#dbeafe; --marine:#0b1e33; --cyan:#0891b2;
-    --corail:#e11d48; --vert:#059669; --gris:#475569; --fond:#f8fafc;
+    --bleu:#C79A00; --bleu-clair:#FFF7D6; --marine:#1C2430; --cyan:#FFCC00;
+    --corail:#e11d48; --vert:#059669; --gris:#475569; --fond:#F4F4F1;
     --ombre:0 6px 24px rgba(11,30,51,.08);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#0f172a;background:var(--fond);line-height:1.65}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#1C2430;background:var(--fond);line-height:1.65}
   header.hero{
-    background:linear-gradient(160deg,#0b1e33 0%,#123a5c 55%,#0891b2 130%);
+    background:linear-gradient(160deg,#1C2430 0%,#2B3A50 55%,#3D5A80 130%);
     color:#fff;padding:64px 20px 48px;text-align:center;
   }
   header.hero h1{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em}
-  header.hero p{max-width:720px;margin:14px auto 0;font-size:1.1rem;color:#c7e3f5}
+  header.hero p{max-width:720px;margin:14px auto 0;font-size:1.1rem;color:#d3dae3}
   .badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
     border-radius:999px;padding:4px 14px;font-size:.85rem;margin-bottom:18px;letter-spacing:.06em;text-transform:uppercase}
   nav.sommaire{background:#fff;border-bottom:1px solid #e2e8f0;
     box-shadow:0 2px 10px rgba(0,0,0,.05)}
   nav.sommaire a{text-decoration:none;color:var(--marine);font-weight:600;font-size:.9rem;
     padding:6px 12px;border-radius:8px;transition:.15s}
-  nav.sommaire a:hover{background:var(--bleu-clair);color:var(--bleu)}
+  nav.sommaire a:hover{background:var(--bleu-clair);color:#1C2430}
   main{max-width:980px;margin:0 auto;padding:40px 20px 80px}
   section.carteforce{background:#fff;border-radius:16px;box-shadow:var(--ombre);padding:34px 30px;margin-bottom:44px}
   h2{font-size:1.6rem;color:var(--marine);margin-bottom:6px;display:flex;align-items:center;gap:10px}
-  h2 .num{background:var(--bleu);color:#fff;width:36px;height:36px;border-radius:10px;display:inline-flex;
+  h2 .num{background:#FFCC00;color:#1C2430;width:36px;height:36px;border-radius:10px;display:inline-flex;
     align-items:center;justify-content:center;font-size:1.05rem;flex:0 0 auto}
   h3{color:var(--bleu);margin:26px 0 10px;font-size:1.15rem}
   p{margin:10px 0;color:#1e293b}
@@ -32,9 +32,9 @@
   .lexique{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
   .carte{background:var(--fond);border-left:4px solid var(--cyan);border-radius:10px;padding:14px 16px}
   .carte b{color:var(--marine)}
-  .formule{background:#0b1e33;color:#a5f3fc;text-align:center;border-radius:10px;padding:14px;
+  .formule{background:#1C2430;color:#FFCC00;text-align:center;border-radius:10px;padding:14px;
     font-family:'Cambria Math',Georgia,serif;font-size:1.15rem;margin:16px 0;letter-spacing:.03em}
-  .formule small{display:block;color:#7dd3fc;font-family:inherit;font-size:.85rem;margin-top:6px}
+  .formule small{display:block;color:#E8D48B;font-family:inherit;font-size:.85rem;margin-top:6px}
   .encadre{border-left:5px solid var(--corail);background:#fff1f2;border-radius:10px;padding:14px 18px;margin:18px 0}
   .encadre.vert{border-color:var(--vert);background:#ecfdf5}
   .encadre.bleu{border-color:var(--bleu);background:var(--bleu-clair)}
@@ -55,15 +55,15 @@
   .hero--page h1{font-size:clamp(1.4rem,3vw,2.1rem)}
   .hero--page p{font-size:1rem}
   .fil{font-size:.85rem;color:#9fb8cf;margin-bottom:14px}
-  .fil a{color:#93c5fd;text-decoration:none}
+  .fil a{color:#E8D48B;text-decoration:none}
   .fil a:hover{text-decoration:underline}
   .cartes-liens{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:30px 0 10px}
   .carte-lien{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:22px;box-shadow:var(--ombre);
-    text-decoration:none;color:inherit;display:block;transition:.18s;border-top:4px solid var(--bleu)}
-  .carte-lien:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(11,30,51,.14);border-top-color:var(--cyan)}
+    text-decoration:none;color:inherit;display:block;transition:.18s;border-top:4px solid #FFCC00}
+  .carte-lien:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(11,30,51,.14);border-top-color:#E6B800}
   .carte-lien h3{margin:0 0 8px;color:var(--marine);font-size:1.08rem}
   .carte-lien p{margin:0;font-size:.92rem;color:var(--gris)}
   .carte-lien .lire{display:inline-block;margin-top:12px;font-weight:700;color:var(--bleu);font-size:.9rem}
   .retour{display:inline-block;margin-bottom:18px;font-weight:700;color:var(--bleu);text-decoration:none}
   .retour:hover{text-decoration:underline}
-  .intro-courte{max-width:760px;margin:0 auto;text-align:center;font-size:1.05rem;color:#dbeafe}
+  .intro-courte{max-width:760px;margin:0 auto;text-align:center;font-size:1.05rem;color:#d3dae3}
