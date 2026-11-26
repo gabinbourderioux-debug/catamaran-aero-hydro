@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Démonstration — nouvelle palette (marine, blanc voile, corail)</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --marine:#0B2545; --marine-2:#12345F; --voile:#F5F1E8; --corail:#F26B4E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--voile);color:var(--marine);line-height:1.65}
+
+  header.demo-hero{background:linear-gradient(150deg,var(--marine) 0%,var(--marine-2) 70%,#1a4a7a 115%);color:#fff;text-align:center;padding:56px 20px 44px}
+  header.demo-hero .badge{display:inline-block;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:4px 14px;font-size:.85rem;margin-bottom:16px;letter-spacing:.06em;text-transform:uppercase}
+  header.demo-hero h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;letter-spacing:-.02em}
+  header.demo-hero p{max-width:640px;margin:12px auto 0;color:#fdece6;font-size:1.05rem}
+
+  .palette{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:-26px auto 0;padding:0 20px;max-width:860px}
+  .swatch{background:#fff;border-radius:14px;box-shadow:0 8px 22px rgba(11,37,69,.18);padding:12px 18px;display:flex;align-items:center;gap:12px}
+  .swatch .touche{width:36px;height:36px;border-radius:10px}
+  .swatch b{display:block;font-size:.95rem}
+  .swatch code{font-size:.8rem;color:#5b708a}
+
+  main{max-width:900px;margin:0 auto;padding:46px 20px 70px}
+  section.demo{background:#fff;border-radius:18px;box-shadow:0 6px 24px rgba(11,37,69,.10);padding:32px 28px;margin-bottom:34px}
+  h2{font-size:1.5rem;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  h2 .num{background:var(--corail);color:#fff;width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;flex:0 0 auto}
+  p+p{margin-top:10px}
+  a.exemple{color:var(--corail);font-weight:700;text-decoration:none;border-bottom:2px solid rgba(242,107,78,.35)}
+  a.exemple:hover{border-bottom-color:var(--corail)}
+  .encadre{border-left:5px solid var(--corail);background:var(--voile);border-radius:10px;padding:14px 18px;margin:18px 0}
+  .btn{display:inline-block;background:var(--corail);color:#fff;border:none;border-radius:12px;padding:11px 22px;font-weight:800;font-size:.95rem;text-decoration:none;box-shadow:0 4px 14px rgba(242,107,78,.35)}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.secondaire{background:var(--marine);box-shadow:0 4px 14px rgba(11,37,69,.3)}
+  .boutons{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+
+  .cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+  .carte-lien{background:#fff;border:1px solid #e8e0d0;border-radius:16px;padding:20px;border-top:4px solid var(--corail);box-shadow:0 6px 18px rgba(11,37,69,.08);text-decoration:none;color:inherit;display:block;transition:.18s}
+  .carte-lien:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(11,37,69,.16)}
+  .carte-lien h3{color:var(--marine);font-size:1.05rem;margin-bottom:6px}
+  .carte-lien p{font-size:.9rem;color:#6b5e46}
+  .carte-lien .lire{display:inline-block;margin-top:10px;font-weight:800;color:var(--corail)}
+
+  .figure{background:var(--voile);border:1px solid #e8e0d0;border-radius:14px;padding:16px;margin-top:18px}
+  .figure figcaption{font-size:.85rem;color:#6b5e46;text-align:center;margin-top:8px;font-style:italic}
+  .figure svg{display:block;width:100%;max-width:780px;height:auto;margin:0 auto}
+
+  footer{background:var(--marine);color:#b9c6d8;text-align:center;padding:30px 20px}
+  footer .auteur{font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<header class="demo-hero">
+  <div class="badge">Démonstration de palette — non indexée</div>
+  <h1>Aérodynamique &amp; hydrodynamique du catamaran</h1>
+  <p>Un conflit permanent entre deux fluides : l'air qui pousse, l'eau qui freine — et le catamaran qui dépasse tout le monde.</p>
+</header>
+
+<div class="palette">
+  <div class="swatch"><span class="touche" style="background:#0B2545"></span><div><b>Bleu marine</b><code>#0B2545 — en-tête, titres, pied de page</code></div></div>
+  <div class="swatch"><span class="touche" style="background:#F5F1E8;border:1px solid #e0d7c4"></span><div><b>Blanc voile</b><code>#F5F1E8 — fonds des sections</code></div></div>
+  <div class="swatch"><span class="touche" style="background:#F26B4E"></span><div><b>Corail</b><code>#F26B4E — boutons, liens, accents</code></div></div>
+</div>
+
+<main>
+
+<section class="demo">
+  <h2><span class="num">1</span> Exemple de titre de section</h2>
+  <p>Voici à quoi ressembleraient les pages : les <b>titres et textes en bleu marine</b> sur fond
+  <b>blanc voile</b>, et le <b>corail</b> pour ce qui doit sortir : <a class="exemple" href="#">un lien important</a>,
+  les boutons et les petits repères comme les numéros de section.</p>
+  <div class="encadre">
+    <b>Encadré clé :</b> les informations importantes répondraient aussi au corail,
+    avec le texte marine lisible sur fond blanc voile plus doux que le blanc pur.
+  </div>
+  <div class="boutons">
+    <a class="btn" href="#">Voir la figure</a>
+    <a class="btn secondaire" href="#">Bouton secondaire (marine)</a>
+  </div>
+</section>
+
+<section class="demo">
+  <h2><span class="num">2</span> Échantillon de figure</h2>
+  <p>Les schémas changeraient de couleurs : traits et textes en marine, flèches de vent en corail.</p>
+  <div class="figure">
+    <svg viewBox="0 0 780 300" role="img" aria-label="Exemple de schéma aux couleurs de la palette">
+      <defs>
+        <marker id="fleDemo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#F26B4E"/>
+        </marker>
+      </defs>
+      <line x1="40" y1="230" x2="740" y2="230" stroke="#0B2545" stroke-width="2" stroke-dasharray="9 7" opacity=".5"/>
+      <text x="736" y="216" font-size="13" fill="#0B2545" opacity=".65" text-anchor="end">route</text>
+
+      <circle cx="330" cy="230" r="9" fill="#fff" stroke="#0B2545" stroke-width="4"/>
+      <text x="330" y="262" font-size="14" fill="#0B2545" font-weight="bold" text-anchor="middle">le bateau</text>
+
+      <line x1="530" y1="230" x2="344" y2="230" stroke="#F26B4E" stroke-width="5" marker-end="url(#fleDemo)"/>
+      <text x="437" y="205" font-size="14" fill="#F26B4E" font-weight="bold" text-anchor="middle">vent vitesse (droit devant)</text>
+
+      <line x1="268" y1="40" x2="330" y2="222" stroke="#0B2545" stroke-width="5" marker-end="url(#fleDemo)"/>
+      <text x="250" y="30" font-size="14" fill="#0B2545" font-weight="bold" text-anchor="end">vent réel</text>
+
+      <line x1="480" y1="120" x2="352" y2="209" stroke="#F26B4E" stroke-width="4" stroke-dasharray="7 6" marker-end="url(#fleDemo)"/>
+      <text x="492" y="114" font-size="14" fill="#F26B4E" font-weight="bold">vent apparent</text>
+
+      <path d="M 560,230 C 600,196 660,200 720,216 C 662,206 602,210 560,230 Z" fill="#12345F" opacity=".18"/>
+      <path d="M 560,230 C 600,196 660,200 720,216" fill="none" stroke="#0B2545" stroke-width="4" stroke-linecap="round"/>
+      <text x="640" y="184" font-size="14" fill="#0B2545" text-anchor="middle" font-weight="bold">la voile, une toile courbée</text>
+    </svg>
+    <figcaption>Exemple de figure aux couleurs de la palette : marine pour l'objet, corail pour le vent.</figcaption>
+  </div>
+</section>
+
+<section class="demo">
+  <h2><span class="num">3</span> Cartes-liens</h2>
+  <div class="cartes">
+    <a class="carte-lien" href="#">
+      <h3>La voile, une aile dressée</h3>
+      <p>Dépression sur le dos bombé, angle d'attaque, finesse portance / traînée.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="#">
+      <h3>Météo, vent &amp; marées</h3>
+      <p>Le vent en direct du spot, la mer et le coefficient du jour.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div>Aérodynamique &amp; hydrodynamique du catamaran — démonstration de palette.</div>
+</footer>
+
+</body>
+</html>
