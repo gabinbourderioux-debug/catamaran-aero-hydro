@@ -189,11 +189,12 @@
   <h3>Le môle : le vent réel s'écroule</h3>
   <p>Le vent ne contourne pas poliment un obstacle long : sous le vent du môle (ou de toute
   pointe), le flux est réduit, dévié et tourbillonnant. Ici le vent réel chute de <b>15 à 7 nd</b>.
-  Et pendant que la voile faseye, le bateau perd sa vitesse : son vent vitesse tombe aussi, de
-  <b>10 à 5 nd</b>. Les deux flèches fondent ensemble — le triangle complet se ratatine.</p>
+  Pour bien isoler l'effet du môle, la construction garde le vent vitesse constant à 10 nd : le
+  croisement des reportés se rapproche du bateau et le vent apparent s'effondre de <b>≈ 20 à
+  ≈ 14 nd</b>.</p>
 
   <div class="figure">
-    <svg viewBox="0 0 860 500" role="img" aria-label="Construction du vent apparent dans l'ombre du môle : le vent réel fond de 15 à 7 nœuds, le vent vitesse de 10 à 5 nœuds, le vent apparent s'effondre d'environ 20 à environ 10 nœuds.">
+    <svg viewBox="0 0 860 500" role="img" aria-label="Construction du vent apparent dans l'ombre du môle : le vent réel fond de 15 à 7 nœuds, le vent vitesse reste à 10 nœuds, le vent apparent s'effondre d'environ 20 à environ 14 nœuds.">
       <defs>
         <marker id="fl10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
@@ -214,11 +215,10 @@
       <line x1="6" y1="190" x2="24" y2="190" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#fl10)"/>
       <line x1="48" y1="160" x2="100" y2="164" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 4" opacity=".8" marker-end="url(#fl10)"/>
 
-      <line x1="250" y1="450" x2="830" y2="450" stroke="none"/>
-      <circle cx="630" cy="450" r="4" fill="none" stroke="#94a3b8" stroke-width="2"/>
-      <text x="646" y="444" font-size="11.5" fill="#64748b">là où il allait</text>
+      <circle cx="630" cy="450" r="4" fill="none" stroke="#1C2430" stroke-width="2"/>
+      <text x="646" y="444" font-size="11.5" fill="#475569">là où va le bateau</text>
 
-      <line x1="630" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="3" opacity=".38" marker-end="url(#fl10)"/>
+
       <line x1="520" y1="165" x2="430" y2="450" stroke="#1d4ed8" stroke-width="3" opacity=".38" marker-end="url(#fl10)"/>
       <circle cx="520" cy="165" r="4" fill="#1d4ed8" opacity=".5"/>
       <text x="506" y="150" font-size="11.5" fill="#64748b" text-anchor="end">avant le môle : VR = 15 nd</text>
@@ -229,34 +229,34 @@
       <circle cx="720" cy="165" r="5" fill="#7c3aed" opacity=".5"/>
       <text x="655" y="250" font-size="11.5" fill="#64748b" text-anchor="start">VA avant ≈ 20 nd</text>
 
-      <line x1="530" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="5.5" marker-end="url(#fl10)"/>
-      <text x="500" y="476" font-size="11.5" fill="#059669" font-weight="bold" text-anchor="middle">le bateau ralentit : vent vitesse 5 nd</text>
+      <line x1="630" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="5.5" marker-end="url(#fl10)"/>
+      <text x="530" y="476" font-size="12" fill="#059669" font-weight="bold" text-anchor="middle">Vent vitesse = 10 nd (inchangé)</text>
 
       <line x1="472" y1="317" x2="430" y2="450" stroke="#1d4ed8" stroke-width="5.5" marker-end="url(#fl10)"/>
       <circle cx="472" cy="317" r="5" fill="#1d4ed8"/>
       <text x="452" y="300" font-size="12.5" fill="#1d4ed8" font-weight="bold" text-anchor="end">VR = 7 nd</text>
 
-      <line x1="572" y1="317" x2="472" y2="317" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl10)"/>
-      <line x1="572" y1="317" x2="530" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl10)"/>
-      <circle cx="572" cy="317" r="6" fill="#7c3aed"/>
-      <text x="572" y="296" font-size="11.5" fill="#7c3aed" font-weight="bold" text-anchor="middle">croisement des reportés</text>
+      <line x1="672" y1="317" x2="472" y2="317" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl10)"/>
+      <line x1="672" y1="317" x2="630" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl10)"/>
+      <circle cx="672" cy="317" r="6" fill="#7c3aed"/>
+      <text x="680" y="296" font-size="11.5" fill="#7c3aed" font-weight="bold" text-anchor="middle">croisement des reportés</text>
 
-      <line x1="572" y1="317" x2="430" y2="450" stroke="#7c3aed" stroke-width="5.5" marker-end="url(#fl10)"/>
-      <text x="470" y="380" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="end">VA ≈ 10 nd</text>
+      <line x1="672" y1="317" x2="430" y2="450" stroke="#7c3aed" stroke-width="5.5" marker-end="url(#fl10)"/>
+      <text x="480" y="432" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="start">VA ≈ 14 nd</text>
     </svg>
-    <figcaption>Fig. 4 — Dans l'ombre du môle, le vent réel fond (15 → 7 nd, bleu) et le bateau
-    ralentit (vent vitesse 10 → 5 nd, vert) : les deux reportés viennent se croiser bien plus
-    près du bateau, et le vent apparent s'effondre (≈ 20 → ≈ 10 nd). Traits clairs : avant le
-    môle ; couleurs pleines + pointillés : dans l'abri.</figcaption>
+    <figcaption>Fig. 4 — Dans l'ombre du môle, le vent réel fond (15 → 7 nd, bleu) ; le vent
+    vitesse reste à 10 nd — on ne compte pas le ralentissement du bateau. Les reportés viennent
+    se croiser plus près du bateau : le vent apparent s'effondre de ≈ 20 à ≈ 14 nd. Traits
+    clairs : avant le môle ; couleurs pleines + pointillés : dans l'abri.</figcaption>
   </div>
 
-  <p><b>✔ Dans notre sens :</b> l'abri sert à se calmer — les voiles reposent, le vent apparent
-  s'effondre avec la vitesse. Et au <b>bout du môle</b>, le flux se referme en rafale : la
-  construction repart avec un vent réel regonflé. C'est l'accélération que tout le monde sent à
-  la sortée d'une pointe.</p>
-  <p><b>✖ Contre nous :</b> entrer par mégarde dans l'ombre = vent réel et vitesse s'effondrent
-  en même temps : faseyage, on stoppe net, on dérive avec le courant. Il faut viser la sortie
-  (le bout du môle) en remettant toute la toile dès qu'on sent la rafale se refermer.</p>
+  <p><b>✔ Dans notre sens :</b> l'abri sert à se calmer : le vent réel fond, le vent apparent
+  fond avec lui. Et au <b>bout du môle</b>, le flux se referme en rafale : la construction
+  repart avec un vent réel regonflé. C'est l'accélération que tout le monde sent à la sortée
+  d'une pointe.</p>
+  <p><b>✖ Contre nous :</b> entrer par mégarde dans l'ombre = le vent réel fond : faseyage, on
+  stoppe net, on dérive avec le courant. Il faut viser la sortie (le bout du môle) en remettant
+  toute la toile dès qu'on sent la rafale se refermer.</p>
 
   <h3>La risée : le vent réel grossit d'un coup</h3>
   <p>Une risée, c'est une couche d'air plus fort qui descend du ciel et avance sur l'eau — elle
