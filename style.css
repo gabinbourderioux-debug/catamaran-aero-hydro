@@ -9,7 +9,8 @@
     --bleu:#FFCC00; --bleu-clair:#2A3446;
     --gris:#9fb0c3; --fond:#131A22; --txt:#d7dee8; --carte:#1C2430;
     --bordure:#2C3A4E; --figure-fond:#18212C; --zebre:#222E3D;
-    --ok-fond:#12332A; --err-fond:#3A1A22; --titre:#FFF7D6;
+    --ok-fond:#123F30; --err-fond:#451725; --titre:#FFF7D6;
+    --vert:#34D399; --corail:#FB7185;
     --ombre:0 6px 24px rgba(0,0,0,.45);
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -44,8 +45,8 @@
   .formule{background:#1C2430;color:#FFCC00;text-align:center;border-radius:10px;padding:14px;
     font-family:'Cambria Math',Georgia,serif;font-size:1.15rem;margin:16px 0;letter-spacing:.03em}
   .formule small{display:block;color:#E8D48B;font-family:inherit;font-size:.85rem;margin-top:6px}
-  .encadre{border-left:5px solid var(--corail);background:#fff1f2;border-radius:10px;padding:14px 18px;margin:18px 0}
-  .encadre.vert{border-color:var(--vert);background:#ecfdf5}
+  .encadre{border-left:5px solid var(--corail);background:var(--err-fond);border-radius:10px;padding:14px 18px;margin:18px 0}
+  .encadre.vert{border-color:var(--vert);background:var(--ok-fond)}
   .encadre.bleu{border-color:var(--bleu);background:var(--bleu-clair)}
   table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.95rem}
   th{background:var(--marine);color:#fff;padding:10px;text-align:left}
