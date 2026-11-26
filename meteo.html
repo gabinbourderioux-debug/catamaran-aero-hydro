@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Météo, vent &amp; marées — avant de naviguer en catamaran</title>
 <meta name="description" content="Le vent et la mer au bord de l'eau : vitesse et direction du vent en nœuds, rafales, houle, température de la mer et coefficient de marée du jour, plus les liens vers les sources officielles.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:title" content="Météo, vent &amp; marées — avant de naviguer en catamaran">
+<meta property="og:description" content="Le vent et la mer au bord de l'eau : vitesse et direction du vent en nœuds, rafales, houle, température de la mer et coefficient de marée du jour, plus les liens vers les sources officielles.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/meteo.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 <script src="darkmode.js"></script>
 <style>
@@ -74,7 +81,7 @@
 
   <div class="grille-meteo" id="vent-actuel"></div>
 
-  <h3>Les prochaines heures</h3>
+  <h3>Les 24 prochaines heures : quand partir sur l’eau ?</h3>
   <div id="prevision"></div>
 </section>
 
@@ -370,6 +377,7 @@
   <div class="auteur">Gabin Bourderioux</div>
   <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
   <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="test.html" style="color:#E8D48B">Zone test</a>
+  <a href="confidentialite.html" style="color:#E8D48B">Confidentialité</a>
   <button id="bascule-theme" class="btn-theme" type="button"></button>
 </footer>
 
@@ -408,6 +416,67 @@ function carte(lab, val, unite, sous){
     (unite ? '<span class="unite"> ' + unite + '</span>' : '') + (sous || '') + '</div>';
 }
 
+function meilleureFenetre(vit, raf){
+  let best = null, cur = null;
+  for(let i = 0; i < vit.length; i++){
+    const v = vit[i], r = (raf[i] == null ? v : raf[i]);
+    const ok = v >= 5 && v <= 20 && r <= 25;
+    if(ok){ if(!cur) cur = [i, i]; else cur[1] = i; if(!best || cur[1]-cur[0] > best[1]-best[0]) best = [cur[0], cur[1]]; }
+    else cur = null;
+  }
+  return best;
+}
+
+function grapheHeures(h){
+  const N = Math.min(h.time.length, 25);
+  const vit = h.wind_speed_10m.slice(0, N).map(k => k / 1.852);
+  const raf = (h.wind_gusts_10m || []).slice(0, N).map(k => k / 1.852);
+  const fen = meilleureFenetre(vit, raf);
+  const x0 = 46, x1 = 852, y0 = 24, y1 = 178;
+  const maxnd = Math.max(30, Math.ceil(Math.max.apply(null, vit)));
+  const bw = (x1 - x0) / N;
+  let g = '';
+  for(let i = 0; i < N; i++){
+    const v = vit[i], r = (raf[i] == null ? v : raf[i]);
+    const hh = String(h.time[i]).slice(11, 13);
+    const col = v < 5 ? '#94a3b8' : v <= 20 ? '#059669' : v <= 27 ? '#d97706' : '#e11d48';
+    const hbar = (y1 - y0) * v / maxnd;
+    const dansFen = fen && i >= fen[0] && i <= fen[1];
+    g += '<rect x="' + (x0 + i*bw + bw*0.14).toFixed(1) + '" y="' + (y1 - hbar).toFixed(1) +
+      '" width="' + (bw*0.72).toFixed(1) + '" height="' + hbar.toFixed(1) + '" rx="2" fill="' + col +
+      '" opacity="' + (dansFen ? '1' : '.35') + '"><title>' + hh + ' h \u2014 ' + Math.round(v) + ' nd, rafales ' + Math.round(r) + ' nd</title></rect>';
+    if(i % 3 === 0){
+      g += '<text x="' + (x0 + i*bw + bw/2).toFixed(1) + '" y="196" font-size="11" fill="#475569" text-anchor="middle">' + hh + ' h</text>';
+      g += '<text x="' + (x0 + i*bw + bw/2).toFixed(1) + '" y="' + (y1 - hbar - 5).toFixed(1) + '" font-size="10" font-weight="bold" fill="#334155" text-anchor="middle">' + Math.round(v) + '</text>';
+    }
+  }
+  if(fen){
+    g += '<rect x="' + (x0 + fen[0]*bw).toFixed(1) + '" y="' + (y1 + 4) + '" width="' + ((fen[1]-fen[0]+1)*bw).toFixed(1) + '" height="6" fill="#FFCC00"/>';
+  }
+  const ys20 = y1 - (y1 - y0) * 20 / maxnd;
+  const seuil = '<line x1="' + x0 + '" y1="' + ys20.toFixed(1) + '" x2="' + x1 + '" y2="' + ys20.toFixed(1) +
+    '" stroke="#e11d48" stroke-width="1" stroke-dasharray="4 5" opacity=".6"/>' +
+    '<text x="' + x1 + '" y="' + (ys20 - 5).toFixed(1) + '" font-size="10.5" fill="#e11d48" text-anchor="end">20 nd : limite de confort</text>';
+  const axe = '<line x1="' + x0 + '" y1="' + y1 + '" x2="' + x1 + '" y2="' + y1 + '" stroke="#1C2430" stroke-width="1.5"/>';
+  const titre = '<text x="30" y="14" font-size="14" font-weight="bold" fill="#1C2430">Les 24 prochaines heures : quand partir sur l’eau ?</text>';
+  let message;
+  if(fen){
+    const dv = vit.slice(fen[0], fen[1] + 1).map(Math.round);
+    message = 'Meilleure fen\u00eatre pour sortir : de ' + String(h.time[fen[0]]).slice(11, 13) + ' h \u00e0 ' +
+      String(h.time[fen[1]]).slice(11, 13) + ' h \u2014 vent de ' + Math.min.apply(null, dv) + ' \u00e0 ' +
+      Math.max.apply(null, dv) + ' nd. Les autres cr\u00e9neaux sont estomp\u00e9s.';
+  } else {
+    message = 'Pas de fen\u00eatre id\u00e9ale dans les 24 h : le vent est trop faible (gris), trop fort (orange/rouge) ou les rafales trop violentes \u2014 regarde la table d\u00e9taill\u00e9e ci-dessous.';
+  }
+  return '<div class="figure"><svg viewBox="0 0 860 214" role="img" aria-label="Graphique du vent heure par heure pour les 24 prochaines heures, avec la meilleure fen\u00eatre de navigation surlign\u00e9e en jaune.">' +
+    titre + g + seuil + axe + '</svg>' +
+    '<div class="legende"><span><span class="pastille" style="background:#059669"></span>vent id\u00e9al (5-20 nd)</span>' +
+    '<span><span class="pastille" style="background:#d97706"></span>vent frais (21-27 nd)</span>' +
+    '<span><span class="pastille" style="background:#e11d48"></span>trop fort (&gt; 27 nd)</span>' +
+    '<span><span class="pastille" style="background:#94a3b8"></span>trop faible (&lt; 5 nd)</span></div>' +
+    '<figcaption>' + message + '</figcaption></div>';
+}
+
 async function charger(){
   const lieu = LIEUX[document.getElementById('choix-lieu').value];
   document.getElementById('vent-actuel').innerHTML =
@@ -416,7 +485,7 @@ async function charger(){
 
   const urlMeteo = 'https://api.open-meteo.com/v1/forecast?latitude=' + lieu.lat +
     '&longitude=' + lieu.lon + '&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code' +
-    '&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&forecast_hours=7&timezone=auto';
+    '&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&forecast_hours=25&timezone=auto';
   const urlMer = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + lieu.lat +
     '&longitude=' + lieu.lon + '&current=wave_height,wave_direction,sea_surface_temperature&forecast_hours=1&timezone=auto';
 
@@ -445,7 +514,9 @@ async function charger(){
     document.getElementById('vent-actuel').innerHTML += '<div class="probleme">Pluie annoncée : pense à remiser la toile complète et à t’équiper avant de sortir !</div>';
   }
 
-  let rows = '';
+  document.getElementById('prevision').innerHTML = grapheHeures(h);
+
+  let rows = '<tr><th>Heure</th><th>Vent</th><th></th><th>Origine</th><th>Rafales</th></tr>';
   for(let i = 1; i < Math.min(h.time.length, 7); i++){
     rows += '<tr><td>' + String(h.time[i]).slice(11, 16) + '</td>' +
       '<td><b>' + nd(h.wind_speed_10m[i]) + ' nd</b></td>' +
@@ -453,8 +524,7 @@ async function charger(){
       '<td>venant de ' + cardinal(h.wind_direction_10m[i]) + '</td>' +
       '<td>' + nd(h.wind_gusts_10m[i]) + ' nd</td></tr>';
   }
-  document.getElementById('prevision').innerHTML =
-    '<table><tr><th>Heure</th><th>Vent</th><th></th><th>Origine</th><th>Rafales</th></tr>' + rows + '</table>';
+  document.getElementById('prevision').innerHTML += '<table>' + rows + '</table>';
 
   const mer = document.getElementById('etat-mer');
   if(rMer.status === 'fulfilled' && !rMer.value.error && rMer.value.current && rMer.value.current.wave_height != null){

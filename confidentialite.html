@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidentialité — Aérodynamique &amp; Hydrodynamique du Catamaran</title>
+<meta name="description" content="Ce que le site stocke (ou non) sur ton appareil : pas de cookies, pas de traceurs, mot de passe de la zone test haché, données météo demandées à Open-Meteo.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:title" content="Confidentialité — Aérodynamique &amp; Hydrodynamique du Catamaran">
+<meta property="og:description" content="Ce que le site stocke (ou non) sur ton appareil : pas de cookies, pas de traceurs, mot de passe de la zone test haché, données météo demandées à Open-Meteo.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/confidentialite.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Confidentialité : ce que ce site sait (et ne sait pas) de toi</h1>
+  <p>Résumé simple : <b>pas de cookies, pas de traceurs, pas de compte</b> — et tout ce qui est enregistré reste sur ton appareil.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="aero.html">La voile</a></li>
+    <li><a href="hydro.html">Les coques</a></li>
+    <li><a href="foils.html">Les foils</a></li>
+    <li><a href="stabilite.html">Stabilité</a></li>
+    <li><a href="meteo.html">Météo</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+
+<section class="carteforce" id="resume">
+  <h2><span class="num">1</span> En résumé</h2>
+  <div class="encadre vert">
+    <b>Ce site ne collecte rien :</b> aucun cookie, aucun traqueur, aucun compteur publicitaire, aucun compte
+    à créer, aucune donnée envoyée vers un serveur qui t'identifie. Tu peux tout lire sans rien donner.
+  </div>
+</section>
+
+<section class="carteforce" id="stocke">
+  <h2><span class="num">2</span> Ce qui est enregistré sur <b>ton</b> appareil</h2>
+  <p>Deux techniques de « mémoire du navigateur » sont utilisées. Elles restent dans ton navigateur :
+  le site ne peut pas les lire depuis ailleurs, et tu peux les effacer quand tu veux.</p>
+  <table>
+    <tr><th>Réglage</th><th>Technique</th><th>À quoi ça sert</th></tr>
+    <tr><td>Thème nuit/jour choisi</td><td>localStorage <code>theme</code></td><td>Retrouver tes couleurs au retour sur le site</td></tr>
+    <tr><td>Brouillons HTML/CSS/JS de la zone test</td><td>localStorage</td><td>Ne pas perdre ton code de test si tu changes de page</td></tr>
+    <tr><td>Session de la zone test</td><td>sessionStorage</td><td>Rester débloqué le temps de l'onglet, sans redemander le mot de passe</td></tr>
+  </table>
+  <p>Pour tout effacer : réglages du navigateur → « Données de site » / « Stockage local » → supprimer pour ce site. Rien d'autre n'aura été stocké nulle part.</p>
+</section>
+
+<section class="carteforce" id="code">
+  <h2><span class="num">3</span> Le mot de passe de la zone test</h2>
+  <p>La zone test est protégée par un code personnel. Dans le code source du site, ce code
+  n'apparaît <b>jamais en clair</b> : seul un <b>haché</b> (une empreinte irréversible calculée par
+  l'algorithme djb2) y est stocké. Ton navigateur calcule l'empreinte du code que tu saisis et la
+  compare : le code lui-même ne quitte jamais ton appareil et il n'est pas lisible dans la page.</p>
+  <div class="encadre">
+    <b>⚠️ Un hachage côté navigateur protège le code source, pas la porte :</b> c'est une protection
+    de confidentialité (le code n'est connu que de ceux à qui tu l'as donné), pas un coffre-fort.
+    La zone test sert à essayer du code, elle ne contient aucune donnée personnelle.
+  </div>
+</section>
+
+<section class="carteforce" id="services">
+  <h2><span class="num">4</span> Les services externes sollicités</h2>
+  <table>
+    <tr><th>Service</th><th>Quand</th><th>Ce qu'il voit</th></tr>
+    <tr><td>Open-Meteo (météo + marine)</td><td>Page Météo</td><td>Les coordonnées du spot demandé et l'adresse IP de ta connexion (comme tout serveur consulté)</td></tr>
+    <tr><td>GitHub Pages</td><td>Chaque visite</td><td>Des statistiques d'audience agrégées (pages vues, pays), visibles seulement par le gestionnaire du site, sans cookie ni identification personnelle</td></tr>
+  </table>
+  <p>Aucun de ces services ne reçoit d'information d'identification de ta part : pas d'e-mail, pas de nom, pas de compte.</p>
+</section>
+
+<section class="carteforce" id="questions">
+  <h2><span class="num">5</span> Questions fréquentes</h2>
+  <h3>Faut-il accepter des cookies ?</h3>
+  <p>Non. Le site n'utilise pas de cookies du tout — donc pas de bandeau à cliquer. Le bandeau
+  légal n'est obligatoire que si on dépose des cookies ou des traceurs ; ici, seuls de simples
+  réglages (ton thème, tes brouillons) sont mémorisés dans le navigateur, sans suivi de ta navigation.</p>
+  <h3>Qui peut voir mon trafic ?</h3>
+  <p>Le gestionnaire du site voit dans les Statistiques GitHub des chiffres agrégés (pages vues,
+  provenance approximative à l'échelle d'un pays), jamais une identité. Aucun compteur externe
+  n'est installé sur les pages.</p>
+  <h3>Comment poser une question sur cette page ?</h3>
+  <p>Le site est un projet pédagogique signé dans le pied de page : tu peux écrire directement au
+  gestionnaire du dépôt GitHub indiqué en bas.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="test.html" style="color:#E8D48B">Zone test</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+</body>
+</html>
