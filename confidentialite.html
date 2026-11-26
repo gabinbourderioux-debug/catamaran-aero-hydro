@@ -4,25 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Confidentialité — Aérodynamique &amp; Hydrodynamique du Catamaran</title>
-<meta name="description" content="Ce que le site stocke (ou non) sur ton appareil : pas de cookies, pas de traceurs, mot de passe de la zone test haché, données météo demandées à Open-Meteo.">
+<meta name="description" content="Ce que le site stocke (ou non) sur ton appareil : pas de cookies, pas de compte, mot de passe de la zone test haché, données météo demandées à Open-Meteo, visites comptées anonymement par GoatCounter.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1C2430">
   <link rel="apple-touch-icon" href="icone-192.png">
 <meta property="og:title" content="Confidentialité — Aérodynamique &amp; Hydrodynamique du Catamaran">
-<meta property="og:description" content="Ce que le site stocke (ou non) sur ton appareil : pas de cookies, pas de traceurs, mot de passe de la zone test haché, données météo demandées à Open-Meteo.">
+<meta property="og:description" content="Ce que le site stocke (ou non) sur ton appareil : pas de cookies, pas de compte, mot de passe de la zone test haché, données météo demandées à Open-Meteo, visites comptées anonymement par GoatCounter.">
 <meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
 <meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/confidentialite.html">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 <script src="darkmode.js"></script>
+<script src="stats.js" defer></script>
 </head>
 <body>
 
 <header class="hero hero--page">
   <h1>Confidentialité : ce que ce site sait (et ne sait pas) de toi</h1>
-  <p>Résumé simple : <b>pas de cookies, pas de traceurs, pas de compte</b> — et tout ce qui est enregistré reste sur ton appareil.</p>
+  <p>Résumé simple : <b>pas de cookies, pas de compte, pas de publicité</b> — et tout ce qui est enregistré reste sur ton appareil.</p>
 </header>
 
 <nav class="sommaire" aria-label="Navigation">
@@ -61,8 +62,9 @@
 <section class="carteforce" id="resume">
   <h2><span class="num">1</span> En résumé</h2>
   <div class="encadre vert">
-    <b>Ce site ne collecte rien :</b> aucun cookie, aucun traqueur, aucun compteur publicitaire, aucun compte
-    à créer, aucune donnée envoyée vers un serveur qui t'identifie. Tu peux tout lire sans rien donner.
+    <b>Ce site ne te profile pas :</b> aucun cookie, aucune publicité, aucun compte à créer. Un compteur de
+    visites respectueux (GoatCounter) note seulement « une page a été vue », sans cookie et sans savoir
+    qui tu es. Tu peux tout lire sans rien donner.
   </div>
 </section>
 
@@ -97,7 +99,8 @@
   <table>
     <tr><th>Service</th><th>Quand</th><th>Ce qu'il voit</th></tr>
     <tr><td>Open-Meteo (météo + marine)</td><td>Page Météo</td><td>Les coordonnées du spot demandé et l'adresse IP de ta connexion (comme tout serveur consulté)</td></tr>
-    <tr><td>GitHub Pages</td><td>Chaque visite</td><td>Des statistiques d'audience agrégées (pages vues, pays), visibles seulement par le gestionnaire du site, sans cookie ni identification personnelle</td></tr>
+    <tr><td>GitHub Pages</td><td>Chaque visite</td><td>Des statistiques d’audience agrégées (pages vues, pays), visibles seulement par le gestionnaire du site, sans cookie ni identification personnelle</td></tr>
+    <tr><td>GoatCounter (compteur de visites)</td><td>Chaque visite</td><td>Le nom de la page vue, la date, la taille d’écran et le pays approximatif, regroupés en statistiques d’ensemble : sans cookie, sans identification, et désactivé si ton navigateur active « Ne pas suivre » (Do Not Track)</td></tr>
   </table>
   <p>Aucun de ces services ne reçoit d'information d'identification de ta part : pas d'e-mail, pas de nom, pas de compte.</p>
 </section>
@@ -106,12 +109,14 @@
   <h2><span class="num">5</span> Questions fréquentes</h2>
   <h3>Faut-il accepter des cookies ?</h3>
   <p>Non. Le site n'utilise pas de cookies du tout — donc pas de bandeau à cliquer. Le bandeau
-  légal n'est obligatoire que si on dépose des cookies ou des traceurs ; ici, seuls de simples
-  réglages (ton thème, tes brouillons) sont mémorisés dans le navigateur, sans suivi de ta navigation.</p>
+  légal n’est obligatoire que si on dépose des cookies ; ici, le compteur de visites fonctionne sans
+  cookie et ne mesure que des statistiques d’ensemble, et seuls de simples réglages (ton thème, tes
+  brouillons) sont mémorisés dans le navigateur, sans suivi de ta navigation.</p>
   <h3>Qui peut voir mon trafic ?</h3>
-  <p>Le gestionnaire du site voit dans les Statistiques GitHub des chiffres agrégés (pages vues,
-  provenance approximative à l'échelle d'un pays), jamais une identité. Aucun compteur externe
-  n'est installé sur les pages.</p>
+  <p>Le gestionnaire du site voit des chiffres agrégés (pages vues, provenance approximative à
+  l’échelle d’un pays) dans les Statistiques GitHub et sur son tableau de bord GoatCounter : combien
+  de fois chaque page a été vue, jamais une identité. Le compteur ne pose pas de cookie et
+  n’enregistre rien qui permette de savoir qui tu es.</p>
   <h3>Comment poser une question sur cette page ?</h3>
   <p>Le site est un projet pédagogique signé dans le pied de page : tu peux écrire directement au
   gestionnaire du dépôt GitHub indiqué en bas.</p>
