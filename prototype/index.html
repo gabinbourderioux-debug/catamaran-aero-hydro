@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aérodynamique &amp; Hydrodynamique du Catamaran — Comprendre la vitesse en multicoque</title>
+<meta name="description" content="Portail pédagogique sur l'aérodynamique des voiles et l'hydrodynamique des coques et foils de catamaran : portance, traînée, vent apparent, stabilité, décollage. Schémas et explications détaillées.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="../icone-192.png">
+<meta property="og:title" content="Aérodynamique &amp; Hydrodynamique du Catamaran — Comprendre la vitesse en multicoque">
+<meta property="og:description" content="Portail pédagogique sur l'aérodynamique des voiles et l'hydrodynamique des coques et foils de catamaran : portance, traînée, vent apparent, stabilité, décollage. Schémas et explications détaillées.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/index.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<script src="../darkmode.js"></script>
+
+<style>
+.prototype-ribbon{position:sticky;top:0;z-index:90;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;background:var(--marine,#1C2430);border-bottom:2px solid #FFCC00;box-shadow:0 4px 16px rgba(0,0,0,.14)}
+.prototype-ribbon span{color:#E8D48B;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.prototype-ribbon a{color:#fff;text-decoration:none;padding:6px 11px;border:1px solid rgba(255,255,255,.25);border-radius:8px;font-size:.86rem;font-weight:700}
+.prototype-ribbon a:hover{background:#FFCC00;color:#1C2430}
+.prototype-ribbon a:first-of-type{background:#FFCC00;color:#1C2430}
+@media(max-width:600px){.prototype-ribbon{gap:6px;padding:7px}.prototype-ribbon span{width:100%;text-align:center}.prototype-ribbon a{font-size:.78rem;padding:6px 8px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="badge">Voile • Multicoques • Physique</div>
+  <h1>L'aérodynamique &amp; l'hydrodynamique du catamaran</h1>
+  <p>Pourquoi un catamaran vole-t-il sur l'eau ? Un catamaran rapide est le siège d'un conflit permanent
+  entre deux fluides : l'air, qui pousse par la voile, et l'eau, qui freine par les coques.</p>
+</header>
+<div class="prototype-ribbon"><span>Copie de test · indépendante</span><a href="index.html">Accueil de la copie</a><a href="experience.html">Studio interactif</a><a href="../test.html">Retour zone test</a></div>
+
+<main class="conteneur">
+
+<section class="carteforce" id="vue-ensemble">
+  <h2><span class="num">1</span> Vue d'ensemble : une bataille entre deux fluides</h2>
+  <p>Un catamaran qui navigue est le siège d'un conflit permanent entre deux fluides : <b>l'air</b>
+  au-dessus de la surface et <b>l'eau</b> en dessous. L'air pousse (la voile transforme l'énergie du
+  vent en force vélique), l'eau freine (les coques et les appendices opposent une résistance).
+  Le bateau accélère jusqu'à l'équilibre entre les deux.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 820 480" role="img" aria-label="Vue de dessus : forces aérodynamiques et hydrodynamiques sur un catamaran">
+      <defs>
+        <marker id="fle" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="820" height="480" fill="#F4F4F1"/>
+      <!-- echelle de grad -->
+      <text x="26" y="34" font-size="16" font-weight="bold" fill="#1C2430">Vue de dessus</text>
+
+      <!-- coques -->
+      <rect x="240" y="100" width="36" height="290" rx="18" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>
+      <rect x="544" y="100" width="36" height="290" rx="18" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>
+      <!-- plateforme -->
+      <rect x="276" y="128" width="268" height="234" fill="#e2e8f0" opacity=".6" stroke="#94a3b8" stroke-dasharray="4 4"/>
+      <text x="410" y="392" font-size="13" fill="#64748b" text-anchor="middle">trampoline</text>
+
+      <!-- centre de gravity et CL -->
+      <circle cx="410" cy="245" r="7" fill="#059669"/>
+      <text x="410" y="270" font-size="13" fill="#059669" text-anchor="middle" font-weight="bold">C.E. / C.D.</text>
+
+      <!-- mat + voile bombee -->
+      <line x1="410" y1="245" x2="410" y2="126" stroke="#1C2430" stroke-width="5"/>
+      <circle cx="410" cy="126" r="8" fill="#1C2430"/>
+      <path d="M410,132 C 470,160 470,230 410,258" fill="none" stroke="#e11d48" stroke-width="7" stroke-linecap="round"/>
+      <text x="482" y="205" font-size="14" fill="#e11d48" font-weight="bold">voile</text>
+
+      <!-- vent reel -->
+      <line x1="760" y1="150" x2="600" y2="170" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fle)"/>
+      <line x1="780" y1="230" x2="620" y2="230" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fle)"/>
+      <line x1="760" y1="310" x2="600" y2="300" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fle)"/>
+      <text x="742" y="135" font-size="15" fill="#1d4ed8" font-weight="bold">Vent réel</text>
+
+      <!-- force velique -->
+      <line x1="450" y1="195" x2="250" y2="120" stroke="#e11d48" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="300" y="86" font-size="15" fill="#e11d48" font-weight="bold" text-anchor="middle">Force vélique Fᵥ (pousse vers l'avant-gauche)</text>
+
+      <!-- trainee hydro (opposee a l'avance) -->
+      <line x1="410" y1="245" x2="410" y2="330" stroke="#0891b2" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="410" y="352" font-size="14" fill="#0891b8" font-weight="bold" text-anchor="middle">Traînée hydro R (vers l'arrière)</text>
+
+      <!-- direction avance -->
+      <line x1="410" y1="245" x2="410" y2="60" stroke="#059669" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="410" y="48" font-size="15" fill="#059669" font-weight="bold" text-anchor="middle">Route du bateau</text>
+
+      <!-- derivation anti-derive -->
+      <line x1="290" y1="245" x2="180" y2="245" stroke="#7c3aed" stroke-width="4" marker-end="url(#fle)"/>
+      <text x="170" y="240" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="end">Force anti-dérive (dérive/foil)</text>
+
+      <!-- fils d'ecoulement eau -->
+      <path d="M120,440 C 240,430 340,420 410,420 C 480,420 580,430 700,440" fill="none" stroke="#0891b2" stroke-width="1.6" opacity=".45"/>
+      <path d="M120,455 C 240,447 340,440 410,440 C 480,440 580,447 700,455" fill="none" stroke="#0891b2" stroke-width="1.6" opacity=".45"/>
+    </svg>
+    <figcaption>Fig. 1 — Équilibre des forces en vue de dessus : la force vélique (rouge) est compensée par
+    la traînée hydrodynamique (cyan) et la force anti-dérive (violet). Le bateau file droit quand la résultante s'annule.</figcaption>
+    <div class="legende">
+      <span><span class="pastille" style="background:#1d4ed8"></span>Vent réel</span>
+      <span><span class="pastille" style="background:#e11d48"></span>Forces aérodynamiques</span>
+      <span><span class="pastille" style="background:#0891b2"></span>Forces hydrodynamiques</span>
+      <span><span class="pastille" style="background:#059669"></span>Mouvement</span>
+    </div>
+  </div>
+
+  <div class="lexique">
+    <div class="carte"><b>F. vélique</b> — force totale que le gréement (voiles + mât) extrait du vent.</div>
+    <div class="carte"><b>Traînée hydro</b> — résistance de l'eau : frottement sur la surface mouillée + résistance de vagues + traînée induite des appendices.</div>
+    <div class="carte"><b>Anti-dérive</b> — produite par les dérives ou foils, elle s'oppose au dérapage latéral sous l'effet du vent.</div>
+    <div class="carte"><b>C.E. / C.D.</b> — Centre de poussée vélique (haut du gréement) et Centre de déprive (sous la coque) : leur alignement évite le dérapage et l'empannage sauvage.</div>
+  </div>
+</section>
+
+<section class="carteforce">
+  <h2><span class="num">2</span> Aller plus loin, page par page</h2>
+  <p>Chaque thème est développé sur sa propre page, avec les schémas, les formules et les ordres de grandeur :</p>
+  <div class="cartes-liens">
+<a class="carte-lien" href="experience.html"><h3>Studio interactif — nouvelle version</h3><p>Graphiques manipulables, modèle 3D du catamaran, réglages et historique des simulations.</p><span class="lire">Explorer le studio →</span></a>
+    <a class="carte-lien" href="aero.html">
+      <h3>La voile, une aile dressée</h3>
+      <p>Dépression sur l'extrados, angle d'attaque, finesse portance/traînée, décrochage.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="aero.html#vent-apparent">
+      <h3>Le vent apparent</h3>
+      <p>Le turbo du multicoque : somme vectorielle vitesse du bateau + vent réel, exemple chiffré.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="hydro.html">
+      <h3>Les coques et la traînée</h3>
+      <p>Frottement, résistance de vagues, vitesse de carène, demi-carènes élancées.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="foils.html">
+      <h3>Les foils et le décollage</h3>
+      <p>Portance immergée ½ρV²SCL, courbes de traînée, vitesse de déjaugeage, mode vol.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="stabilite.html">
+      <h3>Stabilité &amp; équilibre</h3>
+      <p>Couple de redressement P×b, couple de gîte, polaire de vitesse, chiffres clés.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="simulateur.html">
+      <h3>Simulateur du vent apparent</h3>
+      <p>Bouge les curseurs du vent et de la vitesse : le triangle des vitesses se construit en direct.</p>
+      <span class="lire">Essayer →</span>
+    </a>
+    <a class="carte-lien" href="jeu.html">
+      <h3>Mini-jeu : la course de bouées</h3>
+      <p>À la barre : vire, empanne et joue des allures pour boucler le parcours le plus vite possible.</p>
+      <span class="lire">Jouer →</span>
+    </a>
+    <a class="carte-lien" href="polaire.html">
+      <h3>Polaire de vitesse interactive</h3>
+      <p>Choisis le vent réel et promène ton doigt sur la courbe : la vitesse du bateau selon l'allure.</p>
+      <span class="lire">Explorer →</span>
+    </a>
+    <a class="carte-lien" href="topo-meteo.html">
+      <h3>Topo météo : le cours</h3>
+      <p>Lire les nuages, la dépression, les fronts, la tempête et la marée — tout réuni.</p>
+      <span class="lire">Lire le cours →</span>
+    </a>
+    <a class="carte-lien" href="manoeuvres.html">
+      <h3>Manœuvres pas à pas</h3>
+      <p>Virement de bord et empannage expliqués à vue de dessus, avec l'erre, les pièges et les réflexes.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="qcm.html">
+      <h3>QCM : teste-toi !</h3>
+      <p>5 questions par partie + un QCM général de 10 questions, avec correction et explications.</p>
+      <span class="lire">Lire la page →</span>
+    </a>
+    <a class="carte-lien" href="meteo.html">
+      <h3>Météo, vent &amp; marées</h3>
+      <p>Le vent en direct en nœuds, l'état de la mer et le coefficient de marée du jour, spot par spot.</p>
+      <span class="lire">Voir la météo →</span>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="../test.html" style="color:#E8D48B">Zone test</a>
+  <a href="../confidentialite.html" style="color:#E8D48B">Confidentialité</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+</body>
+</html>
