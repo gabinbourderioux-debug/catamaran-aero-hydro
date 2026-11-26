@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini-jeu : la course de bouées — Catamaran</title>
+<meta name="description" content="Mini-jeu de catamaran : à la barre, vire et empanne au bon moment pour rejoindre les bouées le plus vite possible. Le vent apparent est vraiment simulé.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="../icone-192.png">
+<meta property="og:title" content="Mini-jeu : la course de bouées">
+<meta property="og:description" content="À la barre du catamaran : vire et empanne au bon moment pour franchir les bouées le plus vite possible.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/jeu.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<script src="../darkmode.js"></script>
+
+<style>
+  :root{--eau-jeu:#d8ecfa;--eau-ligne:#c2ddf2}
+  [data-theme="dark"]{--eau-jeu:#122232;--eau-ligne:#1d3a4e}
+  #jeu{width:100%;max-width:470px;display:block;margin:0 auto;border-radius:14px;border:1px solid var(--bordure);box-shadow:var(--ombre);touch-action:none}
+  #jeu .eau{fill:var(--eau-jeu)}
+  #jeu .vague{stroke:var(--eau-ligne);stroke-width:1.5}
+  #jeu .vw{stroke:#64748b;stroke-width:3;marker-end:url(#flj)}
+  #jeu .dept{stroke:var(--gris);stroke-width:2.5;stroke-dasharray:8 6}
+  #jeu .mq circle{fill:var(--cyan);stroke:var(--marine);stroke-width:2.5}
+  #jeu .mq.pase circle{fill:var(--vert)}
+  #jeu .mq text{font-weight:800;font-size:14px;fill:var(--marine)}
+  #jeu .mq .etiq{font-size:12px;font-weight:500;fill:var(--gris)}
+  #jeu .an{fill:none;stroke:var(--corail);stroke-width:2.5}
+  #jeu #trace{fill:none;stroke:var(--bleu);stroke-width:3;stroke-linejoin:round;opacity:.55}
+  #jeu .coque{fill:#cbd5e1;stroke:var(--marine);stroke-width:2.4}
+  #jeu .trav{stroke:var(--marine);stroke-width:2.4}
+  #jeu .voile{stroke:var(--cyan);stroke-width:4}
+  #jeu .voile.molle{stroke:#94a3b8;stroke-width:3;stroke-dasharray:5 4}
+  #jeu .mat{fill:var(--marine)}
+  #jeu .va{stroke:var(--corail);stroke-width:3.5;marker-end:url(#flj)}
+  #jeu text.va-t{font-size:13px;font-weight:800;fill:var(--corail)}
+  #jeu .vent{font-size:15px;font-weight:700;fill:#64748b}
+  #jeu .ov{font-size:58px;font-weight:800;fill:var(--titre)}
+  #jeu .ov.petit{font-size:24px}
+  .bandeau{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0;font-variant-numeric:tabular-nums}
+  .bandeau b{color:var(--titre)}
+  .pad{display:flex;gap:70px;justify-content:center;margin:18px 0 6px}
+  .btn-pad{width:86px;height:86px;border-radius:50%;border:2px solid var(--bordure);background:var(--carte);font-size:30px;color:var(--titre);cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+  .btn-pad:active{background:var(--cyan)}
+  .btn-jeu{background:#FFCC00;color:#1C2430;border:none;border-radius:10px;padding:12px 22px;font-weight:700;font-size:1rem;cursor:pointer}
+  .btn-jeu:hover{background:#E6B800}
+  #msg-jeu{min-height:1.4em;text-align:center;font-weight:700;color:var(--vert)}
+  #msg-jeu.alerte{color:var(--corail)}
+</style>
+<style>
+.prototype-ribbon{position:sticky;top:0;z-index:90;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;background:var(--marine,#1C2430);border-bottom:2px solid #FFCC00;box-shadow:0 4px 16px rgba(0,0,0,.14)}
+.prototype-ribbon span{color:#E8D48B;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.prototype-ribbon a{color:#fff;text-decoration:none;padding:6px 11px;border:1px solid rgba(255,255,255,.25);border-radius:8px;font-size:.86rem;font-weight:700}
+.prototype-ribbon a:hover{background:#FFCC00;color:#1C2430}
+.prototype-ribbon a:first-of-type{background:#FFCC00;color:#1C2430}
+@media(max-width:600px){.prototype-ribbon{gap:6px;padding:7px}.prototype-ribbon span{width:100%;text-align:center}.prototype-ribbon a{font-size:.78rem;padding:6px 8px}}
+</style>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Mini-jeu : la course de bouées</h1>
+  <p>À la barre ! Le vent (15 nœuds) souffle du haut de la carte. Vire, empanne et choisis tes allures : le jeu simule vraiment le vent apparent, exactement comme ton cours.</p>
+</header>
+<div class="prototype-ribbon"><span>Copie de test · indépendante</span><a href="index.html">Accueil de la copie</a><a href="experience.html">Studio interactif</a><a href="../test.html">Retour zone test</a></div>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="aero.html#aero">La voile</a></li>
+        <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+        <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
+        <li><a href="simulateur.html">Le simulateur</a></li>
+        <li><a href="jeu.html">Le mini-jeu</a></li>
+        <li><a href="polaire.html">La polaire de vitesse</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="hydro.html#hydro">Les coques</a></li>
+        <li><a href="foils.html">Les foils</a></li>
+        <li><a href="stabilite.html">La stabilité</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="meteo.html#vent">La météo en direct</a></li>
+        <li><a href="topo-meteo.html">Topo météo</a></li>
+      </ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+<section class="carteforce" id="jeu-sec">
+  <h2><span class="num">1</span> Le parcours : 4 bouées dans l'ordre</h2>
+  <p>Ligne de départ en bas, puis bouée 1 tout en haut (au près : il faudra <b>virer</b>), bouée 2 à droite (le reaching), bouée 3 à gauche, et retour à la ligne d'arrivée (au portant : attention à l'<b>empannage</b>). La bouée suivante est entourée d'un anneau rouge ; les bouées passées deviennent vertes.</p>
+
+  <div class="bandeau">
+    <span id="chrono-jeu"><b>Chrono :</b> 0,0 s</span>
+    <span id="vitesse-jeu"><b>Vitesse :</b> 0,0 nd</span>
+    <span id="allure-jeu"><b>Allure :</b> —</span>
+  </div>
+
+  <div class="figure">
+  <svg id="jeu" viewBox="0 0 600 880" role="img" aria-label="Mini-jeu : course de bouées en catamaran, vue de dessus, vent du haut">
+    <defs>
+      <marker id="flj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>
+    </defs>
+    <rect class="eau" width="600" height="880"/>
+    <g id="vagues"></g>
+    <g id="fleches-vent"></g>
+    <text class="vent" x="530" y="40">VENT</text>
+    <line class="dept" x1="170" y1="800" x2="430" y2="800"/>
+    <g class="mq" id="mq-3"><circle cx="120" cy="620" r="14"/><text x="120" y="625" text-anchor="middle">3</text></g>
+    <g class="mq" id="mq-1"><circle cx="150" cy="160" r="14"/><text x="150" y="165" text-anchor="middle">1</text></g>
+    <g class="mq" id="mq-2"><circle cx="520" cy="420" r="14"/><text x="520" y="425" text-anchor="middle">2</text></g>
+    <g class="mq" id="mq-A"><circle cx="300" cy="800" r="14"/><text x="300" y="805" text-anchor="middle">A</text><text class="etiq" x="300" y="838" text-anchor="middle">départ · arrivée</text></g>
+    <circle id="anneau" r="19" class="an"/>
+    <polyline id="trace" points=""/>
+    <g id="va-g">
+      <line id="va-l" class="va" x1="0" y1="0" x2="0" y2="0" marker-end="url(#flj)"/>
+      <text id="va-t" class="va-t" x="0" y="0">VA</text>
+    </g>
+    <g id="bateau">
+      <rect class="coque" x="-20" y="-26" width="9" height="52" rx="4.5"/>
+      <rect class="coque" x="11" y="-26" width="9" height="52" rx="4.5"/>
+      <line class="trav" x1="-11" y1="-10" x2="11" y2="-10"/>
+      <line class="trav" x1="-11" y1="10" x2="11" y2="10"/>
+      <path id="voile" class="voile" d="M0,-4 Q 13,3 15,20" fill="none"/>
+      <circle class="mat" cx="0" cy="0" r="3"/>
+    </g>
+    <text id="ov-compte" x="300" y="450" text-anchor="middle" class="ov" visibility="hidden">3</text>
+    <text id="ov-info" x="300" y="450" text-anchor="middle" class="ov petit" visibility="hidden"></text>
+  </svg>
+  </div>
+
+  <div class="pad">
+    <button id="btn-bab" class="btn-pad" type="button" aria-label="Barre à bâbord">←</button>
+    <button id="btn-tri" class="btn-pad" type="button" aria-label="Barre à tribord">→</button>
+  </div>
+  <div style="text-align:center;margin:10px 0">
+    <button id="btn-depart" class="btn-jeu" type="button">Départ (ou touche Espace)</button>
+  </div>
+  <div id="msg-jeu"></div>
+  <div class="bandeau"><span id="record-jeu"></span></div>
+</section>
+
+<section class="carteforce" id="regles">
+  <h2><span class="num">2</span> Comment jouer</h2>
+  <ol>
+    <li><b>À la barre</b> : flèches ← et → du clavier, ou les deux gros boutons ronds sous le plan d'eau sur téléphone.</li>
+    <li><b>Regarde la flèche rouge VA</b> : c'est ton vent apparent, dessiné en direct autour du bateau. Plus elle est longue, plus tu as de puissance.</li>
+    <li><b>Faseie ?</b> Si la flèche VA s'aligne avec le nez du bateau (moins de 25°), les voiles faseient : abats un peu pour retrouver de la vitesse — le même piège que celui du virement de bord.</li>
+    <li><b>L'allure fait la vitesse</b> : au travers et au reaching, tu vas jusqu'à 25 % plus vite que le vent ; au vent arrière tu es lent, et ton vent apparent faiblit avec toi.</li>
+    <li><b>À toi le record</b> : le chrono tourne entre le « GO » et la ligne d'arrivée ; ton meilleur temps est gardé dans ce navigateur.</li>
+  </ol>
+  <div class="encadre bleu">Le moteur du jeu est exactement le triangle des vitesses de ton cours : VA = vent réel − vitesse du bateau, et la puissance des voiles dépend de l'angle du vent <b>apparent</b>. Relis <a href="aero.html#vent-apparent">le vent apparent</a>, <a href="manoeuvres.html">les manœuvres</a>, ou retrouve ces mêmes vecteurs libres en main dans <a href="simulateur.html">le simulateur</a>.</div>
+</section>
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="../test.html" style="color:#E8D48B">Zone test</a>
+  <a href="../confidentialite.html" style="color:#E8D48B">Confidentialité</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+<script>
+const S = 2.2;
+const ROT = 1.9;
+const WR = 15;
+let etat = 'pret';
+let bx = 300, by = 845, theta = Math.PI / 4, v = 0;
+let steerCam = 0, steerPad = 0;
+let tCourse = 0, cd = 0, prochain = 0, coteVoile = 1, Beta = 0, tickT = 0;
+let tracePts = [];
+const marques = [
+  {x: 150, y: 160, n: '1'},
+  {x: 520, y: 420, n: '2'},
+  {x: 120, y: 620, n: '3'},
+  {x: 300, y: 800, n: 'A'}
+];
+const POL = [[0,0.02],[15,0.04],[22,0.08],[30,0.35],[40,0.65],[50,0.85],[62,1.0],[75,1.12],[90,1.2],[100,1.26],[110,1.22],[120,1.1],[135,0.95],[150,0.82],[165,0.74],[180,0.72]];
+
+function polaire(a){
+  if (a <= POL[0][0]) return POL[0][1];
+  for (let i = 1; i < POL.length; i++) {
+    if (a <= POL[i][0]) {
+      const a0 = POL[i-1][0], f0 = POL[i-1][1], a1 = POL[i][0], f1 = POL[i][1];
+      return f0 + (f1 - f0) * (a - a0) / (a1 - a0);
+    }
+  }
+  return 0.72;
+}
+
+function allureNom(b){
+  if (b < 25) return 'face au vent — faseie !';
+  if (b < 70) return 'près';
+  if (b < 112) return 'travers';
+  if (b < 155) return 'portant';
+  return 'vent arrière';
+}
+
+const $ = id => document.getElementById(id);
+const bateauG = $('bateau'), voile = $('voile'), trace = $('trace');
+const vaG = $('va-g'), vaL = $('va-l'), vaT = $('va-t');
+const anneau = $('anneau'), ovCompte = $('ov-compte'), ovInfo = $('ov-info'), msgEl = $('msg-jeu');
+
+function msg(texte, alerte){
+  msgEl.textContent = texte;
+  msgEl.classList.toggle('alerte', !!alerte);
+}
+
+function lireRec(){
+  try { return JSON.parse(localStorage.getItem('recordJeu')); } catch (e) { return null; }
+}
+function fmt(t){ return t.toFixed(1).replace('.', ','); }
+function afficherRecord(){
+  const r = lireRec();
+  $('record-jeu').innerHTML = r ? '<b>Record :</b> ' + fmt(r.temps) + ' s' : '<b>Record :</b> à toi de le fixer !';
+}
+
+function remiseAZero(){
+  bx = 300; by = 845; theta = Math.PI / 4; v = 0;
+  tCourse = 0; prochain = 0; tracePts = [];
+  steerPad = 0; steerCam = 0;
+  document.querySelectorAll('#jeu .mq').forEach(g => g.classList.remove('pase'));
+  ovCompte.setAttribute('visibility', 'hidden');
+  ovInfo.setAttribute('visibility', 'hidden');
+  $('chrono-jeu').innerHTML = '<b>Chrono :</b> 0,0 s';
+  msg('');
+}
+function depart(){
+  if (etat === 'decompte') return;
+  remiseAZero();
+  etat = 'decompte';
+  cd = 3.2;
+  $('btn-depart').textContent = 'Recommencer (Espace)';
+}
+
+function termine(){
+  etat = 'fini';
+  const r = lireRec();
+  const nouveau = !r || tCourse < r.temps;
+  if (nouveau) {
+    try { localStorage.setItem('recordJeu', JSON.stringify({ temps: tCourse })); } catch (e) {}
+    afficherRecord();
+  }
+  ovCompte.setAttribute('visibility', 'hidden');
+  ovInfo.textContent = 'Arrivée ! ' + fmt(tCourse) + ' s' + (nouveau ? ' \ud83c\udfc6' : '');
+  ovInfo.setAttribute('visibility', 'visible');
+  msg(nouveau ? 'Nouveau record ! \ud83c\udfc6' : 'Arrivée en ' + fmt(tCourse) + ' s — record à battre : ' + fmt(r.temps) + ' s');
+}
+
+function tick(dt, t){
+  if (etat === 'decompte') {
+    cd -= dt;
+    ovCompte.setAttribute('visibility', 'visible');
+    if (cd <= 0) {
+      etat = 'course';
+      ovCompte.textContent = 'GO !';
+      setTimeout(() => { if (etat === 'course') ovCompte.setAttribute('visibility', 'hidden'); }, 700);
+    } else {
+      ovCompte.textContent = String(Math.ceil(cd));
+    }
+    return;
+  }
+  if (etat !== 'course') return;
+
+  tCourse += dt;
+  const steer = Math.max(-1, Math.min(1, steerCam + steerPad));
+  theta += steer * ROT * dt;
+  if (theta > Math.PI) theta -= 2 * Math.PI;
+  if (theta < -Math.PI) theta += 2 * Math.PI;
+
+  const ax = -Math.sin(theta) * v, ay = WR + Math.cos(theta) * v;
+  const a = Math.sqrt(ax * ax + ay * ay);
+  const fx = Math.sin(theta), fy = -Math.cos(theta);
+  Beta = a > 0.001 ? Math.acos(Math.max(-1, Math.min(1, (fx * -ax + fy * -ay) / a))) * 180 / Math.PI : 0;
+  let cible = a * polaire(Beta);
+  if (steer) cible *= (1 - 0.12 * Math.abs(steer));
+  cible = Math.min(cible, WR * 2.4);
+  v += (cible - v) * Math.min(1, dt * 1.6);
+  if (v < 0) v = 0;
+
+  bx += Math.sin(theta) * v * S * dt;
+  by -= Math.cos(theta) * v * S * dt;
+  let mur = false;
+  if (bx < 24) { bx = 24; mur = true; }
+  if (bx > 576) { bx = 576; mur = true; }
+  if (by < 24) { by = 24; mur = true; }
+  if (by > 856) { by = 856; mur = true; }
+  if (mur) v *= Math.max(0, 1 - 2 * dt);
+
+  const m = marques[prochain];
+  if (m && Math.hypot(m.x - bx, m.y - by) < 24) {
+    document.getElementById('mq-' + m.n).classList.add('pase');
+    prochain++;
+    if (prochain < marques.length) msg('Bouée ' + m.n + ' validée !');
+    else termine();
+  }
+
+  if (etat === 'course') {
+    if (Beta < 25 && v < 3) msg('Faseie ! Abats un peu pour reprendre de la vitesse.', true);
+    else if (msgEl.textContent.indexOf('Faseie') === 0 || msgEl.textContent.indexOf('Bouée') === 0) msg('');
+  }
+
+  tracePts.push(bx.toFixed(1) + ',' + by.toFixed(1));
+  if (tracePts.length > 240) tracePts.shift();
+  trace.setAttribute('points', tracePts.join(' '));
+
+  $('chrono-jeu').innerHTML = '<b>Chrono :</b> ' + fmt(tCourse) + ' s';
+  $('vitesse-jeu').innerHTML = '<b>Vitesse :</b> ' + fmt(v) + ' nd';
+  $('allure-jeu').innerHTML = '<b>Allure :</b> ' + allureNom(Beta);
+}
+
+function dessine(t){
+  const deg = theta * 180 / Math.PI;
+  bateauG.setAttribute('transform', 'translate(' + bx + ',' + by + ') rotate(' + deg + ')');
+  const cross = Math.sin(theta) * (WR + Math.cos(theta) * v) - (-Math.cos(theta)) * (-Math.sin(theta) * v);
+  if (Math.abs(cross) > 0.2) coteVoile = cross > 0 ? 1 : -1;
+  voile.setAttribute('class', 'voile' + (Beta < 25 ? ' molle' : ''));
+  voile.setAttribute('d', coteVoile > 0 ? 'M0,-4 Q 13,3 15,20' : 'M0,-4 Q -13,3 -15,20');
+
+  const ax = -Math.sin(theta) * v, ay = WR + Math.cos(theta) * v;
+  const a = Math.sqrt(ax * ax + ay * ay);
+  if (a > 1.5) {
+    const L = Math.min(130, a * 4.5);
+    vaL.setAttribute('x1', bx); vaL.setAttribute('y1', by);
+    vaL.setAttribute('x2', bx + ax / a * L); vaL.setAttribute('y2', by + ay / a * L);
+    vaT.setAttribute('x', bx + ax / a * L + 8); vaT.setAttribute('y', by + ay / a * L);
+    vaG.setAttribute('opacity', '1');
+  } else {
+    vaG.setAttribute('opacity', '0');
+  }
+
+  const m = (prochain < marques.length && etat !== 'fini') ? marques[prochain] : null;
+  if (m) {
+    anneau.setAttribute('visibility', 'visible');
+    anneau.setAttribute('cx', m.x); anneau.setAttribute('cy', m.y);
+    anneau.setAttribute('r', String(19 + 4 * Math.sin(t * 4)));
+  } else {
+    anneau.setAttribute('visibility', 'hidden');
+  }
+  $('fleches-vent').setAttribute('transform', 'translate(0,' + ((t * 26) % 30) + ')');
+}
+
+(function construire(){
+  const vagues = [];
+  for (let i = 1; i <= 13; i++) {
+    const y = 60 * i;
+    vagues.push('<line class="vague" x1="' + (30 + (i % 2) * 40) + '" y1="' + y + '" x2="' + (540 - (i % 3) * 50) + '" y2="' + y + '"/>');
+  }
+  $('vagues').innerHTML = vagues.join('');
+  const fl = [];
+  for (let i = 0; i < 5; i++) {
+    const x = 80 + i * 110;
+    fl.push('<line class="vw" x1="' + x + '" y1="6" x2="' + x + '" y2="44"/>');
+  }
+  $('fleches-vent').innerHTML = fl.join('');
+})();
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') { steerCam = -1; e.preventDefault(); }
+  else if (e.key === 'ArrowRight') { steerCam = 1; e.preventDefault(); }
+  else if (e.key === ' ') { depart(); e.preventDefault(); }
+});
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft' && steerCam < 0) steerCam = 0;
+  if (e.key === 'ArrowRight' && steerCam > 0) steerCam = 0;
+});
+$('btn-depart').addEventListener('click', depart);
+
+function setupPad(idBtn, cote){
+  const b = $(idBtn);
+  const on = e => { e.preventDefault(); steerPad = cote; };
+  const off = () => { if (steerPad === cote) steerPad = 0; };
+  b.addEventListener('pointerdown', on);
+  b.addEventListener('pointerup', off);
+  b.addEventListener('pointercancel', off);
+  b.addEventListener('pointerleave', off);
+}
+setupPad('btn-bab', -1);
+setupPad('btn-tri', 1);
+afficherRecord();
+
+let dent = null;
+function boucle(t){
+  if (dent === null) dent = t;
+  const dt = Math.min(0.05, (t - dent) / 1000);
+  dent = t;
+  const s = t / 1000;
+  tick(dt, s);
+  dessine(s);
+  requestAnimationFrame(boucle);
+}
+if (window.requestAnimationFrame) requestAnimationFrame(boucle);
+
+window.__jeu = {
+  polaire, allureNom,
+  tick: (dt) => { tickT += dt; tick(dt, tickT); dessine(tickT); },
+  reset: depart,
+  go: () => { etat = 'course'; },
+  etat: () => etat,
+  pos: () => [bx, by],
+  vitesse: () => v,
+  cap: (x) => { theta = x; },
+  teleport: (x, y) => { bx = x; by = y; v = 0; },
+  tc: () => tCourse,
+  prochain: () => prochain
+};
+</script>
+
+</body>
+</html>
