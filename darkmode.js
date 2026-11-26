@@ -13,3 +13,23 @@
     });
   });
 })();
+
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const tactile = window.matchMedia('(hover: none)');
+    document.querySelectorAll('nav.sommaire li.deroulant > a').forEach(a => {
+      a.addEventListener('click', e => {
+        const li = a.parentElement;
+        if (tactile.matches && !li.classList.contains('ouvert')) {
+          e.preventDefault();
+          document.querySelectorAll('nav.sommaire .deroulant.ouvert').forEach(x => x.classList.remove('ouvert'));
+          li.classList.add('ouvert');
+        }
+      });
+    });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('nav.sommaire li.deroulant'))
+        document.querySelectorAll('nav.sommaire .deroulant.ouvert').forEach(x => x.classList.remove('ouvert'));
+    });
+  });
+})();

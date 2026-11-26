@@ -80,3 +80,16 @@
   .btn-theme{background:transparent;border:1px solid #E8D48B;color:#E8D48B;border-radius:8px;
     padding:6px 16px;cursor:pointer;font-size:.85rem;font-family:inherit;margin-top:14px;transition:.15s}
   .btn-theme:hover{background:rgba(232,212,139,.15)}
+
+  nav.sommaire li{position:relative}
+  nav.sommaire li.deroulant > a > span{font-size:.72rem;opacity:.65}
+  nav.sommaire ul ul{display:none;position:absolute;left:0;top:100%;z-index:60;
+    flex-direction:column;gap:2px;padding:6px;min-width:215px;margin:0;
+    background:var(--carte);border:1px solid var(--bordure);border-radius:10px;
+    box-shadow:0 8px 18px rgba(0,0,0,.14)}
+  nav.sommaire ul ul li{width:100%}
+  nav.sommaire ul ul a{display:block;padding:8px 12px;font-size:.88rem;white-space:nowrap}
+  nav.sommaire li.deroulant:hover > ul,
+  nav.sommaire li.deroulant:focus-within > ul,
+  nav.sommaire li.deroulant.ouvert > ul{display:flex}
+  nav.sommaire li.deroulant.ouvert > a{background:var(--bleu-clair)}
