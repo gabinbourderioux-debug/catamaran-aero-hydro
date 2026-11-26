@@ -84,12 +84,22 @@
   nav.sommaire li{position:relative}
   nav.sommaire li.deroulant > a > span{font-size:.72rem;opacity:.65}
   nav.sommaire ul ul{display:none;position:absolute;left:0;top:100%;z-index:60;
-    flex-direction:column;gap:2px;padding:6px;min-width:215px;margin:0;
+    flex-direction:column;gap:1px;padding:4px;min-width:148px;margin:0;
     background:var(--carte);border:1px solid var(--bordure);border-radius:10px;
     box-shadow:0 8px 18px rgba(0,0,0,.14)}
   nav.sommaire ul ul li{width:100%}
-  nav.sommaire ul ul a{display:block;padding:8px 12px;font-size:.88rem;white-space:nowrap}
+  nav.sommaire ul ul a{display:block;padding:6px 10px;font-size:.84rem;white-space:nowrap}
   nav.sommaire li.deroulant:hover > ul,
   nav.sommaire li.deroulant:focus-within > ul,
   nav.sommaire li.deroulant.ouvert > ul{display:flex}
   nav.sommaire li.deroulant.ouvert > a{background:var(--bleu-clair)}
+
+  @media(max-width:640px){
+    nav.sommaire ul{padding:6px 8px}
+    nav.sommaire ul ul{position:static;min-width:0;box-shadow:none;border:none;border-radius:0;
+      padding:0 0 6px 14px;background:transparent}
+    nav.sommaire ul ul a{font-size:.85rem;padding:5px 8px}
+    nav.sommaire li.deroulant:hover > ul{display:none}
+    nav.sommaire li.deroulant.ouvert > ul,
+    nav.sommaire li.deroulant:focus-within > ul{display:flex}
+  }
