@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Zone test — Gabin</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .porte{max-width:430px;margin:50px auto 0;background:#fff;padding:34px 30px;border-radius:16px;box-shadow:var(--ombre);text-align:center}
+  .porte p{color:#1e293b}
+  .code-case{display:flex;gap:10px;justify-content:center;margin:20px 0 8px}
+  .code-case input{font-size:1.5rem;letter-spacing:.35em;text-align:center;width:170px;padding:10px 6px 10px 14px;
+    border:2px solid #e2e8f0;border-radius:10px;font-family:inherit;color:#1C2430}
+  .code-case input:focus{outline:none;border-color:var(--cyan)}
+  .pave{display:grid;grid-template-columns:repeat(3,68px);gap:10px;justify-content:center;margin:16px 0 6px}
+  .pave button{font-size:1.25rem;font-weight:600;padding:12px 0;border:1px solid #e2e8f0;border-radius:10px;
+    background:#fff;color:#1C2430;cursor:pointer;transition:.12s}
+  .pave button:hover{background:var(--fond)}
+  .err{color:var(--corail);font-size:.9rem;min-height:1.3em;margin:4px 0 10px}
+  .btn-entrer{background:var(--cyan);color:#1C2430;border:none;border-radius:10px;padding:11px 26px;
+    font-weight:700;font-size:.95rem;cursor:pointer}
+  .btn-entrer:hover{background:#E6B800}
+  .atelier{display:none}
+  .gruillez{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+  .gruillez h3{margin:0 0 6px;font-size:.95rem;color:var(--marine)}
+  .gruillez textarea{width:100%;min-height:190px;font-family:'Courier New',monospace;font-size:.85rem;
+    border:1px solid #e2e8f0;border-radius:10px;padding:10px;resize:vertical;background:#fff;color:#1e293b}
+  .gruillez textarea:focus{outline:none;border-color:var(--cyan)}
+  #apercu{width:100%;min-height:430px;border:1px solid #e2e8f0;border-radius:10px;background:#fff}
+  .barre-atelier{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 4px}
+  @media(max-width:760px){.gruillez{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Zone test</h1>
+  <p>L'atelier privé : un endroit pour essayer des idées, du code, des mises en page — sans toucher au site.</p>
+</header>
+
+<main class="conteneur">
+
+  <div class="porte" id="porte">
+    <p>Cette zone est réservée. Entre le code à 4 chiffres :</p>
+    <div class="code-case">
+      <input id="code" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="····" autofocus>
+    </div>
+    <div class="pave">
+      <button type="button" data-ch="1">1</button>
+      <button type="button" data-ch="2">2</button>
+      <button type="button" data-ch="3">3</button>
+      <button type="button" data-ch="4">4</button>
+      <button type="button" data-ch="5">5</button>
+      <button type="button" data-ch="6">6</button>
+      <button type="button" data-ch="7">7</button>
+      <button type="button" data-ch="8">8</button>
+      <button type="button" data-ch="9">9</button>
+      <button type="button" data-ch="C">C</button>
+      <button type="button" data-ch="0">0</button>
+    </div>
+    <p class="err" id="err"></p>
+    <button class="btn-entrer" id="entrer">Entrer</button>
+  </div>
+
+  <div class="atelier" id="atelier">
+    <h2 style="font-size:1.2rem"><span class="num">✓</span> Atelier ouvert — teste tout ce que tu veux</h2>
+    <p>Écris ton HTML, ton CSS et ton JS dans les cases, appuie sur <b>Exécuter</b>, le résultat s'affiche
+    dans l'aperçu. Rien n'est enregistré sur le site : c'est ton brouillon.</p>
+    <div class="gruillez">
+      <div><h3>HTML</h3><textarea id="ta-html" spellcheck="false"></textarea></div>
+      <div><h3>CSS</h3><textarea id="ta-css" spellcheck="false"></textarea></div>
+      <div><h3>JavaScript</h3><textarea id="ta-js" spellcheck="false"></textarea></div>
+      <div><h3>Aperçu</h3><iframe id="apercu" title="Aperçu du test"></iframe></div>
+    </div>
+    <div class="barre-atelier">
+      <button class="btn-entrer" id="executer">Exécuter</button>
+      <button class="pave-reset" id="nettoyer" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:11px 18px;cursor:pointer;color:#1C2430">Nettoyer les cases</button>
+      <span style="font-size:.85rem;color:var(--gris)">Les cases se sauvegardent dans ton navigateur.</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Zone de test privée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a>
+</footer>
+
+<script>
+const CODE = '2810';
+const porte = document.getElementById('porte');
+const atelier = document.getElementById('atelier');
+const codeEl = document.getElementById('code');
+const errEl = document.getElementById('err');
+
+function ouvrirAtelier() {
+  porte.style.display = 'none';
+  atelier.style.display = 'block';
+  ['html', 'css', 'js'].forEach(function (k) {
+    const el = document.getElementById('ta-' + k);
+    el.value = localStorage.getItem('zoneTest-' + k) || '';
+    el.addEventListener('input', function () { localStorage.setItem('zoneTest-' + k, el.value); });
+  });
+  executer();
+}
+
+function essayer() {
+  if (codeEl.value === CODE) {
+    sessionStorage.setItem('zoneTest-ok', '1');
+    ouvrirAtelier();
+    codeEl.value = '';
+    errEl.textContent = '';
+  } else {
+    errEl.textContent = 'Code faux. Réessaie.';
+    codeEl.value = '';
+  }
+}
+
+document.querySelectorAll('.pave button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    if (b.dataset.ch === 'C') codeEl.value = '';
+    else if (codeEl.value.length < 4) codeEl.value += b.dataset.ch;
+    if (codeEl.value.length === 4) essayer();
+  });
+});
+document.getElementById('entrer').addEventListener('click', essayer);
+codeEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') essayer(); });
+codeEl.addEventListener('input', function () { if (codeEl.value.length === 4) essayer(); });
+
+function executer() {
+  const h = document.getElementById('ta-html').value;
+  const c = document.getElementById('ta-css').value;
+  const j = document.getElementById('ta-js').value;
+  const doc = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+    '<style>body{font-family:sans-serif;margin:12px;color:#1e293b}' + c + '</style></head><body>' +
+    h + '<scr' + 'ipt>try{' + j + '}catch(e){document.body.innerHTML+=\'<pre style="color:#e11d48">\' + e + \'</pre>\'}</scr' + 'ipt></body></html>';
+  document.getElementById('apercu').srcdoc = doc;
+}
+document.getElementById('executer').addEventListener('click', executer);
+document.getElementById('nettoyer').addEventListener('click', function () {
+  ['html', 'css', 'js'].forEach(function (k) {
+    document.getElementById('ta-' + k).value = '';
+    localStorage.removeItem('zoneTest-' + k);
+  });
+  executer();
+});
+
+if (sessionStorage.getItem('zoneTest-ok') === '1') ouvrirAtelier();
+</script>
+
+</body>
+</html>
