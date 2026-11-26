@@ -71,28 +71,32 @@
 
 <section class="carteforce" id="stocke">
   <h2><span class="num">2</span> Ce qui est enregistré sur <b>ton</b> appareil</h2>
-  <p>Deux techniques de « mémoire du navigateur » sont utilisées. Elles restent dans ton navigateur :
+  <p>Trois réglages utiles, rien d'autre. Ils restent dans ton navigateur :
   le site ne peut pas les lire depuis ailleurs, et tu peux les effacer quand tu veux.</p>
   <table>
     <tr><th>Réglage</th><th>Technique</th><th>À quoi ça sert</th></tr>
     <tr><td>Thème nuit/jour choisi</td><td>localStorage <code>theme</code></td><td>Retrouver tes couleurs au retour sur le site</td></tr>
-    <tr><td>Brouillons HTML/CSS/JS de la zone test</td><td>localStorage</td><td>Ne pas perdre ton code de test si tu changes de page</td></tr>
-    <tr><td>Session de la zone test</td><td>sessionStorage</td><td>Rester débloqué le temps de l'onglet, sans redemander le mot de passe</td></tr>
-    <tr><td>Avancement de l'atelier interactif (zone test)</td><td>localStorage <code>cah_catamaran_state_v1</code></td><td>Retrouver tes réglages et tes résultats dans l'atelier</td></tr>
+    <tr><td>Ton record au mode révision du QCM</td><td>localStorage <code>recordRev</code></td><td>Afficher ton meilleur score au quiz chronométré</td></tr>
+    <tr><td>Ton record au mini-jeu</td><td>localStorage <code>recordJeu</code></td><td>Afficher ton meilleur temps sur le parcours de bouées</td></tr>
   </table>
-  <p>Pour tout effacer : réglages du navigateur → « Données de site » / « Stockage local » → supprimer pour ce site. Rien d'autre n'aura été stocké nulle part.</p>
+  <p>Le site comporte aussi une <b>zone privée réservée à son auteur</b>, fermée par un code que tu
+  n'as pas : tant que cette porte reste fermée, <b>rien n'est enregistré pour toi</b> — ni brouillon,
+  ni session, rien du tout.</p>
+  <p>Pour tout effacer : réglages du navigateur → « Données de site » / « Stockage local » → supprimer pour ce site. C'est tout ce qui existe.</p>
 </section>
 
 <section class="carteforce" id="code">
-  <h2><span class="num">3</span> Le mot de passe de la zone test</h2>
-  <p>La zone test est protégée par un code personnel. Dans le code source du site, ce code
-  n'apparaît <b>jamais en clair</b> : seul un <b>haché</b> (une empreinte irréversible calculée par
-  l'algorithme djb2) y est stocké. Ton navigateur calcule l'empreinte du code que tu saisis et la
-  compare : le code lui-même ne quitte jamais ton appareil et il n'est pas lisible dans la page.</p>
+  <h2><span class="num">3</span> La zone privée (réservée à l'auteur)</h2>
+  <p>Une page du site, la <b>zone test</b>, est fermée par un code personnel que seul le gestionnaire
+  connaît. En tant que visiteur, tu n'as pas besoin de ce code : cette zone sert d'atelier technique
+  à l'auteur, elle ne contient <b>aucune donnée des visiteurs</b> et n'en recevra jamais.</p>
+  <p>Côté technique, le code n'apparaît <b>jamais en clair</b> dans le code source du site (qui est
+  public) : seul un <b>haché</b> y est stocké — une empreinte irréversible calculée par l'algorithme
+  djb2. Même en lisant tout le code source, on ne peut pas reconstituer le code à partir de son empreinte.</p>
   <div class="encadre">
-    <b>⚠️ Un hachage côté navigateur protège le code source, pas la porte :</b> c'est une protection
-    de confidentialité (le code n'est connu que de ceux à qui tu l'as donné), pas un coffre-fort.
-    La zone test sert à essayer du code, elle ne contient aucune donnée personnelle.
+    <b>⚠️ En clair :</b> tu ne peux pas entrer dans la zone privée, et c'est voulu. Elle ne te concerne
+    pas, elle ne collecte rien sur toi, et sa protection sert à garder l'atelier de l'auteur hors de
+    la vue du public — pas à cacher des données personnelles.
   </div>
 </section>
 
@@ -119,6 +123,9 @@
   l’échelle d’un pays) dans les Statistiques GitHub et sur son tableau de bord GoatCounter : combien
   de fois chaque page a été vue, jamais une identité. Le compteur ne pose pas de cookie et
   n’enregistre rien qui permette de savoir qui tu es.</p>
+  <h3>Le lien « Zone test » en bas de page, je peux y entrer ?</h3>
+  <p>Non : elle est réservée à l'auteur. Sans le code, la porte reste fermée et rien ne s'enregistre
+  sur ton appareil. C'est une simple page d'atelier technique, pas du contenu caché aux visiteurs.</p>
   <h3>Comment poser une question sur cette page ?</h3>
   <p>Le site est un projet pédagogique signé dans le pied de page : tu peux écrire directement au
   gestionnaire du dépôt GitHub indiqué en bas.</p>
