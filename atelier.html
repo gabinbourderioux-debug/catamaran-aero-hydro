@@ -6,6 +6,18 @@
     if (sessionStorage.getItem('zoneTest-ok') !== '1') location.replace('test.html');
   } catch (e) {}
   if (!window.structuredClone) window.structuredClone = function (o) { return JSON.parse(JSON.stringify(o)); };
+  if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r);
+      this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r);
+      this.arcTo(x, y, x + w, y, r);
+      this.closePath();
+      return this;
+    };
+  }
 </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -298,7 +310,11 @@
 
     canvas {
       display: block;
-      width: 100%;
+      width: 0;
+      min-width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      height: auto;
       border-radius: var(--radius-sm);
       background: #061222;
     }
@@ -679,7 +695,7 @@
         <div class="card">
           <h3>Diagramme interactif des forces en navigation</h3>
           <div class="canvas-box">
-            <canvas id="overview-canvas" height="390"></canvas>
+            <canvas id="overview-canvas" height="330"></canvas>
           </div>
           <div class="legend-row">
             <span><i class="legend-dot" style="background:#22d3ee;"></i>Vent Apparent (VA)</span>
@@ -833,7 +849,7 @@
         <div class="card">
           <h3>Visualisation dynamique du phénomène</h3>
           <div class="canvas-box">
-            <canvas id="physics-canvas" height="360"></canvas>
+            <canvas id="physics-canvas" height="300"></canvas>
           </div>
           <div class="kpi-row">
             <div class="kpi"><span>Efficacité aero/hydro</span><strong id="phys-eff-out">92%</strong></div>
@@ -905,7 +921,7 @@
         <div class="card">
           <h3>Coupe transversale : coques &amp; foils</h3>
           <div class="canvas-box">
-            <canvas id="foil-canvas" height="360"></canvas>
+            <canvas id="foil-canvas" height="300"></canvas>
           </div>
         </div>
       </div>
@@ -937,7 +953,7 @@
         <div class="card">
           <h3>Tracé polaire interactif</h3>
           <div class="canvas-box">
-            <canvas id="polar-canvas" height="410"></canvas>
+            <canvas id="polar-canvas" height="340"></canvas>
           </div>
           <div class="legend-row">
             <span><i class="legend-dot" style="background:#22d3ee;"></i>Catamaran Sport / Foil</span>
@@ -1067,7 +1083,7 @@
         <div class="card">
           <h3>Profil aérodynamique &amp; écoulement</h3>
           <div class="canvas-box">
-            <canvas id="trim-canvas" height="380"></canvas>
+            <canvas id="trim-canvas" height="320"></canvas>
           </div>
         </div>
       </div>
@@ -1110,7 +1126,7 @@
         </div>
 
         <div class="canvas-box">
-          <canvas id="game-canvas" height="430"></canvas>
+          <canvas id="game-canvas" height="360"></canvas>
         </div>
 
         <div class="btn-group" style="justify-content:center;">
@@ -1312,15 +1328,19 @@
         "game-canvas"
       ];
 
+      const HAUTEURS_INITIALES = {};
+      CANVAS_IDS.forEach((id) => {
+        const c = document.getElementById(id);
+        HAUTEURS_INITIALES[id] = parseInt(c.getAttribute("height"), 10) || 360;
+      });
+
       function fitCanvasToContainer(canvas) {
         const box = canvas.parentElement;
         if (!box) return;
-        const targetWidth = Math.max(280, box.clientWidth - 20);
-        const targetHeight = parseInt(canvas.getAttribute("height"), 10) || 360;
+        const targetWidth = Math.min(Math.max(280, box.clientWidth - 20), 700);
+        const targetHeight = HAUTEURS_INITIALES[canvas.id] || 360;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-        canvas.style.width = `${targetWidth}px`;
-        canvas.style.height = `${targetHeight}px`;
         canvas.width = Math.floor(targetWidth * dpr);
         canvas.height = Math.floor(targetHeight * dpr);
 
