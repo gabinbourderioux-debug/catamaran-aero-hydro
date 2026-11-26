@@ -4,36 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QCM — Aérodynamique &amp; Hydrodynamique du Catamaran</title>
-<meta name="description" content="Teste tes connaissances sur le catamaran : QCM de 5 questions sur la voile, le vent apparent, les coques, les foils et la stabilité, plus un QCM général de 10 questions.">
+<meta name="description" content="Teste tes connaissances sur le catamaran : un QCM de 5 questions sur chaque thème (voile, vent apparent, coques, foils, stabilité, météo) et un QCM général de 10 questions.">
 <link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
 <style>
-  .qcm{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:var(--ombre);padding:24px 22px;margin-bottom:26px}
-  .qcm>summary{cursor:pointer;font-weight:800;color:var(--marine);font-size:1.15rem;list-style:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .qcm{background:var(--carte);border:1px solid var(--bordure);border-radius:16px;box-shadow:var(--ombre);padding:24px 22px;margin-bottom:26px}
+  .qcm>summary{cursor:pointer;font-weight:800;color:var(--titre);font-size:1.15rem;list-style:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .qcm>summary::-webkit-details-marker{display:none}
   .qcm>summary .chev{transition:.15s}
   .qcm[open]>summary .chev{transform:rotate(90deg)}
   .qcm .soustitre{font-size:.9rem;color:var(--gris);font-weight:500;flex-basis:100%}
-  .quest{margin:18px 0 6px;font-weight:600;color:#1C2430}
-  .reponse{display:block;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer;transition:.12s;font-size:.95rem}
+  .quest{margin:18px 0 6px;font-weight:600;color:var(--txt)}
+  .reponse{display:block;border:2px solid var(--bordure);border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer;transition:.12s;font-size:.95rem}
   .reponse:hover{border-color:var(--bleu);background:var(--fond)}
   .reponse input{margin-right:8px;accent-color:var(--bleu)}
-  .qcm.corrige .reponse.ok{border-color:var(--vert);background:#ecfdf5;font-weight:600}
-  .qcm.corrige .reponse.ko{border-color:var(--corail);background:#fff1f2}
+  .qcm.corrige .reponse.ok{border-color:var(--vert);background:var(--ok-fond);font-weight:600}
+  .qcm.corrige .reponse.ko{border-color:var(--corail);background:var(--err-fond)}
   .expl{display:none;font-size:.88rem;color:var(--gris);background:var(--fond);border-left:4px solid var(--cyan);border-radius:8px;padding:10px 14px;margin:8px 0}
-  .qcm.corrige .expl{display:block}
+  .qcm.corrige .expl.visible{display:block}
+  .expl a{color:var(--bleu);font-weight:600}
   .actions-qcm{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
   .btn{background:#FFCC00;color:#1C2430;border:none;border-radius:10px;padding:10px 20px;font-weight:700;font-size:.95rem;cursor:pointer}
   .btn:hover{background:#E6B800}
   .btn.gris{background:#64748b}
   .score{font-weight:800;font-size:1rem}
-  .score.partiel{color:var(--corail)} .score.plein{color:var(--vert)} .score.zero{color:var(--marine)}
+  .score.partiel{color:var(--corail)} .score.plein{color:var(--vert)} .score.zero{color:var(--titre)}
 </style>
 </head>
 <body>
 
 <header class="hero hero--page">
   <h1>QCM : teste tes connaissances</h1>
-  <p>5 questions par partie, et un QCM général de 10 questions sur tout le site. Réponds, clique « Corriger » : les bonnes réponses apparaissent en vert, avec une explication.</p>
+  <p>5 questions sur chaque partie (voile, vent apparent, coques, foils, stabilité, météo) et un QCM général de 10 questions. Réponds, clique « Corriger » : les bonnes réponses passent en vert, les mauvaises reçoivent <b>une explication et le lien vers la partie du site</b> à relire.</p>
 </header>
 
 <nav class="sommaire" aria-label="Navigation">
@@ -56,6 +58,7 @@
   <div class="auteur">Gabin Bourderioux</div>
   <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
   <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="test.html" style="color:#E8D48B">Zone test</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
 </footer>
 
 <script>
@@ -120,6 +123,18 @@ const QCMS = [
     {q:"Sur la polaire d'un catamaran de sport, le ratio vitesse/vent maximum se situe vers…", rep:["30° du vent","90–110° du vent","180° (vent arrière pur)"], ok:1,
      exp:"Au reaching latéral, un catamaran peut doubler la vitesse du vent ; au vent arrière, il ralentit."}
   ]},
+  {id:'meteo', titre:'QCM 6 — La météo du marin : vent, ciel et marées', lien:'meteo.html', questions:[
+    {q:"Sur la carte météo, plus les isobares sont serrées…", rep:["moins il y a de vent","plus il y a de vent","plus la mer est chaude"], ok:1, lien:'meteo.html#vent',
+     exp:"Des isobares serrées = fort gradient de pression = vent fort. C'est la règle de base du lecteur de carte météo."},
+    {q:"Dans l'hémisphère nord, le vent tourne autour d'une dépression…", rep:["en sens antihoraire","en sens horaire","il n'y a pas de vent dans une dépression"], ok:0, lien:'meteo.html#ciel',
+     exp:"L'air converge vers le centre en tournant en antihoraire et monte : nuages et pluie. Dans l'anticyclone, l'air descend : beau temps mais peu de vent."},
+    {q:"Des fils de nuages blancs très haut et un halo autour du soleil annoncent…", rep:["du beau temps garanti","une dépression dans 24-48 h","une marée haute"], ok:1, lien:'meteo.html#ciel',
+     exp:"Les cirrus sont les messagers de la perturbation : le front chaud arrive 1 à 2 jours plus tard avec sa pluie fine."},
+    {q:"Le grain brutal d'un front froid vient de…", rep:["l'air chaud qui monte doucement sur l'air froid","l'air froid qui chasse l'air chaud et le jette en altitude","la pluie qui refroidit la voile"], ok:1, lien:'meteo.html#ciel',
+     exp:"L'air froid, plus lourd, passe comme un coin sous l'air chaud : muraille de cumulonimbus, rafales et vent qui peut doubler en moins d'une minute."},
+    {q:"Un coefficient de marée très fort (90-120) arrive…", rep:["à la nouvelle ou à la pleine lune","au premier quartier","par temps chaud"], ok:0, lien:'meteo.html#maree',
+     exp:"À la nouvelle et à la pleine lune, la lune et le soleil tirent dans le même axe (marées de vives-eaux) : gros coefficients, courants plus forts."}
+  ]},
   {id:'general', titre:'QCM Général — 10 questions sur tout le site', lien:'index.html', questions:[
     {q:"Les deux fluides qui s'affrontent autour d'un catamaran sont…", rep:["l'air et l'eau","le ketchup et la mayonnaise","l'eau et le soleil"], ok:0,
      exp:"L'air pousse (force vélique), l'eau freine (traînée hydro) ; la vitesse limite est leur équilibre."},
@@ -152,11 +167,12 @@ function render(){
     let html = '<summary><span class="chev">▸</span> ' + qcm.titre +
       ' <span class="soustitre">' + qcm.questions.length + ' questions — détail sur <a href="' + qcm.lien + '">cette page</a></span></summary>';
     qcm.questions.forEach((q, i) => {
+      const lien = q.lien || qcm.lien;
       html += '<div class="quest">' + (i+1) + '. ' + q.q + '</div>';
       q.rep.forEach((r, j) => {
         html += '<label class="reponse"><input type="radio" name="' + qcm.id + '-' + i + '" value="' + j + '">' + r + '</label>';
       });
-      html += '<div class="expl">💡 ' + q.exp + '</div>';
+      html += '<div class="expl">💡 ' + q.exp + ' → <a href="' + lien + '">relire cette partie</a></div>';
     });
     html += '<div class="actions-qcm"><button class="btn">Corriger</button>' +
             '<button class="btn gris" type="button">Recommencer</button>' +
@@ -169,6 +185,7 @@ function render(){
     btnCorriger.addEventListener('click', () => {
       if (d.classList.contains('corrige')) return;
       let nbOk = 0;
+      const exs = d.querySelectorAll('.expl');
       qcm.questions.forEach((q, i) => {
         const inputs = d.querySelectorAll('input[name="' + qcm.id + '-' + i + '"]');
         const labels = d.querySelectorAll('.reponse');
@@ -181,6 +198,7 @@ function render(){
             if (j === q.ok) nbOk++; else lab.classList.add('ko');
           }
         });
+        if (!chosen || chosen !== labels[i*q.rep.length + q.ok].querySelector('input')) exs[i].classList.add('visible');
       });
       d.classList.add('corrige');
       const n = qcm.questions.length;
@@ -193,6 +211,7 @@ function render(){
       score.textContent = ''; score.className = 'score';
       d.querySelectorAll('input').forEach(inp => { inp.checked = false; inp.disabled = false; });
       d.querySelectorAll('.reponse').forEach(l => l.classList.remove('ok','ko'));
+      d.querySelectorAll('.expl').forEach(e => e.classList.remove('visible'));
     });
   });
 }

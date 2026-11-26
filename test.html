@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Zone test — Gabin</title>
 <link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
 <style>
   .porte{max-width:430px;margin:50px auto 0;background:#fff;padding:34px 30px;border-radius:16px;box-shadow:var(--ombre);text-align:center}
   .porte p{color:#1e293b}
@@ -23,7 +24,7 @@
   .btn-entrer:hover{background:#E6B800}
   .atelier{display:none}
   .gruillez{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
-  .gruillez h3{margin:0 0 6px;font-size:.95rem;color:var(--marine)}
+  .gruillez h3{margin:0 0 6px;font-size:.95rem;color:var(--titre)}
   .gruillez textarea{width:100%;min-height:190px;font-family:'Courier New',monospace;font-size:.85rem;
     border:1px solid #e2e8f0;border-radius:10px;padding:10px;resize:vertical;background:#fff;color:#1e293b}
   .gruillez textarea:focus{outline:none;border-color:var(--cyan)}
@@ -88,6 +89,7 @@
   <div class="auteur">Gabin Bourderioux</div>
   <div class="auteur-sous">Zone de test privée.</div>
   <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
 </footer>
 
 <script>
