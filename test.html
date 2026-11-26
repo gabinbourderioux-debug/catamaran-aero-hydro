@@ -42,9 +42,10 @@
 <main class="conteneur">
 
   <div class="porte" id="porte">
-    <p>Cette zone est réservée. Entre le code à 4 chiffres :</p>
+    <p><b>Cette zone est privée.</b> Entre le <b>mot de passe</b> :</p>
     <div class="code-case">
-      <input id="code" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="····" autofocus>
+      <input id="code" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="····"
+        aria-label="mot de passe" title="mot de passe" autofocus>
     </div>
     <div class="pave">
       <button type="button" data-ch="1">1</button>
@@ -61,6 +62,7 @@
     </div>
     <p class="err" id="err"></p>
     <button class="btn-entrer" id="entrer">Entrer</button>
+    <p style="font-size:.8rem;color:#94a3b8;margin-top:14px">🔒 Le mot de passe est personnel : il ne doit pas être montré ni partagé.</p>
   </div>
 
   <div class="atelier" id="atelier">
@@ -89,7 +91,8 @@
 </footer>
 
 <script>
-const CODE = '2810';
+const CODE_HASH = 2085926382; // mot de passe haché (djb2) : il n'apparaît jamais en clair
+function hach(s) { let x = 5381; for (const ch of s) x = ((x * 33) ^ ch.charCodeAt(0)) >>> 0; return x; }
 const porte = document.getElementById('porte');
 const atelier = document.getElementById('atelier');
 const codeEl = document.getElementById('code');
@@ -107,13 +110,13 @@ function ouvrirAtelier() {
 }
 
 function essayer() {
-  if (codeEl.value === CODE) {
+  if (hach(codeEl.value) === CODE_HASH) {
     sessionStorage.setItem('zoneTest-ok', '1');
     ouvrirAtelier();
     codeEl.value = '';
     errEl.textContent = '';
   } else {
-    errEl.textContent = 'Code faux. Réessaie.';
+    errEl.textContent = 'Mot de passe faux. Réessaie.';
     codeEl.value = '';
   }
 }
