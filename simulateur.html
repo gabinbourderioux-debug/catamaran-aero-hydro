@@ -23,6 +23,10 @@
   .actions-sim{margin:8px 0 4px}
   .verdict{font-size:1.02rem}
   .verdict b{color:var(--titre)}
+  .comparer{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:12px 0 2px;font-size:.95rem}
+  .comparer .case{display:inline-flex;align-items:center;gap:6px;background:var(--carte);border:1px solid var(--bordure);border-radius:8px;padding:4px 10px;cursor:pointer}
+  .comparer input{accent-color:var(--bleu);cursor:pointer}
+  #effets{font-size:.93rem;color:var(--txt);margin:6px 0 2px}
   @media(max-width:640px){.curseurs{grid-template-columns:1fr}}
 </style>
 </head>
@@ -57,7 +61,7 @@
   arrive de droit devant (le vent que le bateau fabrique en avançant), les deux reportés en
   <b>pointillés gris</b> se croisent, et le <b style="color:#7c3aed">vent apparent</b> va du
   <b>croisement des reportés</b> jusqu'au bateau. <b>Bonus : tire sur le rond bleu du vent réel
-  pour changer sa direction, de face à 0° jusqu’au vent arrière à 180°</b> — le triangle se recalcule tout seul.</p>
+  pour changer sa direction, de face à 0° jusqu’au vent arrière à 180°</b> — le triangle se recalcule tout seul. Coche ensuite une case pour <b>superposer un môle, une risée ou une veine de courant</b> : les mêmes effets que les <a href="aero.html#vent-terrain">figures 4, 5 et 6 du cours</a>, sur ton propre triangle.</p>
 
   <div class="curseurs">
     <label for="inVR">Vent réel : <output id="oVR">15</output> nd</label>
@@ -69,7 +73,16 @@
     <button class="btn" id="exCours" type="button">Revenir à l'exemple du cours (15 nd / 10 nd)</button>
   </div>
 
+  <div class="comparer">
+    <b>Superposer au triangle :</b>
+    <span class="case"><input type="checkbox" id="ckGarde"><label for="ckGarde">garder cette situation (mémoire)</label></span>
+    <span class="case"><input type="checkbox" id="ckRisee"><label for="ckRisee">une risée : le vent grossit (+5 nd)</label></span>
+    <span class="case"><input type="checkbox" id="ckMole"><label for="ckMole">un môle : le vent s’écroule (−8 nd)</label></span>
+    <span class="case"><input type="checkbox" id="ckCourant"><label for="ckCourant">une veine de courant portante (+5 nd sur la route)</label></span>
+  </div>
+
   <div class="figure" id="dessin" aria-live="polite"></div>
+  <div id="effets" aria-live="polite"></div>
 
   <div class="encadre bleu verdict" id="verdict"></div>
 
@@ -94,6 +107,9 @@
 <script>
 const inVR = document.getElementById('inVR'), inVB = document.getElementById('inVB');
 const oVR = document.getElementById('oVR'), oVB = document.getElementById('oVB');
+const ckRisee = document.getElementById('ckRisee'), ckMole = document.getElementById('ckMole'),
+  ckCourant = document.getElementById('ckCourant'), ckGarde = document.getElementById('ckGarde');
+let fige = null;
 
 const S = 12;
 const B = [360, 480];
@@ -161,6 +177,31 @@ function dessiner(){
     g += texte(labVA[0] - 14, labVA[1] + 4, 'vent apparent \u2248 ' + va.toFixed(1) + ' nd', '#7c3aed', 12.5, 'end', true);
     g += texte(C[0], C[1] - 12, 'le croisement des reportés', '#475569', 11, 'middle');
   }
+  const listeEff = [];
+  let gardeIdentique = false;
+  function triangleEffet(vr2, vb2, dir2, nom, col){
+    if(vr2 === vr && vb2 === vb && dir2[0] === DIR_R[0] && dir2[1] === DIR_R[1]) return false;
+    const A2 = [B[0] + vb2 * S, B[1]];
+    const W2 = [B[0] + vr2 * S * dir2[0], B[1] + vr2 * S * dir2[1]];
+    const C2 = [A2[0] + W2[0] - B[0], A2[1] + W2[1] - B[1]];
+    const va2 = Math.hypot(C2[0] - B[0], C2[1] - B[1]) / S;
+    g += ligne(A2, C2, col, 2, null, true);
+    g += ligne(W2, C2, col, 2, null, true);
+    if(vr2 > 0) g += ligne(W2, B, col, 2, 'mrVR');
+    if(vb2 > 0) g += ligne(A2, B, col, 2, 'mrVV');
+    g += ligne(C2, B, col, 2.5, 'mrVA');
+    g += '<circle cx="' + C2[0].toFixed(1) + '" cy="' + C2[1].toFixed(1) + '" r="4" fill="' + col + '"/>';
+    g += texte(C2[0], Math.min(632, C2[1] + 22), nom + ' : \u2248 ' + va2.toFixed(1) + ' nd', col, 12, 'middle', true);
+    listeEff.push({nom: nom, va: va2, d: va2 - va, col: col});
+    return true;
+  }
+  if(ckGarde.checked && fige){
+    if(!triangleEffet(fige.vr, fige.vb, fige.dir, 'gardée', '#64748b')) gardeIdentique = true;
+  }
+  if(ckRisee.checked) triangleEffet(Math.min(30, vr + 5), vb, DIR_R, 'risée', '#d97706');
+  if(ckMole.checked) triangleEffet(Math.max(0, vr - 8), vb, DIR_R, 'môle', '#e11d48');
+  if(ckCourant.checked) triangleEffet(vr, vb + 5, DIR_R, 'courant', '#0e7490');
+
   g += texte(30, 24, 'La construction de la figure 3, en direct', '#1C2430', 15, null, true);
   g += texte(30, 620, 'Échelle : 12 px = 1 nd — tire sur le rond bleu pour tourner le vent réel, du vent de face au vent arrière.', '#64748b', 11.5);
 
@@ -183,12 +224,22 @@ function dessiner(){
   else if(angR <= 110) suite = 'Le vrai vent arrive de ~' + angR + '\u00b0 de la route, presque de travers : ' + fmt() + ' nd sur le réel, et il faiblit dès que tu descends vers le vent arrière.';
   else suite = 'Vent d\u2019arrière (~' + angR + '\u00b0 de la route) : le bateau fuit devant son propre vent, donc il perd ' + Math.abs(ecart).toFixed(1) + ' nd sur le réel — le régime du grand largue, voiles largues.';
   document.getElementById('verdict').innerHTML = msg + ' ' + suite;
+  const boEffets = document.getElementById('effets');
+  if(listeEff.length === 0) boEffets.textContent = gardeIdentique
+    ? 'Situation gardée ! Bouge les curseurs ou tire le rond bleu : l’ancienne situation reste dessinée pour la comparaison.'
+    : 'Coche une case ci-dessus pour superposer un effet sur le triangle.';
+  else boEffets.innerHTML = listeEff.map(e => '<span style="color:' + e.col + ';font-weight:bold">' + e.nom + ' : ≈ ' + e.va.toFixed(1) + ' nd (' + (e.d >= 0 ? '+' : '−') + Math.abs(e.d).toFixed(1) + ')</span>').join(' · ');
 }
 
 inVR.addEventListener('input', dessiner);
 inVB.addEventListener('input', dessiner);
 document.getElementById('exCours').addEventListener('click', () => {
   inVR.value = 15; inVB.value = 10; DIR_R = [0.301, -0.953]; dessiner();
+});
+[ckRisee, ckMole, ckCourant].forEach(ck => ck.addEventListener('change', dessiner));
+ckGarde.addEventListener('change', () => {
+  fige = ckGarde.checked ? {vr: +inVR.value, vb: +inVB.value, dir: DIR_R.slice()} : null;
+  dessiner();
 });
 
 const dessin = document.getElementById('dessin');
