@@ -19,6 +19,7 @@
     <li><a href="index.html">Accueil</a></li>
     <li><a href="aero.html">La voile</a></li>
     <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+    <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
     <li><a href="hydro.html">Les coques</a></li>
     <li><a href="foils.html">Les foils</a></li>
     <li><a href="stabilite.html">Stabilité</a></li>
@@ -174,6 +175,128 @@
     45° du vent réel tout en naviguant à 1,5 à 2 fois la vitesse du vent. Ce cercle vertueux
     s'arrête quand la traînée hydrodynamique équilibre la force vélique.
   </div>
+</section>
+
+<section class="carteforce" id="vent-terrain">
+  <h2><span class="num">3</span> Quand le vent change : môle, risée et veine de courant</h2>
+  <p>La construction de la fig. 3 montre le cas « académique » où le vent réel est régulier. Sur
+  l'eau, il change d'un instant à l'autre : un <b>môle</b> ou une pointe le coupe, une <b>risée</b>
+  le renforce brutalement, une <b>veine de courant</b> emporte le bateau lui-même. À chaque fois,
+  le triangle du vent apparent est recalculé en direct — et l'effet n'est pas le même selon que la
+  perturbation <b>joue dans notre sens</b> ou <b>contre nous</b>.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 470" role="img" aria-label="Trois panneaux : le môle dévie et coupe le vent ; la risée, annoncée par une nappe sombre sur l'eau, renforce le vent ; la veine de courant emporte le bateau et change le vent ressenti.">
+      <defs>
+        <marker id="fl9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="860" height="470" fill="#F4F4F1"/>
+      <line x1="287" y1="18" x2="287" y2="452" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 6"/>
+      <line x1="573" y1="18" x2="573" y2="452" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 6"/>
+
+      <!-- PANNEAU 1 : le mole -->
+      <text x="148" y="32" font-size="15" fill="#1C2430" font-weight="bold" text-anchor="middle">1 · Le môle</text>
+      <rect x="18" y="330" width="256" height="60" fill="#a5f3fc" opacity=".5"/>
+      <line x1="18" y1="330" x2="274" y2="330" stroke="#0891b2" stroke-width="2"/>
+      <line x1="24" y1="120" x2="66" y2="120" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fl9)"/>
+      <line x1="24" y1="170" x2="66" y2="170" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fl9)"/>
+      <text x="44" y="104" font-size="11.5" fill="#1d4ed8" font-weight="bold" text-anchor="middle">vent réel</text>
+      <rect x="74" y="66" width="16" height="264" fill="#94a3b8" stroke="#1C2430" stroke-width="1.8"/>
+      <text x="82" y="56" font-size="11.5" fill="#334155" font-weight="bold" text-anchor="middle">le môle</text>
+      <ellipse cx="128" cy="268" rx="58" ry="26" fill="#cbd5e1" opacity=".55"/>
+      <line x1="100" y1="250" x2="140" y2="252" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#fl9)"/>
+      <text x="128" y="234" font-size="11" fill="#475569" text-anchor="middle">vent faible, dévié, tourbillonnant</text>
+      <line x1="94" y1="312" x2="232" y2="318" stroke="#1d4ed8" stroke-width="4" marker-end="url(#fl9)"/>
+      <text x="170" y="298" font-size="11" fill="#1d4ed8" font-weight="bold" text-anchor="middle">le flux se referme : rafale</text>
+      <rect x="150" y="338" width="30" height="8" rx="4" fill="#cbd5e1" stroke="#1C2430" stroke-width="1.5"/>
+      <path d="M165,338 C 172,330 172,324 165,318" fill="none" stroke="#e11d48" stroke-width="3"/>
+      <text x="148" y="414" font-size="10.8" fill="#059669" font-weight="bold" text-anchor="middle">✔ dans notre sens : l'abri nous calme, on repose les voiles</text>
+      <text x="148" y="438" font-size="10.8" fill="#e11d48" font-weight="bold" text-anchor="middle">✖ contre nous : l'ombre de vent nous stoppe net</text>
+
+      <!-- PANNEAU 2 : la risee -->
+      <text x="430" y="32" font-size="15" fill="#1C2430" font-weight="bold" text-anchor="middle">2 · La risée</text>
+      <rect x="301" y="330" width="256" height="60" fill="#a5f3fc" opacity=".5"/>
+      <line x1="301" y1="330" x2="557" y2="330" stroke="#0891b2" stroke-width="2"/>
+      <line x1="312" y1="110" x2="392" y2="114" stroke="#64748b" stroke-width="2" opacity=".7" marker-end="url(#fl9)"/>
+      <line x1="312" y1="150" x2="392" y2="154" stroke="#64748b" stroke-width="2" opacity=".7" marker-end="url(#fl9)"/>
+      <text x="352" y="94" font-size="11" fill="#64748b" text-anchor="middle">le vent d'avant, plus faible</text>
+      <line x1="316" y1="290" x2="500" y2="316" stroke="#059669" stroke-width="5.5" marker-end="url(#fl9)"/>
+      <text x="408" y="270" font-size="12" fill="#059669" font-weight="bold" text-anchor="middle">la risée : +5 à +10 nd d'un coup</text>
+      <ellipse cx="360" cy="362" rx="72" ry="16" fill="#334155" opacity=".35"/>
+      <text x="352" y="386" font-size="10.5" fill="#0e7490" text-anchor="middle">la nappe sombre annonce la risée</text>
+      <rect x="505" y="338" width="30" height="8" rx="4" fill="#cbd5e1" stroke="#1C2430" stroke-width="1.5"/>
+      <path d="M520,338 C 527,330 527,324 520,318" fill="none" stroke="#e11d48" stroke-width="3"/>
+      <text x="430" y="414" font-size="10.8" fill="#059669" font-weight="bold" text-anchor="middle">✔ elle nous rattrape par l'arrière : gros gain de vitesse</text>
+      <text x="430" y="438" font-size="10.8" fill="#e11d48" font-weight="bold" text-anchor="middle">✖ de face : le vent apparent gonfle d'un coup</text>
+
+      <!-- PANNEAU 3 : la veine de courant -->
+      <text x="716" y="32" font-size="15" fill="#1C2430" font-weight="bold" text-anchor="middle">3 · La veine de courant</text>
+      <rect x="592" y="330" width="256" height="60" fill="#a5f3fc" opacity=".5"/>
+      <line x1="592" y1="330" x2="848" y2="330" stroke="#0891b2" stroke-width="2"/>
+      <line x1="592" y1="120" x2="760" y2="124" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#fl9)"/>
+      <text x="668" y="104" font-size="11.5" fill="#1d4ed8" font-weight="bold" text-anchor="middle">vent réel</text>
+      <rect x="592" y="306" width="250" height="70" rx="12" fill="#a5f3fc" opacity=".45" stroke="#0891b2" stroke-width="2" stroke-dasharray="8 6"/>
+      <text x="716" y="298" font-size="12" fill="#0e7490" font-weight="bold" text-anchor="middle">la veine de courant</text>
+      <line x1="602" y1="334" x2="686" y2="334" stroke="#0891b2" stroke-width="2.5" marker-end="url(#fl9)"/>
+      <line x1="602" y1="356" x2="672" y2="356" stroke="#0891b2" stroke-width="2.5" marker-end="url(#fl9)"/>
+      <rect x="736" y="338" width="30" height="8" rx="4" fill="#cbd5e1" stroke="#1C2430" stroke-width="1.5"/>
+      <path d="M751,338 C 758,330 758,324 751,318" fill="none" stroke="#e11d48" stroke-width="3"/>
+      <text x="716" y="414" font-size="10.8" fill="#059669" font-weight="bold" text-anchor="middle">✔ portant : le vent apparent faiblit</text>
+      <text x="716" y="438" font-size="10.8" fill="#e11d48" font-weight="bold" text-anchor="middle">✖ contraire : il grossit, comme une risée</text>
+    </svg>
+    <figcaption>Fig. 4 — Trois fois où le vent réel change sous nos pieds : le <b>môle</b> le coupe
+    puis le renvoie en rafale au bout ; la <b>risée</b> le renforce d'un coup (annoncée par la nappe
+    sombre sur l'eau) ; la <b>veine de courant</b> emporte le bateau, donc son vent apparent. Vert :
+    quand ça joue dans notre sens ; rouge : quand ça joue contre nous.</figcaption>
+  </div>
+
+  <h3>Le môle (et la même mécanique à chaque pointe)</h3>
+  <p>Le vent ne contourne pas poliment un obstacle long : sous le vent du môle, le flux est
+  <b>réduit, dévié et tourbillonnant</b> sur une bonne longueur, puis, juste au <b>bout du môle</b>,
+  le flux se referme et s'<b>accélère</b> (effet Venturi) avant de retrouver la direction du vent
+  réel. Exactement le même schéma se rejoue à chaque point de la côte : c'est pour cela qu'on
+  accélère souvent « à la sortée de la pointe ».</p>
+  <p><b>✔ Dans notre sens :</b> couloir d'accélération au bout → le vent apparent grandit net
+  en sortant, la voile repart en force ; et l'abri reste utile en descente de régate ou pour se
+  calmer : on y repose les voiles, le vent apparent s'effondre avec la vitesse du bateau.</p>
+  <p><b>✖ Contre nous :</b> entrer par mégarde dans la zone d'ombre = le vent réel chute de moitié,
+  le vent apparent chute d'autant, les voiles faseyent et le bateau <b>stoppe vite</b> : on perd
+  le contrôle, on dérive avec le courant, et il faut viser la sortie (le bout du môle) en remettant
+  le maximum de toile dès qu'on sent la rafale se refermer.</p>
+
+  <h3>La risée : la bouffée qui arrive</h3>
+  <p>Une risée, c'est une <b>couche d'air plus fort qui descend du ciel</b> et avance sur l'eau :
+  elle s'annonce par ces fameuses <b>nappes sombres</b> qui glissent sur la surface (le vent
+  chiffonne l'eau, qui réfléchit moins la lumière). D'un bord à l'autre du plan d'eau, on peut
+  gagner ou perdre 5 à 10 nœuds de vent réel.</p>
+  <p><b>✔ Dans notre sens :</b> la risée nous rattrape <b>par l'arrière</b> — le vent apparent
+  grossit d'un coup, le catamaran accélère ; une fois lancé, son vent apparent tourne vers l'avant
+  (mécanique de la fig. 3), on peut alors <b>serrer un peu plus</b> la route sans décrocher.
+  C'est le moteur des « trains de risées » que les régatiers enchaînent.</p>
+  <p><b>✖ Contre nous :</b> elle débarque <b>de face</b> pendant que la route nous confronte à
+  elle (au près) : le vent apparent gonfle et se redresse brutalement — un mur de puissance.
+  Il faut <b>percher</b>, <b>choquer un peu</b>, tenir les barres, puis le bateau accélère et
+  tout se rééquilibre. Sur un bateau léger, la même risée non préparée met l'équipage à l'eau sans prévenir.</p>
+
+  <h3>La veine de courant : le courant entre dans l'équation</h3>
+  <p>Le courant se simplifie en un transport : il ne change pas le vent dans l'air, mais il
+  <b>emporte le bateau</b> et l'eau — donc il change le <b>vent ressenti</b>. Il entre dans la
+  formule sous la même case que le vent vitesse :</p>
+  <div class="formule">vent ressenti = vent réel − (vitesse sur l'eau + courant)
+    <small>Le courant se <b>retranche</b> ou s'<b>ajoute</b> à la vitesse du bateau dans la construction de la fig. 3.</small>
+  </div>
+  <p><b>✔ Dans notre sens (courant portant) :</b> le bateau glisse plus vite que sa vitesse propre,
+  il « fuit » le vent → le vent apparent <b>faiblit et tourne vers l'arrière</b> : on a l'impression
+  d'avoir moins de vent, et il faut <b>border</b> pour conserver la puissance. Bonus : les
+  vagues et la dérive sont plus douces.</p>
+  <p><b>✖ Contre nous (courant contraire) :</b> le bateau avance tout juste au sol, le vent réel
+  « défile » plus vite devant lui → le vent apparent <b>grossit, comme une risée permanente</b> qu'on
+  ne peut ni éviter ni choquer. Au près serré, c'est le fameux combo dur : petit vent + gros courant.
+  Juste au bord, la veine contraire peut aussi <b>faire dériver à contre-bord</b> quand le vent tombe.
+  C'est pour cela qu'en régate on cherche la veine favorable comme on cherche une risée : par la
+  couleur de l'eau.</p>
 </section>
 </main>
 
