@@ -157,7 +157,7 @@ function calc(){
  const drive=Math.max(0,airL*Math.sin(appAngle*Math.PI/180)*.82+airD*Math.cos(appAngle*Math.PI/180)*.3);
  const hc=coeff(fi),qh=.5*rhoW*boat*boat,foilL=qh*foilA*hc.cl,foilD=qh*foilA*(.012+.02*hc.cl*hc.cl),hullR=.5*rhoW*boat*boat*.85*num('hullDrag');
  const weight=mass*9.81,ratio=foilL/weight,hydro=foilD+hullR,net=drive-hydro,heel=Math.min(35,Math.max(0,airL*.7/(mass*9.81*.9)*57.3));
- return{wind,boat,area,trim,app,appAngle,aoa,sc,airL,airD,drive,fi,foilA,hc,foilL,foilD,hullR,weight,ratio,hydro,net,heel,mass};
+ return{wind,boat,area,trim,app,appAngle,aoa,sc,airL,airD,drive,fi,foilA,hc,foilL,foilD,hullR,weight,ratio,hydro,net,heel,mass,rhoW};
 }
 function drawPlot(canvas,series,labels,maxY){
  const ctx=canvas.getContext('2d'),w=canvas.clientWidth||600,h=230,dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
