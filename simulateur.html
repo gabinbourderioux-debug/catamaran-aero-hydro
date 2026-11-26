@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur du vent apparent — Aérodynamique du Catamaran</title>
+<meta name="description" content="Bouge deux curseurs (vent réel et vitesse du bateau) et regarde le triangle des vitesses se construire en direct : le vent apparent apparaît avec la même méthode que le schéma du cours.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:title" content="Simulateur du vent apparent — Aérodynamique du Catamaran">
+<meta property="og:description" content="Bouge deux curseurs (vent réel et vitesse du bateau) et regarde le triangle des vitesses se construire en direct : le vent apparent apparaît avec la même méthode que le schéma du cours.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/simulateur.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
+<style>
+  .curseurs{display:grid;grid-template-columns:250px 1fr;gap:10px 16px;align-items:center;margin:18px 0 6px;max-width:680px}
+  .curseurs label{font-weight:700;color:var(--titre)}
+  .curseurs output{color:var(--bleu);font-weight:800}
+  .curseurs input[type=range]{width:100%;accent-color:var(--bleu);cursor:pointer}
+  .actions-sim{margin:8px 0 4px}
+  .verdict{font-size:1.02rem}
+  .verdict b{color:var(--titre)}
+  @media(max-width:640px){.curseurs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Simulateur : le vent apparent en direct</h1>
+  <p>Bouge les deux curseurs et regarde la construction se dessiner : le vent réel arrive, le bateau fabrique son vent de vitesse, les reportés se croisent — et le vent apparent sort du triangle.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="aero.html">La voile</a></li>
+    <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+    <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
+    <li><a href="hydro.html">Les coques</a></li>
+    <li><a href="foils.html">Les foils</a></li>
+    <li><a href="stabilite.html">Stabilité</a></li>
+    <li><a href="meteo.html">Météo</a></li>
+    <li><a href="simulateur.html">Simulateur</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+
+<section class="carteforce" id="simu">
+  <h2><span class="num">1</span> Le triangle des vitesses, curseurs en main</h2>
+  <p>C'est exactement la construction de la <a href="aero.html#vent-apparent">figure 3 du cours</a> :
+  le <b style="color:#1d4ed8">vent réel</b> arrive vers le bateau, le <b style="color:#059669">vent vitesse</b>
+  arrive de droit devant (le vent que le bateau fabrique en avançant), les deux reportés en
+  <b>pointillés gris</b> se croisent, et le <b style="color:#7c3aed">vent apparent</b> va du
+  <b>croisement des reportés</b> jusqu'au bateau.</p>
+
+  <div class="curseurs">
+    <label for="inVR">Vent réel : <output id="oVR">15</output> nd</label>
+    <input type="range" id="inVR" min="0" max="30" step="1" value="15">
+    <label for="inVB">Vitesse du bateau : <output id="oVB">10</output> nd</label>
+    <input type="range" id="inVB" min="0" max="30" step="1" value="10">
+  </div>
+  <div class="actions-sim">
+    <button class="btn" id="exCours" type="button">Revenir à l'exemple du cours (15 nd / 10 nd)</button>
+  </div>
+
+  <div class="figure" id="dessin" aria-live="polite"></div>
+
+  <div class="encadre bleu verdict" id="verdict"></div>
+
+  <div class="encadre">
+    <b>Les trois réflexes à tester :</b> laisse le vent réel à 15 et pousse la vitesse du bateau
+    (le vent apparent <b>grossit et remonte vers l'avant</b>) ; mets le vent réel à 0
+    (il ne reste que le vent de vitesse) ; mets le bateau à 0 (on sent exactement le vent réel).
+    Tu viens de <b>voir</b> pourquoi un catamaran rapide « fabrique son propre vent ».
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="test.html" style="color:#E8D48B">Zone test</a>
+  <a href="confidentialite.html" style="color:#E8D48B">Confidentialité</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+<script>
+const inVR = document.getElementById('inVR'), inVB = document.getElementById('inVB');
+const oVR = document.getElementById('oVR'), oVB = document.getElementById('oVB');
+
+const S = 12;
+const B = [360, 480];
+const DIR_R = [0.301, -0.953];
+
+function ligne(a, b, col, w, marker, dash){
+  return '<line x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) +
+    '" y2="' + b[1].toFixed(1) + '" stroke="' + col + '" stroke-width="' + w + '"' +
+    (dash ? ' stroke-dasharray="6 5"' : '') +
+    (marker ? ' marker-end="url(#' + marker + ')"' : '') + '/>';
+}
+function texte(x, y, t, col, taille, ancre, gras){
+  return '<text x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" font-size="' + (taille || 12.5) + '"' +
+    (gras ? ' font-weight="bold"' : '') + ' fill="' + col + '"' +
+    (ancre ? ' text-anchor="' + ancre + '"' : '') + '>' + t + '</text>';
+}
+
+function dessiner(){
+  const vr = +inVR.value, vb = +inVB.value;
+  oVR.textContent = vr; oVB.textContent = vb;
+
+  const A = [B[0] + vb * S, B[1]];
+  const W = [B[0] + vr * S * DIR_R[0], B[1] + vr * S * DIR_R[1]];
+  const C = [A[0] + W[0] - B[0], A[1] + W[1] - B[1]];
+  const va = Math.hypot(C[0] - B[0], C[1] - B[1]) / S;
+  const ang = Math.round(Math.abs(Math.atan2(C[1] - B[1], C[0] - B[0]) * 180 / Math.PI));
+
+  const defs = '<defs>' +
+    '<marker id="mrVR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>' +
+    '<marker id="mrVV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>' +
+    '<marker id="mrVA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>' +
+    '</defs>';
+
+  let g = '';
+  g += ligne(A, C, '#94a3b8', 2, null, true);
+  g += ligne(W, C, '#94a3b8', 2, null, true);
+  if(vr > 0) g += ligne(W, B, '#1d4ed8', 3.5, 'mrVR');
+  if(vb > 0) g += ligne(A, B, '#059669', 3.5, 'mrVV');
+  if(vr > 0 || vb > 0) g += ligne(C, B, '#7c3aed', 3.5, 'mrVA');
+
+  g += '<circle cx="' + B[0] + '" cy="' + B[1] + '" r="6" fill="#1C2430"/>';
+  g += texte(B[0] - 96, B[1] + 26, 'le bateau (il file vers la droite \u2192)', '#334155', 12);
+  if(vr > 0 || vb > 0){
+    g += '<circle cx="' + C[0].toFixed(1) + '" cy="' + C[1].toFixed(1) + '" r="5" fill="#FFCC00" stroke="#1C2430" stroke-width="1.5"/>';
+  }
+
+  const labVR = [(W[0] + B[0]) / 2, (W[1] + B[1]) / 2];
+  const labVV = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+  const labVA = [(C[0] + B[0]) / 2, (C[1] + B[1]) / 2];
+  if(vr > 0) g += texte(labVR[0] + 12, labVR[1], 'vent réel = ' + vr + ' nd', '#1d4ed8', 12.5, null, true);
+  if(vb > 0) g += texte(labVV[0], labVV[1] - 16, 'vent vitesse = ' + vb + ' nd', '#059669', 12.5, 'middle', true);
+  if(vr > 0 || vb > 0){
+    g += texte(labVA[0] - 14, labVA[1] + 4, 'vent apparent \u2248 ' + va.toFixed(1) + ' nd', '#7c3aed', 12.5, 'end', true);
+    g += texte(C[0], C[1] - 12, 'le croisement des reportés', '#475569', 11, 'middle');
+  }
+  g += texte(30, 24, 'La construction de la figure 3, en direct', '#1C2430', 15, null, true);
+  g += texte(30, 620, 'Échelle : 12 px = 1 nd — le vent réel arrive du même côté que sur la figure 3 du cours.', '#64748b', 11.5);
+
+  document.getElementById('dessin').innerHTML =
+    '<svg viewBox="0 0 920 640" role="img" aria-label="Triangle des vitesses interactif">' + defs + g + '</svg>';
+
+  let msg = 'Vent apparent estimé : ';
+  if(vr === 0 && vb === 0) msg += '<b>0 nd';
+  else msg += '<b>\u2248 ' + va.toFixed(1) + ' nd</b>, arrivant à <b>' + ang + '\u00b0</b> de la route';
+  if(vr === 0 && vb === 0) msg += '</b>.';
+  let suite;
+  if(vb === 0 && vr === 0) suite = 'Tout est calme… gonfle les curseurs !';
+  else if(vb === 0) suite = 'Bateau arrêté : tu sens exactement le vent réel.';
+  else if(vr === 0) suite = 'Plus aucun vrai vent : il ne reste que le vent que tu fabriques — utile pour rentrer au moteur, pas pour briller.';
+  else if(va - vr >= 0.5) suite = 'Plus fort que le réel (+' + (va - vr).toFixed(1) + ' nd) : le turbo du catamaran ! Et note : plus tu vas vite, plus le vent apparent remonte vers l\u2019avant.';
+  else if(va - vr <= -0.5) suite = 'Moins fort que le réel : ça arrive quand la route \u00ab fuit \u00bb sous le vent du vent réel.';
+  else suite = 'Aux alentours de l\u2019équilibre.';
+  document.getElementById('verdict').innerHTML = msg + ' ' + suite;
+}
+
+inVR.addEventListener('input', dessiner);
+inVB.addEventListener('input', dessiner);
+document.getElementById('exCours').addEventListener('click', () => {
+  inVR.value = 15; inVB.value = 10; dessiner();
+});
+dessiner();
+</script>
+
+</body>
+</html>
