@@ -3,7 +3,7 @@
    remplir l'URL ci-dessous, ex. "https://mon-site.goatcounter.com/count". */
 (function () {
   "use strict";
-  var URL_COMPTE = "";
+  var URL_COMPTE = "https://gabinbourderioux.goatcounter.com/count";
   if (!URL_COMPTE) return;
   try {
     if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
