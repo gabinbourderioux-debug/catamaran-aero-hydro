@@ -49,7 +49,7 @@
 <main class="conteneur">
 
   <div class="porte" id="porte">
-    <p><b>Cette zone est privée.</b> Entre le <b>mot de passe</b> :</p>
+    <p><b>Accès à la zone de travail.</b> Entre le <b>code</b> :</p>
     <div class="code-case">
       <input id="code" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="····"
         aria-label="mot de passe" title="mot de passe" autofocus>
@@ -69,21 +69,21 @@
     </div>
     <p class="err" id="err"></p>
     <button class="btn-entrer" id="entrer">Entrer</button>
-    <p style="font-size:.8rem;color:#94a3b8;margin-top:14px">🔒 Le mot de passe est personnel : il ne doit pas être montré ni partagé.</p>
+    <p style="font-size:.8rem;color:#94a3b8;margin-top:14px">Ce code masque simplement l’interface : les fichiers publiés restent accessibles par leur URL.</p>
   </div>
 
   <div class="atelier" id="atelier">
-    <h2 style="font-size:1.2rem"><span class="num">✓</span> Atelier ouvert — teste tout ce que tu veux</h2>
+    <h2 style="font-size:1.2rem"><span class="num">✓</span> Espace de prototypage</h2><p class="encadre" style="margin:12px 0">Cette zone n’est pas confidentielle : le contrôle du code est effectué dans le navigateur. Les pages publiées restent accessibles à toute personne connaissant leur adresse.</p>
     <p style="margin-top:12px"><a class="btn-entrer" style="display:inline-block;text-decoration:none" href="atelier.html">🧪 Ouvrir l'atelier interactif</a>
     <span style="font-size:.85rem;color:var(--gris)">— grande page de simulations en test (forces, foils, polaire, mini-jeu, QCM)</span></p>
-    <p style="margin-top:12px"><a class="btn-entrer" style="display:inline-block;text-decoration:none" href="labo.html">Mode labo — aérodynamique</a> <span style="font-size:.85rem;color:var(--gris)">— prototype indépendant, sans modifier le reste du site</span></p>
+    <p style="margin-top:12px"><a class="btn-entrer" style="display:inline-block;text-decoration:none" href="labo.html">Ouvrir le laboratoire scientifique</a> <span style="font-size:.85rem;color:var(--gris)">— voiles, foils, simulateur, météo et carnet d’essais</span></p>
     <p>Écris ton HTML, ton CSS et ton JS dans les cases, appuie sur <b>Exécuter</b>, le résultat s'affiche
     dans l'aperçu. Rien n'est enregistré sur le site : c'est ton brouillon.</p>
     <div class="gruillez">
       <div><h3>HTML</h3><textarea id="ta-html" spellcheck="false"></textarea></div>
       <div><h3>CSS</h3><textarea id="ta-css" spellcheck="false"></textarea></div>
       <div><h3>JavaScript</h3><textarea id="ta-js" spellcheck="false"></textarea></div>
-      <div><h3>Aperçu</h3><iframe id="apercu" title="Aperçu du test"></iframe></div>
+      <div><h3>Aperçu</h3><iframe id="apercu" title="Aperçu isolé du test" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe></div>
     </div>
     <div class="barre-atelier">
       <button class="btn-entrer" id="executer">Exécuter</button>
@@ -149,7 +149,7 @@ function executer() {
   const j = document.getElementById('ta-js').value;
   const doc = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
     '<style>body{font-family:sans-serif;margin:12px;color:#1e293b}' + c + '</style></head><body>' +
-    h + '<scr' + 'ipt>try{' + j + '}catch(e){document.body.innerHTML+=\'<pre style="color:#e11d48">\' + e + \'</pre>\'}</scr' + 'ipt></body></html>';
+    h + '<scr' + 'ipt>try{' + j + '}catch(e){const p=document.createElement(\'pre\');p.style.color=\'#e11d48\';p.textContent=String(e);document.body.appendChild(p)}</scr' + 'ipt></body></html>';
   document.getElementById('apercu').srcdoc = doc;
 }
 document.getElementById('executer').addEventListener('click', executer);
