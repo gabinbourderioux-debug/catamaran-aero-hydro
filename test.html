@@ -58,6 +58,7 @@ body{background:var(--zt-paper)}
 footer{margin-top:55px}
 @media(max-width:850px){.workbench{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.preview-frame{height:390px}#code-editor{height:340px}.intro{align-items:flex-start;flex-direction:column}}
 @media(max-width:480px){.zone{padding:0 13px;margin-top:18px}.panel-head{padding:0 12px}.tab{padding:9px 10px}.preview-frame{height:330px}}
+</style>
 </head>
 <body>
 <header class="hero hero--page">
@@ -65,8 +66,6 @@ footer{margin-top:55px}
   <p>Un espace simple pour créer, tester et vérifier des idées sans modifier le site publié.</p>
 </header>
 
-
-<div class="site-copy-access"><a href="refonte/index.html">Ouvrir le site recopié →</a></div>
 <main class="zone">
   <section class="lock" id="lock" aria-labelledby="lock-title">
     <h2 id="lock-title">Accéder à l’atelier</h2>
@@ -151,19 +150,7 @@ footer{margin-top:55px}
   function open(){lock.style.display='none';workspace.style.display='block';['html','css','js'].forEach(k=>{values[k]=localStorage.getItem(store[k]);if(values[k]===null)values[k]=starter[k];});show('html');run();}
   function show(lang){if(values[active]!==undefined)values[active]=code.value;active=lang;code.value=values[lang];tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.lang===lang)));document.getElementById('language-name').textContent=lang==='js'?'JavaScript':lang.toUpperCase();code.setAttribute('aria-label','Code '+lang.toUpperCase());}
   function save(){values[active]=code.value;localStorage.setItem(store[active],code.value);document.getElementById('save-status').textContent='Modifications sauvegardées';}
-  function run(){
-    save();
-    const html=values.html||'';
-    const css=values.css||'';
-    const js=values.js||'';
-    const openScript='<scr'+'ipt>';
-    const closeScript='<'+'/scr'+'ipt>';
-    const safeJs=js.replace(/<\/script/gi,'<\\/script');
-    const doc='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;font-family:system-ui,sans-serif;color:#172536}'+css+'.site-copy-access{max-width:1220px;margin:18px auto 0;padding:0 22px;text-align:right}.site-copy-access a{display:inline-block;background:#0c7895;color:#fff;text-decoration:none;padding:11px 16px;border-radius:9px;font-weight:650;font-size:.9rem}.site-copy-access a:hover{filter:brightness(.92)}@media(max-width:480px){.site-copy-access{padding:0 13px}}
-</style></head><body>'+html+openScript+'try{'+safeJs+'}catch(e){const p=document.createElement("pre");p.style.cssText="color:#b42318;white-space:pre-wrap";p.textContent="Erreur JavaScript : "+e;document.body.appendChild(p)}'+closeScript+'</body></html>';
-    document.getElementById('preview').srcdoc=doc;
-    document.getElementById('preview-status').textContent='Aperçu mis à jour';
-  }
+  function run(){save();const html=values.html||'';const css=values.css||'';const js=values.js||'';const safeJs=js.replace(/<\/script/gi,'<\\/script');const doc='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;font-family:system-ui,sans-serif;color:#172536}'+css+'</style></head><body>'+html+'<script>try{'+safeJs+'}catch(e){const p=document.createElement("pre");p.style.cssText="color:#b42318;white-space:pre-wrap";p.textContent="Erreur JavaScript : "+e;document.body.appendChild(p)}<\\/script></body></html>';document.getElementById('preview').srcdoc=doc;document.getElementById('preview-status').textContent='Aperçu mis à jour';}
   tabs.forEach(t=>t.addEventListener('click',()=>{save();show(t.dataset.lang);}));
   code.addEventListener('input',save);
   document.getElementById('run-code').addEventListener('click',run);
