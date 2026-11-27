@@ -69,6 +69,15 @@
   .stat-jeu strong{font-size:1.15rem;color:var(--titre);font-variant-numeric:tabular-nums}
   .jeu-aide{font-size:.85rem;color:var(--gris);text-align:center}
   @media(max-width:600px){.pad{gap:38px}.btn-pad{width:76px;height:76px}.jeu-actions .btn-jeu{flex:1 1 130px;padding:11px 12px}}
+  #jeu3d{display:block;width:100%;height:460px;max-width:760px;margin:0 auto;border:1px solid var(--bordure);border-radius:14px;overflow:hidden;background:#0b2940;touch-action:pan-y}
+  .jeu-vues{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .jeu-vues button{border:1px solid var(--bordure);border-radius:8px;padding:8px 14px;background:var(--carte);color:var(--txt);font-weight:700;cursor:pointer}
+  .jeu-vues button.actif{background:var(--marine);color:white;border-color:var(--marine)}
+  .jeu-reglage small{display:block;color:var(--gris);font-size:.78rem;margin-top:3px}
+  .jeu-reglage input[type=checkbox]{accent-color:var(--cyan)}
+  .jeu-aide{line-height:1.55}
+  @media(max-width:600px){#jeu3d{height:360px}.jeu-reglages{grid-template-columns:1fr 1fr}.jeu-reglage{padding:9px}.stats-jeu{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 </style>
 <style>
 .prototype-ribbon{position:sticky;top:0;z-index:90;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;background:var(--marine,#1C2430);border-bottom:2px solid #FFCC00;box-shadow:0 4px 16px rgba(0,0,0,.14)}
@@ -83,7 +92,7 @@
 
 <header class="hero hero--page">
   <h1>Mini-jeu : la course de bouées</h1>
-  <p>À la barre ! Le vent (15 nœuds) souffle du haut de la carte. Vire, empanne et choisis tes allures : le jeu simule vraiment le vent apparent, exactement comme ton cours.</p>
+  <p>À la barre : règle le vent et les courants, remonte au près, accélère au portant et franchis les quatre marques. Passe de la carte 2D à la vue 3D immersive.</p>
 </header>
 <div class="prototype-ribbon"><span>Copie de test · indépendante</span><a href="index.html">Accueil de la copie</a><a href="experience.html">Studio interactif</a><a href="../test.html">Retour zone test</a></div>
 
@@ -127,7 +136,14 @@
     <div class="jeu-reglage"><label for="reg-angle">Direction du vent <output id="reg-angle-val">0°</output></label><input id="reg-angle" type="range" min="-60" max="60" value="0" step="5"></div>
     <div class="jeu-reglage"><label for="reg-difficulte">Difficulté</label><select id="reg-difficulte"><option value="facile">Débutant</option><option value="normal" selected>Équipage régulier</option><option value="expert">Expert</option></select></div>
   </div>
+  <div class="jeu-reglages">
+    <div class="jeu-reglage"><label for="reg-courant">Force du courant <output id="reg-courant-val">1 nd</output></label><input id="reg-courant" type="range" min="0" max="6" value="1" step=".5"><small>Vitesse du courant dans l'eau</small></div>
+    <div class="jeu-reglage"><label for="reg-courant-angle">Direction du courant <output id="reg-courant-angle-val">180°</output></label><input id="reg-courant-angle" type="range" min="0" max="355" value="180" step="5"><small>0° = vers le haut du parcours</small></div>
+    <div class="jeu-reglage"><label><input id="reg-inverse" type="checkbox"> Inverser le courant</label><small>Inverse le sens du courant choisi</small></div>
+  </div>
   <div class="jeu-options"><label><input id="reg-rafales" type="checkbox" checked> Rafales et bascules de vent</label><label><input id="reg-trace" type="checkbox" checked> Afficher ma trajectoire</label></div>
+  <div class="jeu-vues"><button id="vue-2d" type="button">Vue carte 2D</button><button id="vue-3d" class="actif" type="button">Vue 3D</button></div>
+
 
   <div class="stats-jeu">
     <div class="stat-jeu"><small>Chrono</small><strong id="chrono-jeu">0,0 s</strong></div>
@@ -137,7 +153,8 @@
     <div class="stat-jeu"><small>Pénalités</small><strong id="penalites-jeu">0 s</strong></div>
   </div>
 
-  <div class="figure">
+  <canvas id="jeu3d" aria-label="Vue 3D du catamaran sur le parcours"></canvas>
+  <div class="figure" id="jeu2d-wrap" style="display:none">
   <svg id="jeu" viewBox="0 0 600 880" role="img" aria-label="Mini-jeu : course de bouées en catamaran, vue de dessus, vent du haut">
     <defs>
       <marker id="flj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>
@@ -188,12 +205,14 @@
   <h2><span class="num">2</span> Comment jouer</h2>
   <ol>
     <li><b>À la barre</b> : flèches ← et → ou touches A / D. Sur téléphone, maintiens les boutons ronds pour barrer.</li>
-    <li><b>Réglages</b> : choisis la force et la direction du vent ainsi que la difficulté avant le départ. Active les rafales pour un vent variable.</li>
+    <li><b>Vent</b> : règle sa force, sa direction et les rafales. La vitesse dépend de l'angle du vent apparent.</li>
+    <li><b>Courants</b> : règle la force et la direction du courant. Coche « Inverser le courant » pour faire passer le courant dans le sens opposé. Le courant déplace le bateau sur le fond sans augmenter sa vitesse dans l'eau.</li>
+    <li><b>Allures</b> : au près, remonte face au vent en tirant des bords ; au portant, navigue avec le vent venant de l'arrière et empanne pour changer de côté.</li>
     <li><b>Pénalités</b> : toucher une limite du plan d'eau ajoute 3 secondes. Évite les bords pour conserver ton temps.</li>
     <li><b>Regarde la flèche rouge VA</b> : c'est ton vent apparent, dessiné en direct autour du bateau. Plus elle est longue, plus tu as de puissance.</li>
     <li><b>Faseie ?</b> Si la flèche VA s'aligne avec le nez du bateau (moins de 25°), les voiles faseient : abats un peu pour retrouver de la vitesse — le même piège que celui du virement de bord.</li>
     <li><b>L'allure fait la vitesse</b> : au travers et au reaching, tu vas jusqu'à 25 % plus vite que le vent ; au vent arrière tu es lent, et ton vent apparent faiblit avec toi.</li>
-    <li><b>À toi le record</b> : le chrono tourne entre le « GO » et la ligne d'arrivée ; ton meilleur temps est gardé dans ce navigateur.</li>
+    <li><b>À toi le record</b> : le chrono inclut les pénalités de contact avec les limites. Le meilleur temps est conservé dans ce navigateur.</li>
   </ol>
   <div class="encadre bleu">Le moteur du jeu est exactement le triangle des vitesses de ton cours : VA = vent réel − vitesse du bateau, et la puissance des voiles dépend de l'angle du vent <b>apparent</b>. Relis <a href="aero.html#vent-apparent">le vent apparent</a>, <a href="manoeuvres.html">les manœuvres</a>, ou retrouve ces mêmes vecteurs libres en main dans <a href="simulateur.html">le simulateur</a>.</div>
 </section>
@@ -208,249 +227,124 @@
 </footer>
 
 <script>
-const S = 2.2;
-const ROT = 1.9;
-const WR = 15;
-let etat = 'pret';
-let bx = 300, by = 845, theta = Math.PI / 4, v = 0;
-let steerCam = 0, steerPad = 0;
-let tCourse = 0, cd = 0, prochain = 0, coteVoile = 1, Beta = 0, tickT = 0;
-let tracePts = [];
-const marques = [
-  {x: 150, y: 160, n: '1'},
-  {x: 520, y: 420, n: '2'},
-  {x: 120, y: 620, n: '3'},
-  {x: 300, y: 800, n: 'A'}
-];
-const POL = [[0,0.02],[15,0.04],[22,0.08],[30,0.35],[40,0.65],[50,0.85],[62,1.0],[75,1.12],[90,1.2],[100,1.26],[110,1.22],[120,1.1],[135,0.95],[150,0.82],[165,0.74],[180,0.72]];
-
-function polaire(a){
-  if (a <= POL[0][0]) return POL[0][1];
-  for (let i = 1; i < POL.length; i++) {
-    if (a <= POL[i][0]) {
-      const a0 = POL[i-1][0], f0 = POL[i-1][1], a1 = POL[i][0], f1 = POL[i][1];
-      return f0 + (f1 - f0) * (a - a0) / (a1 - a0);
-    }
-  }
-  return 0.72;
+const S=2.2;
+let ROT=1.9,WR=15,windAngle=0,currentSpeed=1,currentAngle=180,currentReverse=false,rafales=true;
+let etat='pret',bx=300,by=845,theta=Math.PI/4,v=0,steerCam=0,steerPad=0;
+let tCourse=0,cd=0,prochain=0,coteVoile=1,Beta=0,tracePts=[],penalites=0,cooldownMur=0;
+const marques=[{x:150,y:160,n:'1'},{x:520,y:420,n:'2'},{x:120,y:620,n:'3'},{x:300,y:800,n:'A'}];
+const POL=[[0,.02],[15,.04],[22,.08],[30,.35],[40,.65],[50,.85],[62,1],[75,1.12],[90,1.2],[100,1.26],[110,1.22],[120,1.1],[135,.95],[150,.82],[165,.74],[180,.72]];
+const $=id=>document.getElementById(id);
+const bateauG=$('bateau'),voile=$('voile'),trace=$('trace'),vaG=$('va-g'),vaL=$('va-l'),vaT=$('va-t'),anneau=$('anneau'),ovCompte=$('ov-compte'),ovInfo=$('ov-info'),msgEl=$('msg-jeu');
+function polaire(a){if(a<=POL[0][0])return POL[0][1];for(let i=1;i<POL.length;i++){if(a<=POL[i][0]){const [a0,f0]=POL[i-1],[a1,f1]=POL[i];return f0+(f1-f0)*(a-a0)/(a1-a0);}}return .72;}
+function allureNom(b){if(b<25)return'Face au vent';if(b<70)return'Près';if(b<112)return'Travers';if(b<155)return'Portant';return'Vent arrière';}
+function fmt(n){return Number(n).toFixed(1).replace('.',',');}
+function msg(s,alerte=false){msgEl.textContent=s;msgEl.classList.toggle('alerte',alerte);}
+function ventA(t){const gust=rafales?(1+.16*Math.sin(t*.72)+.08*Math.sin(t*1.91)):1;const a=(windAngle+(rafales?7*Math.sin(t*.23):0))*Math.PI/180;const f=WR*gust;return{x:Math.sin(a)*f,y:Math.cos(a)*f,force:f,angle:a};}
+function courant(){const a=currentAngle*Math.PI/180,sign=currentReverse?-1:1;return{x:Math.sin(a)*currentSpeed*sign,y:Math.cos(a)*currentSpeed*sign};}
+function lireRec(){try{return JSON.parse(localStorage.getItem('recordJeuPrototypeV3'));}catch(e){return null;}}
+function afficherRecord(){const r=lireRec();$('record-jeu').innerHTML=r?'<b>Record :</b> '+fmt(r.temps)+' s':'<b>Record :</b> à toi de le fixer !';}
+function actualiserReglages(){
+ WR=+$('reg-vent').value;windAngle=+$('reg-angle').value;currentSpeed=+$('reg-courant').value;currentAngle=+$('reg-courant-angle').value;currentReverse=$('reg-inverse').checked;rafales=$('reg-rafales').checked;
+ ROT=$('reg-difficulte').value==='facile'?2.35:$('reg-difficulte').value==='expert'?1.5:1.9;
+ $('reg-vent-val').textContent=WR+' nd';$('reg-angle-val').textContent=windAngle+'°';$('reg-courant-val').textContent=currentSpeed+' nd';$('reg-courant-angle-val').textContent=currentAngle+'°'+(currentReverse?' inversé':'');
 }
-
-function allureNom(b){
-  if (b < 25) return 'face au vent — faseie !';
-  if (b < 70) return 'près';
-  if (b < 112) return 'travers';
-  if (b < 155) return 'portant';
-  return 'vent arrière';
-}
-
-const $ = id => document.getElementById(id);
-const bateauG = $('bateau'), voile = $('voile'), trace = $('trace');
-const vaG = $('va-g'), vaL = $('va-l'), vaT = $('va-t');
-const anneau = $('anneau'), ovCompte = $('ov-compte'), ovInfo = $('ov-info'), msgEl = $('msg-jeu');
-
-function msg(texte, alerte){
-  msgEl.textContent = texte;
-  msgEl.classList.toggle('alerte', !!alerte);
-}
-
-function lireRec(){
-  try { return JSON.parse(localStorage.getItem('recordJeu')); } catch (e) { return null; }
-}
-function fmt(t){ return t.toFixed(1).replace('.', ','); }
-function afficherRecord(){
-  const r = lireRec();
-  $('record-jeu').innerHTML = r ? '<b>Record :</b> ' + fmt(r.temps) + ' s' : '<b>Record :</b> à toi de le fixer !';
-}
-
+['reg-vent','reg-angle','reg-courant','reg-courant-angle','reg-inverse','reg-rafales','reg-difficulte'].forEach(id=>$(id).addEventListener('input',actualiserReglages));
+$('reg-trace').addEventListener('change',()=>{trace.style.display=$('reg-trace').checked?'':'none';});
+function choisirVue(mode){const is3d=mode==='3d';$('jeu3d').style.display=is3d?'block':'none';$('jeu2d-wrap').style.display=is3d?'none':'block';$('vue-3d').classList.toggle('actif',is3d);$('vue-2d').classList.toggle('actif',!is3d);}
+$('vue-2d').addEventListener('click',()=>choisirVue('2d'));$('vue-3d').addEventListener('click',()=>choisirVue('3d'));
 function remiseAZero(){
-  bx = 300; by = 845; theta = Math.PI / 4; v = 0;
-  tCourse = 0; prochain = 0; tracePts = [];
-  steerPad = 0; steerCam = 0;
-  document.querySelectorAll('#jeu .mq').forEach(g => g.classList.remove('pase'));
-  ovCompte.setAttribute('visibility', 'hidden');
-  ovInfo.setAttribute('visibility', 'hidden');
-  $('chrono-jeu').innerHTML = '<b>Chrono :</b> 0,0 s';
-  msg('');
+ bx=300;by=845;theta=Math.PI/4;v=0;tCourse=0;prochain=0;tracePts=[];penalites=0;cooldownMur=0;steerPad=0;steerCam=0;
+ document.querySelectorAll('#jeu .mq').forEach(g=>g.classList.remove('pase'));
+ ovCompte.setAttribute('visibility','hidden');ovInfo.setAttribute('visibility','hidden');
+ $('chrono-jeu').textContent='0,0 s';$('vitesse-jeu').textContent='0,0 nd';$('allure-jeu').textContent='—';$('progression-jeu').textContent='0 / 4';$('penalites-jeu').textContent='0 s';
+ trace.setAttribute('points','');trace.style.display=$('reg-trace').checked?'':'none';msg('');
 }
-function depart(){
-  if (etat === 'decompte') return;
-  remiseAZero();
-  etat = 'decompte';
-  cd = 3.2;
-  $('btn-depart').textContent = 'Recommencer (Espace)';
-}
-
+function depart(){if(etat==='decompte')return;actualiserReglages();remiseAZero();etat='decompte';cd=3.2;$('btn-depart').textContent='Recommencer (Espace)';}
 function termine(){
-  etat = 'fini';
-  const r = lireRec();
-  const nouveau = !r || tCourse < r.temps;
-  if (nouveau) {
-    try { localStorage.setItem('recordJeu', JSON.stringify({ temps: tCourse })); } catch (e) {}
-    afficherRecord();
-  }
-  ovCompte.setAttribute('visibility', 'hidden');
-  ovInfo.textContent = 'Arrivée ! ' + fmt(tCourse) + ' s' + (nouveau ? ' \ud83c\udfc6' : '');
-  ovInfo.setAttribute('visibility', 'visible');
-  msg(nouveau ? 'Nouveau record ! \ud83c\udfc6' : 'Arrivée en ' + fmt(tCourse) + ' s — record à battre : ' + fmt(r.temps) + ' s');
+ etat='fini';const final=tCourse+penalites,r=lireRec(),record=!r||final<r.temps;
+ if(record){try{localStorage.setItem('recordJeuPrototypeV3',JSON.stringify({temps:final}));}catch(e){}afficherRecord();}
+ ovCompte.setAttribute('visibility','hidden');ovInfo.textContent='Arrivée ! '+fmt(final)+' s'+(record?' 🏆':'');ovInfo.setAttribute('visibility','visible');
+ msg(record?'Nouveau record !':'Arrivée en '+fmt(final)+' s'+(r?' — record : '+fmt(r.temps)+' s':''));
 }
-
-function tick(dt, t){
-  if (etat === 'decompte') {
-    cd -= dt;
-    ovCompte.setAttribute('visibility', 'visible');
-    if (cd <= 0) {
-      etat = 'course';
-      ovCompte.textContent = 'GO !';
-      setTimeout(() => { if (etat === 'course') ovCompte.setAttribute('visibility', 'hidden'); }, 700);
-    } else {
-      ovCompte.textContent = String(Math.ceil(cd));
-    }
-    return;
-  }
-  if (etat !== 'course') return;
-
-  tCourse += dt;
-  const steer = Math.max(-1, Math.min(1, steerCam + steerPad));
-  theta += steer * ROT * dt;
-  if (theta > Math.PI) theta -= 2 * Math.PI;
-  if (theta < -Math.PI) theta += 2 * Math.PI;
-
-  const ax = -Math.sin(theta) * v, ay = WR + Math.cos(theta) * v;
-  const a = Math.sqrt(ax * ax + ay * ay);
-  const fx = Math.sin(theta), fy = -Math.cos(theta);
-  Beta = a > 0.001 ? Math.acos(Math.max(-1, Math.min(1, (fx * -ax + fy * -ay) / a))) * 180 / Math.PI : 0;
-  let cible = a * polaire(Beta);
-  if (steer) cible *= (1 - 0.12 * Math.abs(steer));
-  cible = Math.min(cible, WR * 2.4);
-  v += (cible - v) * Math.min(1, dt * 1.6);
-  if (v < 0) v = 0;
-
-  bx += Math.sin(theta) * v * S * dt;
-  by -= Math.cos(theta) * v * S * dt;
-  let mur = false;
-  if (bx < 24) { bx = 24; mur = true; }
-  if (bx > 576) { bx = 576; mur = true; }
-  if (by < 24) { by = 24; mur = true; }
-  if (by > 856) { by = 856; mur = true; }
-  if (mur) v *= Math.max(0, 1 - 2 * dt);
-
-  const m = marques[prochain];
-  if (m && Math.hypot(m.x - bx, m.y - by) < 24) {
-    document.getElementById('mq-' + m.n).classList.add('pase');
-    prochain++;
-    if (prochain < marques.length) msg('Bouée ' + m.n + ' validée !');
-    else termine();
-  }
-
-  if (etat === 'course') {
-    if (Beta < 25 && v < 3) msg('Faseie ! Abats un peu pour reprendre de la vitesse.', true);
-    else if (msgEl.textContent.indexOf('Faseie') === 0 || msgEl.textContent.indexOf('Bouée') === 0) msg('');
-  }
-
-  tracePts.push(bx.toFixed(1) + ',' + by.toFixed(1));
-  if (tracePts.length > 240) tracePts.shift();
-  trace.setAttribute('points', tracePts.join(' '));
-
-  $('chrono-jeu').innerHTML = '<b>Chrono :</b> ' + fmt(tCourse) + ' s';
-  $('vitesse-jeu').innerHTML = '<b>Vitesse :</b> ' + fmt(v) + ' nd';
-  $('allure-jeu').innerHTML = '<b>Allure :</b> ' + allureNom(Beta);
+function tick(dt,t){
+ if(etat==='decompte'){cd-=dt;ovCompte.setAttribute('visibility','visible');if(cd<=0){etat='course';ovCompte.textContent='GO !';setTimeout(()=>{if(etat==='course')ovCompte.setAttribute('visibility','hidden');},700);}else ovCompte.textContent=String(Math.ceil(cd));return;}
+ if(etat!=='course')return;
+ tCourse+=dt;cooldownMur=Math.max(0,cooldownMur-dt);
+ const steer=Math.max(-1,Math.min(1,steerCam+steerPad));theta+=steer*ROT*dt;
+ while(theta>Math.PI)theta-=2*Math.PI;while(theta< -Math.PI)theta+=2*Math.PI;
+ const w=ventA(tCourse),cur=courant();
+ const hx=Math.sin(theta),hy=-Math.cos(theta);
+ const groundX=hx*v+cur.x,groundY=hy*v+cur.y;
+ const appX=w.x-groundX,appY=w.y-groundY,appMag=Math.hypot(appX,appY);
+ Beta=appMag>.001?Math.acos(Math.max(-1,Math.min(1,(hx*(-appX)+hy*(-appY))/appMag)))*180/Math.PI:0;
+ let target=appMag*polaire(Beta);if(steer)target*=1-.12*Math.abs(steer);target=Math.max(0,Math.min(target,WR*2.4));
+ v+=(target-v)*Math.min(1,dt*1.6);if(v<0)v=0;
+ const gx=hx*v+cur.x,gy=hy*v+cur.y;
+ bx+=gx*S*dt;by+=gy*S*dt;
+ let wall=false;if(bx<24){bx=24;wall=true;}if(bx>576){bx=576;wall=true;}if(by<24){by=24;wall=true;}if(by>856){by=856;wall=true;}
+ if(wall){v*=Math.max(0,1-2*dt);if(cooldownMur<=0){penalites+=3;cooldownMur=1.5;msg('Limite touchée : +3 secondes.',true);}}
+ const m=marques[prochain];if(m&&Math.hypot(m.x-bx,m.y-by)<24){$('mq-'+m.n).classList.add('pase');prochain++;$('progression-jeu').textContent=prochain+' / 4';if(prochain<marques.length)msg('Bouée '+m.n+' validée !');else termine();}
+ if(etat==='course'&&Beta<24&&v<3)msg('Dans la zone morte : abats pour reprendre de la vitesse.',true);
+ tracePts.push(bx.toFixed(1)+','+by.toFixed(1));if(tracePts.length>300)tracePts.shift();trace.setAttribute('points',tracePts.join(' '));
+ $('chrono-jeu').textContent=fmt(tCourse+penalites)+' s';$('vitesse-jeu').textContent=fmt(v)+' nd';$('allure-jeu').textContent=allureNom(Beta);$('penalites-jeu').textContent=penalites+' s';
 }
-
 function dessine(t){
-  const deg = theta * 180 / Math.PI;
-  bateauG.setAttribute('transform', 'translate(' + bx + ',' + by + ') rotate(' + deg + ')');
-  const cross = Math.sin(theta) * (WR + Math.cos(theta) * v) - (-Math.cos(theta)) * (-Math.sin(theta) * v);
-  if (Math.abs(cross) > 0.2) coteVoile = cross > 0 ? 1 : -1;
-  voile.setAttribute('class', 'voile' + (Beta < 25 ? ' molle' : ''));
-  voile.setAttribute('d', coteVoile > 0 ? 'M0,-4 Q 13,3 15,20' : 'M0,-4 Q -13,3 -15,20');
-
-  const ax = -Math.sin(theta) * v, ay = WR + Math.cos(theta) * v;
-  const a = Math.sqrt(ax * ax + ay * ay);
-  if (a > 1.5) {
-    const L = Math.min(130, a * 4.5);
-    vaL.setAttribute('x1', bx); vaL.setAttribute('y1', by);
-    vaL.setAttribute('x2', bx + ax / a * L); vaL.setAttribute('y2', by + ay / a * L);
-    vaT.setAttribute('x', bx + ax / a * L + 8); vaT.setAttribute('y', by + ay / a * L);
-    vaG.setAttribute('opacity', '1');
-  } else {
-    vaG.setAttribute('opacity', '0');
-  }
-
-  const m = (prochain < marques.length && etat !== 'fini') ? marques[prochain] : null;
-  if (m) {
-    anneau.setAttribute('visibility', 'visible');
-    anneau.setAttribute('cx', m.x); anneau.setAttribute('cy', m.y);
-    anneau.setAttribute('r', String(19 + 4 * Math.sin(t * 4)));
-  } else {
-    anneau.setAttribute('visibility', 'hidden');
-  }
-  $('fleches-vent').setAttribute('transform', 'translate(0,' + ((t * 26) % 30) + ')');
+ bateauG.setAttribute('transform','translate('+bx+','+by+') rotate('+(theta*180/Math.PI)+')');
+ const cross=Math.sin(theta)*(WR+Math.cos(theta)*v)-(-Math.cos(theta))*(-Math.sin(theta)*v);if(Math.abs(cross)>.2)coteVoile=cross>0?1:-1;
+ voile.setAttribute('class','voile'+(Beta<25?' molle':''));voile.setAttribute('d',coteVoile>0?'M0,-4 Q 13,3 15,20':'M0,-4 Q -13,3 -15,20');
+ const w=ventA(t),cur=courant(),hx=Math.sin(theta),hy=-Math.cos(theta),appX=w.x-(hx*v+cur.x),appY=w.y-(hy*v+cur.y),a=Math.hypot(appX,appY);
+ if(a>1.5){const L=Math.min(130,a*4.5);vaL.setAttribute('x1',bx);vaL.setAttribute('y1',by);vaL.setAttribute('x2',bx+appX/a*L);vaL.setAttribute('y2',by+appY/a*L);vaT.setAttribute('x',bx+appX/a*L+8);vaT.setAttribute('y',by+appY/a*L);vaG.setAttribute('opacity','1');}else vaG.setAttribute('opacity','0');
+ const m=prochain<marques.length&&etat!=='fini'?marques[prochain]:null;if(m){anneau.setAttribute('visibility','visible');anneau.setAttribute('cx',m.x);anneau.setAttribute('cy',m.y);anneau.setAttribute('r',String(19+4*Math.sin(t*4)));}else anneau.setAttribute('visibility','hidden');
+ $('fleches-vent').setAttribute('transform','translate(0,'+((t*26)%30)+') rotate('+windAngle+' 300 440)');
+ $('vent-affiche').textContent=fmt(w.force)+' nd · '+windAngle+'°';
+ if(window.__jeu3dUpdate)window.__jeu3dUpdate({x:bx,y:by,heading:theta,speed:v,wind:{x:w.x,y:w.y},current:cur,marks:marques,next:prochain,time:t});
 }
-
-(function construire(){
-  const vagues = [];
-  for (let i = 1; i <= 13; i++) {
-    const y = 60 * i;
-    vagues.push('<line class="vague" x1="' + (30 + (i % 2) * 40) + '" y1="' + y + '" x2="' + (540 - (i % 3) * 50) + '" y2="' + y + '"/>');
-  }
-  $('vagues').innerHTML = vagues.join('');
-  const fl = [];
-  for (let i = 0; i < 5; i++) {
-    const x = 80 + i * 110;
-    fl.push('<line class="vw" x1="' + x + '" y1="6" x2="' + x + '" y2="44"/>');
-  }
-  $('fleches-vent').innerHTML = fl.join('');
-})();
-
-window.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft') { steerCam = -1; e.preventDefault(); }
-  else if (e.key === 'ArrowRight') { steerCam = 1; e.preventDefault(); }
-  else if (e.key === ' ') { depart(); e.preventDefault(); }
-});
-window.addEventListener('keyup', e => {
-  if (e.key === 'ArrowLeft' && steerCam < 0) steerCam = 0;
-  if (e.key === 'ArrowRight' && steerCam > 0) steerCam = 0;
-});
-$('btn-depart').addEventListener('click', depart);
-
-function setupPad(idBtn, cote){
-  const b = $(idBtn);
-  const on = e => { e.preventDefault(); steerPad = cote; };
-  const off = () => { if (steerPad === cote) steerPad = 0; };
-  b.addEventListener('pointerdown', on);
-  b.addEventListener('pointerup', off);
-  b.addEventListener('pointercancel', off);
-  b.addEventListener('pointerleave', off);
-}
-setupPad('btn-bab', -1);
-setupPad('btn-tri', 1);
-afficherRecord();
-
-let dent = null;
-function boucle(t){
-  if (dent === null) dent = t;
-  const dt = Math.min(0.05, (t - dent) / 1000);
-  dent = t;
-  const s = t / 1000;
-  tick(dt, s);
-  dessine(s);
-  requestAnimationFrame(boucle);
-}
-if (window.requestAnimationFrame) requestAnimationFrame(boucle);
-
-window.__jeu = {
-  polaire, allureNom,
-  tick: (dt) => { tickT += dt; tick(dt, tickT); dessine(tickT); },
-  reset: depart,
-  go: () => { etat = 'course'; },
-  etat: () => etat,
-  pos: () => [bx, by],
-  vitesse: () => v,
-  cap: (x) => { theta = x; },
-  teleport: (x, y) => { bx = x; by = y; v = 0; },
-  tc: () => tCourse,
-  prochain: () => prochain
-};
+(function construire(){const vagues=[];for(let i=1;i<=13;i++){const y=60*i;vagues.push('<line class="vague" x1="'+(30+(i%2)*40)+'" y1="'+y+'" x2="'+(540-(i%3)*50)+'" y2="'+y+'"/>');}$('vagues').innerHTML=vagues.join('');const fl=[];for(let i=0;i<5;i++){const x=80+i*110;fl.push('<line class="vw" x1="'+x+'" y1="6" x2="'+x+'" y2="44"/>');}$('fleches-vent').innerHTML=fl.join('');})();
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){steerCam=-1;e.preventDefault();}else if(e.key==='ArrowRight'||e.key.toLowerCase()==='d'){steerCam=1;e.preventDefault();}else if(e.key===' '&&!e.repeat){if(etat==='pause')reprendre();else depart();e.preventDefault();}else if(e.key.toLowerCase()==='p'&&!e.repeat){pause();e.preventDefault();}});
+window.addEventListener('keyup',e=>{if((e.key==='ArrowLeft'||e.key.toLowerCase()==='a')&&steerCam<0)steerCam=0;if((e.key==='ArrowRight'||e.key.toLowerCase()==='d')&&steerCam>0)steerCam=0;});
+$('btn-depart').addEventListener('click',depart);
+function pause(){if(etat==='course'){etat='pause';steerCam=0;steerPad=0;$('btn-pause').textContent='Reprendre (P)';msg('Course en pause.');}else if(etat==='pause')reprendre();}
+function reprendre(){if(etat==='pause'){etat='course';$('btn-pause').textContent='Pause (P)';msg('Course reprise.');}}
+$('btn-pause').addEventListener('click',pause);$('btn-reset').addEventListener('click',()=>{etat='pret';remiseAZero();$('btn-pause').textContent='Pause (P)';$('btn-depart').textContent='Départ (Espace)';});
+function setupPad(id,cote){const b=$(id),on=e=>{e.preventDefault();steerPad=cote;},off=()=>{if(steerPad===cote)steerPad=0;};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off);}
+setupPad('btn-bab',-1);setupPad('btn-tri',1);actualiserReglages();afficherRecord();choisirVue('3d');
+let last=null;function boucle(ms){if(last===null)last=ms;const dt=Math.min(.05,(ms-last)/1000);last=ms;tick(dt,ms/1000);dessine(ms/1000);requestAnimationFrame(boucle);}requestAnimationFrame(boucle);
+window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},reset:depart,go:()=>{etat='course';},etat:()=>etat,pos:()=>[bx,by],vitesse:()=>v,cap:x=>{theta=x;},teleport:(x,y)=>{bx=x;by=y;v=0;},tc:()=>tCourse,prochain:()=>prochain};
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+const canvas=document.getElementById('jeu3d');
+try{
+ const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ const scene=new THREE.Scene();scene.background=new THREE.Color(0x9bc9df);scene.fog=new THREE.Fog(0x9bc9df,90,250);
+ const camera=new THREE.PerspectiveCamera(48,canvas.clientWidth/canvas.clientHeight,.1,500);camera.position.set(0,32,55);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,0,0);controls.maxPolarAngle=Math.PI*.48;controls.minDistance=18;controls.maxDistance=100;
+ scene.add(new THREE.HemisphereLight(0xdff5ff,0x17394b,2.1));
+ const sun=new THREE.DirectionalLight(0xfff0d2,2.4);sun.position.set(-35,55,25);sun.castShadow=true;scene.add(sun);
+ const sea=new THREE.Mesh(new THREE.PlaneGeometry(150,210,40,60),new THREE.MeshStandardMaterial({color:0x167da0,roughness:.48,metalness:.08,wireframe:false}));sea.rotation.x=-Math.PI/2;sea.position.set(0,-.8,-75);sea.receiveShadow=true;scene.add(sea);
+ const grid=new THREE.GridHelper(150,30,0x8dd4e4,0x438fa9);grid.position.set(0,-.72,-75);scene.add(grid);
+ const boat=new THREE.Group();scene.add(boat);
+ const hullMat=new THREE.MeshStandardMaterial({color:0xe6edf2,roughness:.35,metalness:.18});
+ const darkMat=new THREE.MeshStandardMaterial({color:0x17324a,roughness:.55});
+ const sailMat=new THREE.MeshStandardMaterial({color:0xf5f0d9,side:THREE.DoubleSide,roughness:.75});
+ function box(parent,w,h,d,mat,x,y,z){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
+ function hull(z){const g=new THREE.Group();const body=new THREE.Mesh(new THREE.CapsuleGeometry(.43,7.8,5,10),hullMat);body.rotation.x=Math.PI/2;body.position.set(0,0,0);g.add(body);const nose=new THREE.Mesh(new THREE.ConeGeometry(.43,1.3,8),hullMat);nose.rotation.x=-Math.PI/2;nose.position.z=-4.5;g.add(nose);g.position.z=z;boat.add(g);}
+ hull(-1.35);hull(1.35);box(boat,3.2,.18,.22,darkMat,0,.35,-.1);box(boat,3.2,.18,.22,darkMat,0,.35,1.4);
+ const mast= new THREE.Mesh(new THREE.CylinderGeometry(.055,.075,6.6,8),darkMat);mast.position.set(0,3.6,0);boat.add(mast);
+ const sailGeo=new THREE.BufferGeometry();const sailVerts=new Float32Array([0,.6,-.1,0,6.5,-.1,2.8,.7,-.1]);sailGeo.setAttribute('position',new THREE.BufferAttribute(sailVerts,3));sailGeo.computeVertexNormals();const sail=new THREE.Mesh(sailGeo,sailMat);boat.add(sail);
+ box(boat,.35,.15,.65,darkMat,0,.6,1.05);
+ const buoys=[];
+ for(let i=0;i<4;i++){const g=new THREE.Group();const buoy=new THREE.Mesh(new THREE.CylinderGeometry(.45,.58,1.1,16),new THREE.MeshStandardMaterial({color:0xff6a38,roughness:.5}));buoy.position.y=.2;buoy.castShadow=true;g.add(buoy);const top=new THREE.Mesh(new THREE.SphereGeometry(.48,12,8),new THREE.MeshStandardMaterial({color:0xffdf7a}));top.position.y=.78;g.add(top);scene.add(g);buoys.push(g);}
+ const start=new THREE.Mesh(new THREE.BoxGeometry(7,.12,.25),new THREE.MeshStandardMaterial({color:0xf4f4e8}));start.position.set(0,-.15,-3);scene.add(start);
+ const windArrow=new THREE.ArrowHelper(new THREE.Vector3(0,0,-1),new THREE.Vector3(-8,1,5),9,0xffd15c,1.6,1);scene.add(windArrow);
+ let state={x:300,y:845,heading:0,marks:[],next:0,wind:{x:0,y:15},current:{x:0,y:0}};
+ function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+ new ResizeObserver(resize).observe(canvas);
+ window.__jeu3dUpdate=s=>{state=s;boat.position.set((s.x-300)*.12,.1,-(s.y-440)*.12);boat.rotation.y=-s.heading;buoys.forEach((g,i)=>{const p=s.marks[i];g.position.set((p.x-300)*.12,0,-(p.y-440)*.12);g.children[0].material.color.set(i<s.next?0x36b37e:0xff6a38);});windArrow.position.set(-8,1,6);windArrow.setDirection(new THREE.Vector3(s.wind.x,0,-s.wind.y).normalize());};
+ function animate(){requestAnimationFrame(animate);controls.target.lerp(boat.position,.035);controls.update();renderer.render(scene,camera);}animate();
+}catch(err){console.error('Rendu 3D indisponible',err);canvas.style.display='none';document.getElementById('jeu2d-wrap').style.display='block';document.getElementById('vue-3d').disabled=true;document.getElementById('vue-3d').textContent='3D indisponible';document.getElementById('vue-2d').classList.add('actif');}
 </script>
 
 </body>
