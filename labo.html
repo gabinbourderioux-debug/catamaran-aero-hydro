@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Laboratoire — Zone test catamaran</title><link rel="icon" type="image/svg+xml" href="favicon.svg"><meta name="theme-color" content="#1C2430"><link rel="stylesheet" href="style.css"><script src="darkmode.js"></script><script src="stats.js" defer></script>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Laboratoire — Zone test catamaran</title><meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><meta name="theme-color" content="#1C2430"><link rel="stylesheet" href="style.css"><script src="darkmode.js"></script><script src="stats.js" defer></script>
 <style>
 .lab-wrap{max-width:1220px;margin:auto;padding:30px 22px 76px}.lab-nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 26px;padding:9px;background:var(--carte);border:1px solid var(--bordure);border-radius:13px;box-shadow:var(--ombre);position:sticky;top:10px;z-index:15}.lab-tab,.action{border:1px solid var(--bordure);border-radius:9px;padding:10px 14px;background:var(--carte);color:var(--txt);font:inherit;font-weight:650;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}.lab-tab:hover,.action:hover{border-color:var(--bleu);transform:translateY(-1px)}.lab-tab:focus-visible,.action:focus-visible,.lab-control input:focus-visible,.lab-control select:focus-visible{outline:3px solid color-mix(in srgb,var(--cyan) 55%,transparent);outline-offset:2px}.lab-tab[aria-selected=true],.action.primary{background:var(--marine);color:#fff;border-color:var(--marine)}.lab-panel{display:none;animation:labIn .2s ease-out}.lab-panel.active{display:block}@keyframes labIn{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.lab-card{background:var(--carte);border:1px solid var(--bordure);border-radius:15px;padding:22px;margin:16px 0;box-shadow:var(--ombre)}.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.lab-control label{display:flex;justify-content:space-between;gap:12px;font-weight:650;color:var(--titre);margin-bottom:7px}.lab-control output{color:var(--bleu);font-variant-numeric:tabular-nums}.lab-control input[type=range],.lab-control select{width:100%;accent-color:var(--cyan)}.lab-control select,.lab-control input[type=text]{padding:9px;border:1px solid var(--bordure);border-radius:8px;background:var(--carte);color:var(--txt)}.lab-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.lab-metric{background:var(--fond);border:1px solid var(--bordure);border-radius:11px;padding:13px}.lab-metric small{display:block;color:var(--gris)}.lab-metric strong{display:block;font-size:1.45rem;color:var(--titre);font-variant-numeric:tabular-nums}.lab-figure{background:var(--figure-fond);border:1px solid var(--bordure);border-radius:12px;padding:12px;overflow:hidden}.lab-figure svg{width:100%;height:auto;display:block}.lab-muted{color:var(--gris);font-size:.92rem}.lab-warning{border-left:4px solid var(--corail);background:var(--err-fond);padding:12px 15px;border-radius:8px}.lab-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.lab-table-wrap{overflow-x:auto;border-radius:10px}.lab-table-wrap table{min-width:680px;margin:10px 0}.lab-table-wrap th{position:sticky;top:0}.lab-table-wrap button{padding:5px 9px;border:1px solid var(--bordure);border-radius:7px;background:var(--carte);color:var(--txt);cursor:pointer}#coefChart{width:100%;height:auto}#catamaran3d canvas{touch-action:pan-y}.lab-muted{line-height:1.55}.lab-warning a{color:var(--bleu);font-weight:700}.lab-metric{min-height:91px}.lab-metric strong{overflow-wrap:anywhere}.lab-control input[type=range]{cursor:pointer}.lab-card h3{margin-top:4px}@media(max-width:700px){.lab-wrap{padding:20px 12px 55px}.lab-card{padding:15px}.lab-nav{top:4px;gap:6px;padding:7px}.lab-tab{flex:1 1 30%;padding:9px 8px;font-size:.88rem}#catamaran3d{height:410px!important;min-height:340px!important}}@media(prefers-reduced-motion:reduce){.lab-panel{animation:none}.lab-tab,.action{transition:none}}
+#panel-aero.active{display:block!important;visibility:visible!important;opacity:1!important}.aero-live{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:14px}.aero-live .lab-metric{min-height:88px}.aero-flow{stroke-dasharray:9 8;animation:aeroFlow 1.2s linear infinite}@keyframes aeroFlow{to{stroke-dashoffset:-34}}@media(prefers-reduced-motion:reduce){.aero-flow{animation:none}}body.embed-3d>header,body.embed-3d>nav.sommaire,body.embed-3d .lab-nav{display:none!important}body.embed-3d .lab-wrap{padding:10px 12px 24px;max-width:1220px}body.embed-3d #panel-3d{display:block!important}body.embed-3d #panel-aero,body.embed-3d #panel-simu,body.embed-3d #panel-meteo,body.embed-3d #panel-essais{display:none!important}
 </style></head><body>
 <header class="hero hero--page"><span class="badge">Zone test · Prototype indépendant</span><h1>Laboratoire scientifique</h1><p>Voiles, foils, performances et conditions de navigation. Modèles simplifiés à expérimenter, sans modifier les pages publiques.</p></header>
-<main class="lab-wrap"><a class="retour" href="test.html">← Retour à la zone test</a>
+<nav class="sommaire" aria-label="Navigation principale">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="aero.html#aero">La voile</a></li><li><a href="aero.html#vent-apparent">Vent apparent</a></li><li><a href="aero.html#vent-terrain">Vent changeant</a></li></ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="hydro.html#hydro">Les coques</a></li><li><a href="foils.html">Les foils</a></li><li><a href="stabilite.html">La stabilité</a></li></ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="meteo.html#vent">La météo en direct</a></li><li><a href="topo-meteo.html">Topo météo</a></li></ul>
+    </li>
+    <li class="deroulant"><a href="simulateur.html" aria-haspopup="true">Simulation <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="simulateur.html">Vent apparent</a></li><li><a href="studio.html#modele">Modèle 3D du catamaran</a></li></ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li><li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+<main class="lab-wrap">
 <nav class="lab-nav" aria-label="Modules du laboratoire"><button class="lab-tab" data-tab="aero" aria-selected="true">A · Voile & foil</button><button class="lab-tab" data-tab="simu" aria-selected="false">B · Catamaran</button><button class="lab-tab" data-tab="meteo" aria-selected="false">C · Navigation</button><button class="lab-tab" data-tab="3d" aria-selected="false">D · Modèle 3D</button><button class="lab-tab" data-tab="essais" aria-selected="false">E · Expériences</button></nav>
 <section class="lab-panel active" id="panel-aero"><h2><span class="num">A</span> Laboratoire aérodynamique</h2><p>Modifie la forme théorique du profil et l'angle d'incidence. Observe les coefficients et les forces estimées.</p>
 <div class="lab-card lab-grid"><div class="lab-control"><label for="profile">Profil <output id="profileOut">Voile creuse</output></label><select id="profile"><option value="0.08">Profil fin</option><option value="0.16" selected>Voile creuse</option><option value="0.23">Profil très creux</option><option value="0.12">Section de foil</option></select></div><div class="lab-control"><label for="incidence">Angle d'incidence <output id="incidenceOut">6°</output></label><input id="incidence" type="range" min="-5" max="22" step=".5" value="6"></div><div class="lab-control"><label for="speedA">Vent apparent <output id="speedAOut">12 m/s</output></label><input id="speedA" type="range" min="2" max="35" step=".5" value="12"></div><div class="lab-control"><label for="areaA">Surface de référence <output id="areaAOut">25 m²</output></label><input id="areaA" type="range" min="5" max="60" value="25"></div></div>
@@ -29,25 +49,30 @@
 </section>
 <section class="lab-panel" id="panel-3d">
 <h2><span class="num">D</span> Modèle 3D interactif du catamaran</h2>
-<p>Vue 3D schématique du multicoque. Fais glisser pour tourner autour du bateau, zoome avec la molette et modifie les réglages pour observer leur effet sur le modèle.</p>
+<p>Modèle 3D interactif : règle le vent, l’écoute et le chariot, puis observe le déplacement de la voile et les écoulements d’air et d’eau. Les décollements et tourbillons sont représentés par un modèle pédagogique simplifié, pas par un calcul CFD.</p>
 <div class="lab-card">
 <div class="lab-grid">
 <div class="lab-control"><label for="modelSail">Surface de voile <output id="modelSailOut">28 m²</output></label><input id="modelSail" type="range" min="12" max="45" value="28"></div>
+<div class="lab-control"><label for="modelTrim">Réglage d'écoute / bordage <output id="modelTrimOut">18°</output></label><input id="modelTrim" type="range" min="0" max="45" value="18"></div>
+<div class="lab-control"><label for="modelTraveler">Chariot arrière <output id="modelTravelerOut">Centre</output></label><input id="modelTraveler" type="range" min="-100" max="100" value="0"></div>
 <div class="lab-control"><label for="modelFoil">Angle des foils <output id="modelFoilOut">0°</output></label><input id="modelFoil" type="range" min="-12" max="18" value="0"></div>
 <div class="lab-control"><label for="modelRudder">Angle des safrans <output id="modelRudderOut">0°</output></label><input id="modelRudder" type="range" min="-30" max="30" value="0"></div>
-<div class="lab-control"><label for="modelWind">Direction du vent <output id="modelWindOut">90°</output></label><input id="modelWind" type="range" min="0" max="180" value="90"></div>
+<div class="lab-control"><label for="modelWind">Direction d'où vient le vent <output id="modelWindOut">90°</output></label><input id="modelWind" type="range" min="0" max="360" value="90"></div>
 </div>
 <div class="lab-actions"><button class="action primary" id="modelReset">Réinitialiser la vue</button><span class="lab-muted" id="modelStatus" role="status">Initialisation du modèle 3D…</span></div>
-<div id="catamaran3d" style="height:520px;min-height:360px;margin-top:14px;background:var(--figure-fond);border:1px solid var(--bordure);border-radius:12px;overflow:hidden;position:relative"></div>
+<div id="catamaran3d" style="height:560px;min-height:380px;margin-top:14px;background:linear-gradient(#e7f2f7,#b7dce8);border:1px solid var(--bordure);border-radius:12px;overflow:hidden;position:relative"></div>
+<div class="lab-metrics" style="margin-top:12px"><div class="lab-metric"><small>Écoulement sur la voile</small><strong id="sailFlowState">Attaché</strong></div><div class="lab-metric"><small>Angle d’incidence estimé</small><strong id="sailAlpha">—</strong></div><div class="lab-metric"><small>Écoulement sur les safrans</small><strong id="rudderFlowState">Attaché</strong></div><div class="lab-metric"><small>Intensité des tourbillons</small><strong id="vortexLevel">Faible</strong></div></div>
+<p class="lab-muted">Orange : air. Bleu : eau. Les lignes et particules suivent le vent, l’orientation de la voile, le chariot et l’angle des safrans. Le décollement augmente progressivement au-delà de l’incidence critique.</p>
 <div class="lab-muted" style="margin-top:10px">Manipulation : clic gauche + déplacement pour tourner · molette pour zoomer · clic droit pour déplacer la vue. Modèle conceptuel, dimensions et proportions non contractuelles.</div>
 </div>
 <div class="lab-warning">Cette visualisation est un modèle géométrique de démonstration. Elle ne représente pas exactement un bateau réel et ne calcule pas sa stabilité, sa résistance structurelle ni ses performances. Les réglages modifient la géométrie affichée, pas une simulation hydrodynamique validée.</div>
 </section>
 <section class="lab-panel" id="panel-essais"><h2><span class="num">E</span> Carnet d'expérimentation</h2><p>Enregistre localement les paramètres de tes essais pour comparer les configurations. Les données restent dans ce navigateur.</p><div class="lab-card lab-grid"><div class="lab-control"><label for="trialName">Nom de l'essai</label><input id="trialName" type="text" maxlength="60" placeholder="Ex. voile creuse, vent 12 nd"></div><div class="lab-control"><label>Configuration actuelle</label><p class="lab-muted" id="trialSummary">Paramètres du simulateur B.</p></div></div><div class="lab-actions"><button class="action primary" id="saveTrial">Enregistrer cette configuration</button><button class="action" id="exportTrials">Exporter les essais (.json)</button><button class="action" id="clearTrials">Effacer le carnet</button></div><div class="lab-card lab-table-wrap"><table><thead><tr><th>Essai</th><th>Vent</th><th>Voile</th><th>Masse</th><th>Vitesse saisie</th><th>Action</th></tr></thead><tbody id="trialRows"><tr><td colspan="6">Aucun essai enregistré.</td></tr></tbody></table></div></section>
 <div class="lab-card lab-muted"><strong>Statut scientifique :</strong> les modules A et B utilisent des coefficients simplifiés et explicitement non validés expérimentalement. Le module C affiche des données externes avec leur heure de référence. Le module D sauvegarde uniquement dans le stockage local du navigateur.</div></main>
-<footer><div class="auteur">Laboratoire — Zone test</div><div class="auteur-sous">Prototype indépendant · palette graphique du site conservée</div><a href="test.html" style="color:#E8D48B">← Retour à la zone de test</a><br><a href="index.html" style="color:#E8D48B">Accueil</a> · <a href="https://www.instagram.com/gabin_brdx/" target="_blank" rel="noopener" style="color:#E8D48B">📸 Instagram</a><br><button id="bascule-theme" class="btn-theme" type="button"></button></footer>
+<footer><div class="auteur">Laboratoire — Zone test</div><div class="auteur-sous">Prototype indépendant · palette graphique du site conservée</div><br><a href="index.html" style="color:#E8D48B">Accueil</a> · <br><button id="bascule-theme" class="btn-theme" type="button"></button></footer>
 <script>
 const $=id=>document.getElementById(id);document.querySelectorAll('.lab-tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.lab-tab').forEach(b=>b.setAttribute('aria-selected',String(b===btn)));document.querySelectorAll('.lab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+btn.dataset.tab));}));
+if(location.hash==='#panel-3d'){document.body.classList.add('embed-3d');document.querySelectorAll('.lab-tab').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab==='3d')));document.querySelectorAll('.lab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-3d'));}
 const fmt=(n,d=0)=>Number(n).toLocaleString('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d});
 function coeff(a,camber){const stall=Math.max(.35,1-Math.max(0,a-13)*.055),cl=Math.max(-.35,Math.min(1.45,(.10+5*a*Math.PI/180+camber*1.6)))*stall,cd=.014+.018*cl*cl+Math.max(0,a-12)*.0028+Math.max(0,-a-3)*.002;return{cl,cd};}
 function updateA(){const a=+$('incidence').value,v=+$('speedA').value,S=+$('areaA').value,cam=+$('profile').value,q=.5*1.225*v*v,c=coeff(a,cam),L=q*S*c.cl,D=q*S*c.cd;$('incidenceOut').textContent=fmt(a,1)+'°';$('speedAOut').textContent=fmt(v,1)+' m/s';$('areaAOut').textContent=S+' m²';$('profileOut').textContent=$('profile').selectedOptions[0].textContent;$('clA').textContent=fmt(c.cl,2);$('cdA').textContent=fmt(c.cd,3);$('liftA').textContent=fmt(L);$('dragA').textContent=fmt(D);const h=45+Math.min(90,Math.abs(L)/Math.max(1,q*S*1.45)*90),w=30+Math.min(110,D/Math.max(1,q*S*.06)*110);$('liftVector').setAttribute('y2',145-h);$('dragVector').setAttribute('x2',370+w);$('profileShape').setAttribute('d','M150 150 Q370 '+(90+cam*300)+' 610 150 Q370 '+(160+cam*30)+' 150 150Z');let p1='',p2='';for(let i=0;i<=54;i++){const x=-5+i*.5,z=coeff(x,cam),px=50+i*620/54,y1=180-(z.cl+.4)/1.9*150,y2=180-z.cd/.12*150;p1+=(i?' L':'M')+px.toFixed(1)+' '+y1.toFixed(1);p2+=(i?' L':'M')+px.toFixed(1)+' '+y2.toFixed(1);}$('clCurve').setAttribute('d',p1);$('cdCurve').setAttribute('d',p2);}
@@ -121,39 +146,31 @@ $('saveTrial').addEventListener('click',()=>{const a=trials();a.push({name:$('tr
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-const host=document.getElementById('catamaran3d');
-const status=document.getElementById('modelStatus');
+const $=id=>document.getElementById(id);
+const host=$('catamaran3d'),status=$('modelStatus');
 if(host){
  try{
-  const scene=new THREE.Scene();scene.background=new THREE.Color(0xf4f6f8);
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0xdcecf2);
   const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(8,6,9);
-  const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);
-  renderer.domElement.style.width='100%';renderer.domElement.style.height='100%';renderer.domElement.style.display='block';
-  const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,1.3,0);orbit.minDistance=5;orbit.maxDistance=22;
-  scene.add(new THREE.HemisphereLight(0xffffff,0x8293a5,2));
-  const sun=new THREE.DirectionalLight(0xffffff,2.2);sun.position.set(5,10,7);sun.castShadow=true;scene.add(sun);
-  const floor=new THREE.GridHelper(16,32,0xc0c9d2,0xdce2e8);floor.position.y=-.12;scene.add(floor);
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);
+  renderer.domElement.style.cssText='width:100%;height:100%;display:block;touch-action:pan-y';
+  const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,1.3,0);orbit.minDistance=5;orbit.maxDistance=24;
+  scene.add(new THREE.HemisphereLight(0xffffff,0x71899a,2.1));
+  const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(5,10,7);sun.castShadow=true;scene.add(sun);
+  const waterMat=new THREE.MeshStandardMaterial({color:0x68b6d2,roughness:.27,metalness:.04,transparent:true,opacity:.83});
+  const water=new THREE.Mesh(new THREE.PlaneGeometry(18,11,1,1),waterMat);water.rotation.x=-Math.PI/2;water.position.y=-.19;water.receiveShadow=true;scene.add(water);
+  const seabed=new THREE.GridHelper(18,36,0x8dbdce,0xa9d0dc);seabed.position.y=-.205;scene.add(seabed);
   const boat=new THREE.Group();scene.add(boat);
-  const hullMat=new THREE.MeshStandardMaterial({color:0x1c2430,roughness:.48,metalness:.12});
-  const deckMat=new THREE.MeshStandardMaterial({color:0xd9e0e7,roughness:.8});
-  const foilMat=new THREE.MeshStandardMaterial({color:0xc79a00,metalness:.45,roughness:.3});
-  const sailMat=new THREE.MeshStandardMaterial({color:0xffcc00,side:THREE.DoubleSide,roughness:.75});
-  const darkMat=new THREE.MeshStandardMaterial({color:0x35475d,roughness:.6});
+  const hullMat=new THREE.MeshStandardMaterial({color:0x172b3b,roughness:.32,metalness:.18});
+  const deckMat=new THREE.MeshStandardMaterial({color:0xe3e9ed,roughness:.72});
+  const foilMat=new THREE.MeshStandardMaterial({color:0xb98d25,metalness:.55,roughness:.28});
+  const sailMat=new THREE.MeshStandardMaterial({color:0xffc928,side:THREE.DoubleSide,roughness:.72});
+  const darkMat=new THREE.MeshStandardMaterial({color:0x35475d,roughness:.52});
   function makeHull(z){
-   const verts=[],indices=[],rings=48,around=20;
-   for(let i=0;i<=rings;i++){
-    const t=i/rings,x=-3.2+6.4*t;
-    const taper=Math.pow(Math.sin(Math.PI*t),.55);
-    const width=.24+.34*taper,height=.19+.13*taper;
-    for(let j=0;j<around;j++){
-     const a=j/around*Math.PI*2;
-     verts.push(x,.2+Math.sin(a)*height,z+Math.cos(a)*width);
-    }
-   }
-   for(let i=0;i<rings;i++)for(let j=0;j<around;j++){
-    const a=i*around+j,b=i*around+(j+1)%around,c=(i+1)*around+(j+1)%around,d=(i+1)*around+j;
-    indices.push(a,b,d,b,c,d);
-   }
+   const verts=[],indices=[],rings=52,around=24;
+   for(let i=0;i<=rings;i++){const t=i/rings,x=-3.2+6.4*t,taper=Math.pow(Math.sin(Math.PI*t),.55),width=.24+.34*taper,height=.19+.13*taper;
+    for(let j=0;j<around;j++){const a=j/around*Math.PI*2;verts.push(x,.2+Math.sin(a)*height,z+Math.cos(a)*width);}}
+   for(let i=0;i<rings;i++)for(let j=0;j<around;j++){const a=i*around+j,b=i*around+(j+1)%around,c=(i+1)*around+(j+1)%around,d=(i+1)*around+j;indices.push(a,b,d,b,c,d);}
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));g.setIndex(indices);g.computeVertexNormals();
    const mesh=new THREE.Mesh(g,hullMat);mesh.castShadow=true;mesh.receiveShadow=true;boat.add(mesh);
    const deck=new THREE.Mesh(new THREE.BoxGeometry(5.5,.1,.56),deckMat);deck.position.set(0,.42,z);deck.castShadow=true;boat.add(deck);
@@ -164,45 +181,130 @@ if(host){
   const tramp=new THREE.Mesh(new THREE.BoxGeometry(2.5,.045,2.75),new THREE.MeshStandardMaterial({color:0x8795a5,roughness:1,transparent:true,opacity:.8}));tramp.position.set(0,.55,0);boat.add(tramp);
   const mast=new THREE.Mesh(new THREE.CylinderGeometry(.045,.065,6.1,12),darkMat);mast.position.set(-.35,3.55,0);boat.add(mast);
   const sailGroup=new THREE.Group();boat.add(sailGroup);
-  const sailGeometry=new THREE.BufferGeometry();
+  const sailGeo=new THREE.BufferGeometry(),rows=18,cols=10,verts=[],indices=[];
+  for(let r=0;r<=rows;r++){const v=r/rows;for(let q=0;q<=cols;q++){const t=q/cols;verts.push(0,0,0);}}
+  for(let r=0;r<rows;r++)for(let q=0;q<cols;q++){const a=r*(cols+1)+q,b=a+1,d=(r+1)*(cols+1)+q,e=d+1;indices.push(a,d,b,b,d,e);}
+  sailGeo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));sailGeo.setIndex(indices);
+  const sail=new THREE.Mesh(sailGeo,sailMat);sail.castShadow=true;sailGroup.add(sail);
+  const boom=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,2.75,10),darkMat);boom.rotation.z=Math.PI/2;boom.position.set(.98,.72,0);sailGroup.add(boom);
   function updateSail(area){
-   const scale=.72+area/45*.65;
-   const points=[new THREE.Vector3(-.32,6.55,0),new THREE.Vector3(-.32,.68,0),new THREE.Vector3(2.45*scale,.72,0)];
-   sailGeometry.setAttribute('position',new THREE.Float32BufferAttribute(points.flatMap(p=>[p.x,p.y,p.z]),3));sailGeometry.setIndex([0,1,2]);sailGeometry.computeVertexNormals();
-   if(!sailGroup.children.length){const sail=new THREE.Mesh(sailGeometry,sailMat);sail.castShadow=true;sailGroup.add(sail);const boom=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,2.8,8),darkMat);boom.rotation.z=Math.PI/2;boom.position.set(.9,.72,0);sailGroup.add(boom);}
-   else sailGroup.children[1].scale.x=scale;
+   const scale=.72+area/45*.65,arr=sailGeo.attributes.position.array;let k=0;
+   for(let r=0;r<=rows;r++){const v=r/rows;for(let q=0;q<=cols;q++){const t=q/cols;const x=-.32+t*2.65*scale*(1-v),y=.72+v*5.82,z=.18*Math.sin(Math.PI*t)*Math.sin(Math.PI*v);arr[k++]=x;arr[k++]=y;arr[k++]=z;}}
+   sailGeo.attributes.position.needsUpdate=true;sailGeo.computeVertexNormals();boom.scale.y=scale;
   }
+  const track=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.55,10),foilMat);track.rotation.x=Math.PI/2;track.position.set(2.55,.57,0);boat.add(track);
+  const traveler=new THREE.Group();traveler.position.set(2.55,.62,0);boat.add(traveler);
+  const car=new THREE.Mesh(new THREE.BoxGeometry(.28,.13,.32),new THREE.MeshStandardMaterial({color:0xd9a522,metalness:.55,roughness:.3}));traveler.add(car);
+  const pulley=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.11,16),darkMat);pulley.rotation.x=Math.PI/2;pulley.position.y=.12;traveler.add(pulley);
+  const sheetLines=[];
+  for(let i=0;i<3;i++){const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x263b4b,transparent:true,opacity:.9}));boat.add(line);sheetLines.push(line);}
   const foilGroups=[];
-  for(const z of [-1.65,1.65]){
-   const g=new THREE.Group();g.position.set(.45,.25,z);boat.add(g);
-   const strut=new THREE.Mesh(new THREE.BoxGeometry(.075,1.05,.075),foilMat);strut.position.y=-.38;g.add(strut);
-   const wing=new THREE.Mesh(new THREE.BoxGeometry(.95,.075,.22),foilMat);wing.position.set(.05,-.88,0);g.add(wing);foilGroups.push(g);
-  }
+  for(const z of [-1.65,1.65]){const g=new THREE.Group();g.position.set(.45,.25,z);boat.add(g);const strut=new THREE.Mesh(new THREE.BoxGeometry(.075,1.05,.075),foilMat);strut.position.y=-.38;g.add(strut);const wing=new THREE.Mesh(new THREE.BoxGeometry(.95,.075,.22),foilMat);wing.position.set(.05,-.88,0);g.add(wing);foilGroups.push(g);}
   const rudderGroups=[];
-  for(const z of [-1.65,1.65]){
-   const g=new THREE.Group();g.position.set(2.8,.22,z);boat.add(g);
-   const blade=new THREE.Mesh(new THREE.BoxGeometry(.08,.9,.16),darkMat);blade.position.y=-.42;g.add(blade);rudderGroups.push(g);
+  for(const z of [-1.65,1.65]){const g=new THREE.Group();g.position.set(2.8,.22,z);boat.add(g);const blade=new THREE.Mesh(new THREE.BoxGeometry(.08,.9,.16),darkMat);blade.position.y=-.42;g.add(blade);const head=new THREE.Mesh(new THREE.BoxGeometry(.22,.13,.23),foilMat);head.position.y=.04;g.add(head);rudderGroups.push(g);}
+  const tiller=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.3,8),darkMat);tiller.rotation.x=Math.PI/2;tiller.position.set(2.8,.32,0);boat.add(tiller);
+  const windArrow=new THREE.ArrowHelper(new THREE.Vector3(-1,0,0),new THREE.Vector3(-3,2.3,2.8),2.2,0xf08a24,.25,.16);scene.add(windArrow);
+  const liftArrow=new THREE.ArrowHelper(new THREE.Vector3(0,1,0),new THREE.Vector3(.5,1.2,0),1.2,0x15966a,.2,.13);boat.add(liftArrow);
+  const flow=(count,color,size)=>{
+   const p=new Float32Array(count*3),seg=new Float32Array(count*6),pg=new THREE.BufferGeometry(),lg=new THREE.BufferGeometry();
+   pg.setAttribute('position',new THREE.BufferAttribute(p,3));lg.setAttribute('position',new THREE.BufferAttribute(seg,3));
+   const points=new THREE.Points(pg,new THREE.PointsMaterial({color,size,transparent:true,opacity:.88,sizeAttenuation:true}));const lines=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color,transparent:true,opacity:.28}));scene.add(points,lines);
+   return{count,particles:Array.from({length:count},()=>new THREE.Vector3()),previous:Array.from({length:count},()=>new THREE.Vector3()),pg,lg,p,seg,points,lines};
+  };
+  const air=flow(260,0xf08a24,.055),waterFlow=flow(300,0x087fae,.045);
+  let windDir=new THREE.Vector3(0,0,-1),windSide=new THREE.Vector3(1,0,0),alpha=18,stall=0,rudderStall=0;
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  function resetAir(p){const center=new THREE.Vector3(-.1,3.0,0);p.copy(center).addScaledVector(windDir,-rand(5.5,8)).addScaledVector(windSide,rand(-4.2,4.2));p.y=rand(.7,6.5);}
+  function resetWater(p){p.set(rand(-6,-4),rand(-.12,-.02),rand(-2.8,2.8));}
+  air.particles.forEach((p,i)=>{resetAir(p);air.previous[i].copy(p);});
+  waterFlow.particles.forEach((p,i)=>{resetWater(p);waterFlow.previous[i].copy(p);});
+  function updateLines(){
+   boat.updateMatrixWorld(true);
+   const end=sailGroup.localToWorld(new THREE.Vector3(2.35,.72,0));boat.worldToLocal(end);
+   const base=traveler.position.clone().add(new THREE.Vector3(0,.16,0));
+   for(let i=0;i<sheetLines.length;i++){const offset=(i-1)*.055;sheetLines[i].geometry.setFromPoints([end.clone().add(new THREE.Vector3(0,0,offset)),base.clone().add(new THREE.Vector3(0,0,offset))]);}
   }
-  const arrows=[];
-  function arrow(color,origin,dir,length){const a=new THREE.ArrowHelper(dir.clone().normalize(),origin,length,color,.22,.14);boat.add(a);arrows.push(a);return a;}
-  const windArrow=arrow(0x3d5a80,new THREE.Vector3(-2,1.4,2.8),new THREE.Vector3(0,0,-1),2.1);
-  const liftArrow=arrow(0x059669,new THREE.Vector3(.5,1.0,0),new THREE.Vector3(0,1,0),1.6);
-  const dragArrow=arrow(0xc79a00,new THREE.Vector3(1.1,.95,0),new THREE.Vector3(1,0,0),1.2);
-  function setControls(){
-   const sail=+document.getElementById('modelSail').value,foil=+document.getElementById('modelFoil').value,rudder=+document.getElementById('modelRudder').value,wind=+document.getElementById('modelWind').value;
-   document.getElementById('modelSailOut').textContent=sail+' m²';document.getElementById('modelFoilOut').textContent=foil+'°';document.getElementById('modelRudderOut').textContent=rudder+'°';document.getElementById('modelWindOut').textContent=wind+'°';
-   updateSail(sail);foilGroups.forEach(g=>g.rotation.z=foil*Math.PI/180);rudderGroups.forEach(g=>g.rotation.y=rudder*Math.PI/180);
-   const rad=wind*Math.PI/180;windArrow.setDirection(new THREE.Vector3(-Math.cos(rad),0,-Math.sin(rad)).normalize());
-   liftArrow.setLength(1.1+sail/45*.8);dragArrow.setLength(.7+sail/45*.7);
+  function controls(){
+   const area=+$('modelSail').value,trim=+$('modelTrim').value,travel=+$('modelTraveler').value,foil=+$('modelFoil').value,rudder=+$('modelRudder').value,wind=+$('modelWind').value;
+   $('modelSailOut').textContent=area+' m²';$('modelTrimOut').textContent=trim+'°';$('modelTravelerOut').textContent=travel===0?'Centre':(travel<0?'Bâbord ':'Tribord ')+Math.abs(travel)+' %';$('modelFoilOut').textContent=foil+'°';$('modelRudderOut').textContent=rudder+'°';$('modelWindOut').textContent=wind+'°';
+   updateSail(area);const effectiveTrim=THREE.MathUtils.clamp(trim+travel/100*6,0,50);sailGroup.rotation.y=effectiveTrim*Math.PI/180;traveler.position.z=travel/100*1.55;
+   foilGroups.forEach(g=>g.rotation.z=foil*Math.PI/180);rudderGroups.forEach(g=>g.rotation.y=rudder*Math.PI/180);
+   const rad=wind*Math.PI/180;windDir.set(-Math.cos(rad),0,-Math.sin(rad)).normalize();windSide.set(-windDir.z,0,windDir.x).normalize();
+   windArrow.setDirection(windDir);windArrow.position.copy(new THREE.Vector3(-.1,3.1,0).addScaledVector(windDir,-4));windArrow.setLength(2.2,.25,.16);
+   const trimEffective=90-effectiveTrim;alpha=Math.abs(((wind-trimEffective+540)%360)-180);if(alpha>180)alpha=360-alpha;
+   stall=THREE.MathUtils.clamp((alpha-15)/28,0,1);
+   rudderStall=THREE.MathUtils.clamp((Math.abs(rudder)-15)/18,0,1);
+   $('sailAlpha').textContent=alpha.toFixed(0)+'°';$('sailFlowState').textContent=stall<.12?'Attaché':stall<.65?'Début de décollement':'Décollé · tourbillons';
+   $('rudderFlowState').textContent=rudderStall<.12?'Attaché':rudderStall<.65?'Début de décollement':'Décollé · tourbillons';
+   const vortex=Math.max(stall,rudderStall);$('vortexLevel').textContent=vortex<.12?'Faible':vortex<.65?'Modéré':'Important';
+   liftArrow.setLength(1+area/45*1.1);updateLines();
   }
-  ['modelSail','modelFoil','modelRudder','modelWind'].forEach(id=>document.getElementById(id).addEventListener('input',setControls));
-  setControls();
-  function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
-  const observer=new ResizeObserver(resize);observer.observe(host);resize();
-  document.getElementById('modelReset').addEventListener('click',()=>{camera.position.set(8,6,9);orbit.target.set(0,1.3,0);orbit.update();});
-  function animate(){requestAnimationFrame(animate);orbit.update();renderer.render(scene,camera);}animate();
-  status.textContent='Modèle 3D chargé. Déplace la souris ou le doigt sur le bateau pour le manipuler.';
- }catch(error){status.textContent='Impossible de créer le modèle 3D : '+error.message;}
+  ['modelSail','modelTrim','modelTraveler','modelFoil','modelRudder','modelWind'].forEach(id=>$(id).addEventListener('input',controls));
+  $('modelReset').addEventListener('click',()=>{camera.position.set(8,6,9);orbit.target.set(0,1.3,0);orbit.update();});
+  controls();
+  function animate(){
+   requestAnimationFrame(animate);const dt=Math.min(.04,clock.getDelta());orbit.update();
+   const sailCenter=new THREE.Vector3(.65,3.0,0),wakeCenter=sailCenter.clone().addScaledVector(windDir,2.0).addScaledVector(windSide,.7);
+   for(let i=0;i<air.count;i++){
+    const p=air.particles[i],prev=air.previous[i];prev.copy(p);
+    const rel=p.clone().sub(sailCenter),d2=rel.lengthSq(),influence=Math.exp(-d2/4.5);
+    const vel=windDir.clone().multiplyScalar(2.5);
+    vel.addScaledVector(windSide,(1-stall)*1.5*influence);
+    const wake=p.clone().sub(wakeCenter),wd=Math.sqrt(wake.x*wake.x+wake.z*wake.z+wake.y*wake.y*.35);
+    if(stall>.02&&wd<2.8){const swirl=new THREE.Vector3(-wake.z,0,wake.x).normalize();vel.addScaledVector(swirl,stall*2.8*Math.exp(-wd*.65));}
+    p.addScaledVector(vel,dt);
+    if(p.clone().sub(sailCenter).dot(windDir)>8||p.y<.3||p.y>7.5)resetAir(p);
+    const k=i*3,s=i*6;air.p[k]=p.x;air.p[k+1]=p.y;air.p[k+2]=p.z;air.seg[s]=prev.x-vel.x*.35;air.seg[s+1]=prev.y-vel.y*.35;air.seg[s+2]=prev.z-vel.z*.35;air.seg[s+3]=p.x;air.seg[s+4]=p.y;air.seg[s+5]=p.z;
+   }
+   air.pg.attributes.position.needsUpdate=true;air.lg.attributes.position.needsUpdate=true;
+   const rudderAngle=+$('modelRudder').value*Math.PI/180;
+   for(let i=0;i<waterFlow.count;i++){
+    const p=waterFlow.particles[i],prev=waterFlow.previous[i];prev.copy(p);
+    const vel=new THREE.Vector3(2.7,0,0);
+    for(const z0 of [-1.65,1.65]){const dx=p.x-2.8,dz=p.z-z0,dist2=dx*dx+dz*dz+.15;const influence=Math.exp(-dist2/.8);vel.z+=Math.tan(rudderAngle)*1.7*influence;
+     if(rudderStall>.02&&dist2<3){const swirl=new THREE.Vector3(-dz,0,dx).normalize();vel.addScaledVector(swirl,rudderStall*1.9*Math.exp(-dist2*.5));}}
+    for(const z0 of [-1.65,1.65]){const dz=p.z-z0,dx=p.x*.0;vel.z+=Math.sign(dz||1)*.18*Math.exp(-dz*dz/.25)*Math.exp(-((p.x+0.1)*(p.x+0.1))*.18);}
+    p.addScaledVector(vel,dt);
+    if(p.x>6)resetWater(p);
+    const k=i*3,s=i*6;waterFlow.p[k]=p.x;waterFlow.p[k+1]=p.y;waterFlow.p[k+2]=p.z;waterFlow.seg[s]=prev.x-vel.x*.28;waterFlow.seg[s+1]=prev.y-vel.y*.28;waterFlow.seg[s+2]=prev.z-vel.z*.28;waterFlow.seg[s+3]=p.x;waterFlow.seg[s+4]=p.y;waterFlow.seg[s+5]=p.z;
+   }
+   waterFlow.pg.attributes.position.needsUpdate=true;waterFlow.lg.attributes.position.needsUpdate=true;
+   renderer.render(scene,camera);
+  }
+  const clock=new THREE.Clock();
+  function resize(){const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  const observer=new ResizeObserver(resize);observer.observe(host);window.addEventListener('resize',resize);resize();animate();
+  status.textContent='Simulation 3D active · vent, voile, chariot, palan, safrans et écoulements interactifs.';
+ }catch(error){status.textContent='Impossible de créer le modèle 3D : '+error.message;console.error(error);}
 }
+</script>
+
+<script>
+/* Initialisation autonome du laboratoire aérodynamique */
+(()=>{
+ const byId=id=>document.getElementById(id);
+ const ids=['profile','incidence','speedA','areaA','profileOut','incidenceOut','speedAOut','areaAOut','clA','cdA','liftA','dragA','profileShape','liftVector','dragVector','clCurve','cdCurve'];
+ if(ids.some(id=>!byId(id))) return;
+ const number=(n,d=0)=>Number(n).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d});
+ const model=(a,cam)=>{const stall=Math.max(.35,1-Math.max(0,a-13)*.055);const cl=Math.max(-.35,Math.min(1.45,.10+5*a*Math.PI/180+cam*1.6))*stall;const cd=.014+.018*cl*cl+Math.max(0,a-12)*.0028+Math.max(0,-a-3)*.002;return{cl,cd};};
+ function refresh(){
+  const a=Number(byId('incidence').value),v=Number(byId('speedA').value),area=Number(byId('areaA').value),cam=Number(byId('profile').value);
+  const q=.5*1.225*v*v,c=model(a,cam),lift=q*area*c.cl,drag=q*area*c.cd;
+  byId('profileOut').textContent=byId('profile').selectedOptions[0].textContent;
+  byId('incidenceOut').textContent=number(a,1)+'°';byId('speedAOut').textContent=number(v,1)+' m/s';byId('areaAOut').textContent=area+' m²';
+  byId('clA').textContent=number(c.cl,2);byId('cdA').textContent=number(c.cd,3);byId('liftA').textContent=number(lift);byId('dragA').textContent=number(drag);
+  const h=45+Math.min(90,Math.abs(lift)/Math.max(1,q*area*1.45)*90),w=30+Math.min(110,drag/Math.max(1,q*area*.06)*110);
+  byId('liftVector').setAttribute('y2',145-h);byId('dragVector').setAttribute('x2',370+w);
+  byId('profileShape').setAttribute('d','M150 150 Q370 '+(90+cam*300)+' 610 150 Q370 '+(160+cam*30)+' 150 150Z');
+  let clPath='',cdPath='';
+  for(let i=0;i<=54;i++){const angle=-5+i*.5,z=model(angle,cam),x=50+i*620/54,y1=180-(z.cl+.4)/1.9*150,y2=180-z.cd/.12*150;clPath+=(i?' L':'M')+x.toFixed(1)+' '+y1.toFixed(1);cdPath+=(i?' L':'M')+x.toFixed(1)+' '+y2.toFixed(1);}
+  byId('clCurve').setAttribute('d',clPath);byId('cdCurve').setAttribute('d',cdPath);
+ }
+ ['profile','incidence','speedA','areaA'].forEach(id=>{byId(id).addEventListener('input',refresh);byId(id).addEventListener('change',refresh);});
+ const aero=byId('panel-aero');
+ document.querySelectorAll('.lab-tab').forEach(tab=>tab.addEventListener('click',()=>{if(tab.dataset.tab==='aero'){aero.classList.add('active');refresh();}}));
+ if(!document.querySelector('.lab-tab[aria-selected="true"]')||location.hash!=='#panel-3d'){document.querySelectorAll('.lab-tab').forEach(t=>{t.setAttribute('aria-selected',String(t.dataset.tab==='aero'));});document.querySelectorAll('.lab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-aero'));}
+ refresh();
+})();
 </script>
 </body></html>
