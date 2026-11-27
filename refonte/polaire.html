@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polaire de vitesse interactive — Catamaran</title>
+<meta name="description" content="La polaire de vitesse d'un catamaran expliquée et interactive : choisis le vent réel et découvre la vitesse du bateau selon l'allure, du près serré au vent arrière.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="../icone-192.png">
+<meta property="og:title" content="Polaire de vitesse interactive">
+<meta property="og:description" content="Choisis le vent réel et découvre la vitesse du catamaran selon l'allure, du près serré au vent arrière.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/polaire.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../style.css">
+<script src="../darkmode.js"></script>
+<script src="../stats.js" defer></script>
+<style>
+  #polaire{width:100%;max-width:620px;display:block;margin:0 auto;border-radius:14px;border:1px solid var(--bordure);box-shadow:var(--ombre);touch-action:none}
+  #polaire .fond{fill:var(--figure-fond)}
+  #polaire .cercle{fill:none;stroke:var(--bordure);stroke-width:1;stroke-dasharray:4 5}
+  #polaire .rayon{stroke:var(--bordure);stroke-width:1}
+  #polaire .axe{stroke:var(--gris);stroke-width:1.5;stroke-dasharray:2 4}
+  #polaire .etq{font-size:13px;fill:var(--gris)}
+  #polaire .etq-zone{font-size:14px;font-weight:700;fill:var(--marine)}
+  #polaire .ghost{fill:none;stroke:#94a3b8;stroke-width:2;stroke-dasharray:6 5;opacity:.7}
+  #polaire .courbe{fill:none;stroke:var(--cyan);stroke-width:4;stroke-linejoin:round}
+  #polaire .curseur-l{stroke:var(--corail);stroke-width:1.5;stroke-dasharray:3 4}
+  #polaire .curseur-p{fill:var(--corail);stroke:var(--titre);stroke-width:2}
+  .bloc-reglages{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0}
+  .bloc-reglages input[type=range]{width:min(320px,70vw);accent-color:var(--bleu)}
+  .vr-aff{font-weight:800;font-size:1.1rem;color:var(--titre);min-width:110px;font-variant-numeric:tabular-nums}
+  .lectures{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+  .lectures span{background:var(--figure-fond);border:1px solid var(--bordure);border-radius:10px;padding:8px 14px;font-variant-numeric:tabular-nums}
+  .lectures b{color:var(--titre)}
+</style>
+<link rel="stylesheet" href="theme.css"><script src="nav.js" defer></script></head>
+<body>
+
+<header class="hero hero--page">
+  <h1>La polaire de vitesse, en direct</h1>
+  <p>Une polaire, c'est la carte d'identité des performances d'un bateau : à chaque angle du vent, une vitesse. Bouge le vent réel, pose ton doigt sur la courbe, et lis le catamaran.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="./index.html">Accueil</a></li>
+    <li class="deroulant"><a href="./aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="./aero.html#aero">La voile</a></li>
+        <li><a href="./aero.html#vent-apparent">Vent apparent</a></li>
+        <li><a href="./aero.html#vent-terrain">Vent changeant</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="./hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="./hydro.html#hydro">Les coques</a></li>
+        <li><a href="./foils.html">Les foils</a></li>
+        <li><a href="./stabilite.html">La stabilité</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="./meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="./meteo.html#vent">La météo en direct</a></li>
+        <li><a href="./topo-meteo.html">Topo météo</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="./atelier.html" aria-haspopup="true">Interactif <span aria-label="version bêta">BÊTA</span> ▾</a>
+      <ul><li><a href="./simulateur.html">Simulateur de vent apparent</a></li><li><a href="./jeu.html">Mini-jeu de navigation</a></li><li><a href="./polaire.html">Polaire de vitesse interactive</a></li><li><a href="./atelier.html">Atelier interactif</a></li><li><a href="./labo.html">Laboratoire de simulation</a></li>
+        <li><a href="./studio.html">Studio interactif 3D</a></li>
+        <li><a href="./jeu-3d.html">Mini-jeu de navigation 3D</a></li><li><em>Version bêta : des erreurs ou dysfonctionnements peuvent survenir.</em></li></ul>
+    </li>
+    <li><a href="./manoeuvres.html">Manœuvres</a></li>
+    <li><a href="./qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+<div class="sommaire-page"><b>Sommaire :</b> <a href="#lire">1. Lire une polaire</a> · <a href="#courbe">2. La polaire interactive</a> · <a href="#raconter">3. Ce que la polaire raconte</a></div>
+
+<section class="carteforce" id="lire">
+  <h2><span class="num">1</span> Lire une polaire</h2>
+  <p>Le centre du diagramme, c'est le bateau à l'arrêt, face au vent. On tourne autour : vers le haut c'est le <b>près</b>, sur les côtés le <b>travers</b>, vers le bas le <b>vent arrière</b>. Plus la courbe est loin du centre, plus le bateau est rapide à cette allure. Un point de la courbe se lit ainsi : « à 100° du vent, par 15 nœuds de vent réel, ce bateau file 24 nœuds ».</p>
+  <p>Les courbes pointillées grises sont des repères à 8 et 25 nœuds de vent réel ; la courbe jaune suit le vent que tu as choisi avec le curseur. Même principe sur les vrais IMOCA : les navigateurs utilisent leur polaire pour choisir la route qui arrive le plus vite à la bouée.</p>
+</section>
+
+<section class="carteforce" id="courbe">
+  <h2><span class="num">2</span> La polaire interactive</h2>
+  <div class="bloc-reglages">
+    <label for="cur-vr"><b>Vent réel :</b></label>
+    <input type="range" id="cur-vr" min="4" max="30" step="1" value="15">
+    <span class="vr-aff" id="aff-vr">15 nd</span>
+  </div>
+
+  <div class="figure">
+  <svg id="polaire" viewBox="0 0 640 660" role="img" aria-label="Polaire de vitesse interactive : vitesse du catamaran selon l'angle au vent">
+    <rect class="fond" width="640" height="660"/>
+    <g id="grille"></g>
+    <path id="g8" class="ghost" d=""/>
+    <path id="g25" class="ghost" d=""/>
+    <path id="p-courbe" class="courbe" d=""/>
+    <line id="curseur-l" class="curseur-l" x1="320" y1="340" x2="320" y2="140"/>
+    <circle id="curseur-p" class="curseur-p" cx="320" cy="140" r="8"/>
+  </svg>
+  </div>
+
+  <div class="lectures">
+    <span><b>Angle au vent :</b> <span id="l-ang">100°</span></span>
+    <span><b>Allure :</b> <span id="l-all">travers</span></span>
+    <span><b>Vitesse :</b> <span id="l-vit">24,0 nd</span></span>
+    <span><b>Ratio vitesse/vent :</b> <span id="l-rat">1,60</span></span>
+  </div>
+  <p style="text-align:center" class="etq-mobile-hint">Touche la courbe (ou clique-glisse) pour promener le curseur rouge sur toutes les allures.</p>
+</section>
+
+<section class="carteforce" id="raconter">
+  <h2><span class="num">3</span> Ce que la polaire raconte</h2>
+  <div class="encadre"><b>Moins de 30° : muraille.</b> La courbe s'effondre vers le centre : face au vent, la voile faseie, il n'y a plus de portance utile. C'est pour ça qu'au près on tire des bords à ~45° au lieu de foncer tout droit.</div>
+  <div class="encadre vert"><b>Le boss à 90-110°.</b> La bosse de la polaire est au reaching latéral : c'est là qu'un catamaran peut aller plus vite que le vent (ratio > 1), grâce au vent apparent qui se crée lui-même — le cercle vertueux du cours.</div>
+  <div class="encadre vert"><b>Le creux au vent arrière.</b> À 180°, la courbe redescend : le bateau fuit son propre vent, qui s'évanouit avec lui. C'est le creux de performance, celui qui pousse à empanner et à tirer des bords au portant.</div>
+  <div class="encadre bleu">Cette polaire simplifiée dit la même chose que le <a href="./simulateur.html">simulateur du vent apparent</a> et que le <a href="./jeu.html">mini-jeu</a> : la vitesse vient de l'équilibre entre la puissance aérodynamique et la traînée hydrodynamique, et elle dépend de l'angle — relis <a href="./aero.html#vent-apparent">le vent apparent</a> et <a href="./stabilite.html#couplage">le couplage aéro-hydro</a>.</div>
+</section>
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="./index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="../test.html" style="color:#E8D48B">Zone test</a> · <a href="https://www.instagram.com/gabin_brdx/" target="_blank" rel="noopener" style="color:#E8D48B">📸 Instagram</a>
+  <a href="confidentialite.html" style="color:#E8D48B">Confidentialité</a>
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+<script>
+const CX = 320, CY = 340, PXND = 6, VR_DEFAUT = 15;
+const POL = [[0,0.02],[20,0.06],[30,0.3],[40,0.55],[50,0.8],[60,1.05],[70,1.25],[80,1.42],[90,1.52],[100,1.6],[110,1.55],[120,1.42],[130,1.28],[140,1.15],[150,1.05],[165,0.95],[180,0.92]];
+
+function ratio(b){
+  if (b <= POL[0][0]) return POL[0][1];
+  for (let i = 1; i < POL.length; i++) {
+    if (b <= POL[i][0]) {
+      const b0 = POL[i-1][0], f0 = POL[i-1][1], b1 = POL[i][0], f1 = POL[i][1];
+      return f0 + (f1 - f0) * (b - b0) / (b1 - b0);
+    }
+  }
+  return 0.92;
+}
+function facteurVent(vr){
+  return (1 - Math.max(0, vr - 22) * 0.012) * (1 - Math.max(0, 6 - vr) * 0.03);
+}
+function vitesse(b, vr){
+  return vr * ratio(b) * facteurVent(vr);
+}
+function allureNom(b){
+  if (b < 45) return 'près serré';
+  if (b < 75) return 'près';
+  if (b < 115) return 'travers';
+  if (b < 160) return 'portant';
+  return 'vent arrière';
+}
+function fmt(x){ return x.toFixed(1).replace('.', ','); }
+
+const $ = id => document.getElementById(id);
+const rad = b => b * Math.PI / 180;
+
+function chemin(vr){
+  let d = '';
+  for (let b = 0; b <= 180; b += 2) {
+    const r = vitesse(b, vr) * PXND;
+    d += (b ? ' L' : 'M') + (CX + r * Math.sin(rad(b))).toFixed(1) + ',' + (CY - r * Math.cos(rad(b))).toFixed(1);
+  }
+  for (let b = 180; b >= 0; b -= 2) {
+    const r = vitesse(b, vr) * PXND;
+    d += ' L' + (CX - r * Math.sin(rad(b))).toFixed(1) + ',' + (CY - r * Math.cos(rad(b))).toFixed(1);
+  }
+  return d + 'Z';
+}
+
+(function grille(){
+  const g = [];
+  for (let nd = 10; nd <= 50; nd += 10) {
+    g.push('<circle class="cercle" cx="' + CX + '" cy="' + CY + '" r="' + (nd * PXND) + '"/>');
+    g.push('<text class="etq" x="' + (CX + 5) + '" y="' + (CY - nd * PXND - 4) + '">' + nd + ' nd</text>');
+  }
+  for (let b = 0; b <= 180; b += 30) {
+    const x1 = CX + 18 * Math.sin(rad(b)), y1 = CY - 18 * Math.cos(rad(b));
+    const x2 = CX + 300 * Math.sin(rad(b)), y2 = CY - 300 * Math.cos(rad(b));
+    g.push('<line class="rayon" x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/>');
+    if (b > 0 && b < 180) {
+      g.push('<text class="etq" x="' + (CX + 310 * Math.sin(rad(b)) - 12).toFixed(1) + '" y="' + (CY - 310 * Math.cos(rad(b))).toFixed(1) + '">' + b + '°</text>');
+      g.push('<text class="etq" x="' + (CX - 310 * Math.sin(rad(b)) - 12).toFixed(1) + '" y="' + (CY - 310 * Math.cos(rad(b))).toFixed(1) + '">' + b + '°</text>');
+    }
+  }
+  g.push('<text class="etq-zone" x="' + CX + '" y="26" text-anchor="middle">près (face au vent)</text>');
+  g.push('<text class="etq-zone" x="' + CX + '" y="646" text-anchor="middle">vent arrière</text>');
+  g.push('<text class="etq-zone" x="10" y="' + CY + '">travers</text>');
+  $('grille').innerHTML = g.join('');
+})();
+
+let vr = VR_DEFAUT, angle = 100;
+function majCourbe(){
+  $('aff-vr').textContent = vr + ' nd';
+  $('p-courbe').setAttribute('d', chemin(vr));
+  $('g8').setAttribute('d', chemin(8));
+  $('g25').setAttribute('d', chemin(25));
+  majLectures();
+}
+function majLectures(){
+  const r = vitesse(angle, vr) * PXND;
+  const x = CX + r * Math.sin(rad(angle)), y = CY - r * Math.cos(rad(angle));
+  $('curseur-p').setAttribute('cx', x.toFixed(1));
+  $('curseur-p').setAttribute('cy', y.toFixed(1));
+  $('curseur-l').setAttribute('x2', x.toFixed(1));
+  $('curseur-l').setAttribute('y2', y.toFixed(1));
+  $('l-ang').textContent = Math.round(angle) + '°';
+  $('l-all').textContent = allureNom(angle);
+  $('l-vit').textContent = fmt(vitesse(angle, vr)) + ' nd';
+  $('l-rat').textContent = (vitesse(angle, vr) / vr).toFixed(2).replace('.', ',');
+}
+$('cur-vr').addEventListener('input', e => { vr = Number(e.target.value); majCourbe(); });
+
+const svg = $('polaire');
+function pointerAngle(e){
+  const rect = svg.getBoundingClientRect();
+  const px = (e.clientX - rect.left) * 640 / rect.width;
+  const py = (e.clientY - rect.top) * 660 / rect.height;
+  let b = Math.atan2(px - CX, CY - py) * 180 / Math.PI;
+  if (b < 0) b += 360;
+  if (b > 180) b = 360 - b;
+  return b;
+}
+let actif = false;
+svg.addEventListener('pointerdown', e => { actif = true; svg.setPointerCapture(e.pointerId); angle = pointerAngle(e); majLectures(); });
+svg.addEventListener('pointermove', e => { if (actif) { angle = pointerAngle(e); majLectures(); } });
+svg.addEventListener('pointerup', () => { actif = false; });
+svg.addEventListener('pointercancel', () => { actif = false; });
+
+majCourbe();
+
+window.__polaire = { ratio, facteurVent, vitesse, chemin, majCourbe, majLectures,
+  get vr(){ return vr; }, set vr(x){ vr = x; },
+  get angle(){ return angle; }, set angle(x){ angle = x; } };
+</script>
+
+</body>
+</html>
