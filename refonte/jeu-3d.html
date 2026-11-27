@@ -393,6 +393,7 @@ window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},
    const netMat=new THREE.LineBasicMaterial({color:0x536d78,transparent:true,opacity:.55});
    for(let x=-1.25;x<=1.26;x+=.18)rope([x,.27,-1.2],[x,.27,1.2],netMat);
    for(let z=-1.2;z<=1.21;z+=.18)rope([-1.25,.27,z],[1.25,.27,z],netMat);
+   const foilMat=new THREE.MeshStandardMaterial({color:0x9caeb7,metalness:.65,roughness:.28});
    const mastFoot=new THREE.Mesh(new THREE.CylinderGeometry(.16,.19,.18,16),foilMat);mastFoot.position.set(0,.35,0);boat.add(mastFoot);
    const vang=rope([1.5,.9,0],[.45,1.5,0],trimMat);
    const forestay=rope([0,6.8,0],[-.65,.25,0]);
@@ -400,7 +401,6 @@ window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},
    const jibMat=new THREE.MeshStandardMaterial({color:0xd9e4e8,side:THREE.DoubleSide,transparent:true,opacity:.82,roughness:.78});
    const jibGeo=new THREE.BufferGeometry();jibGeo.setAttribute('position',new THREE.Float32BufferAttribute([-.65,.35,0,-.05,5.9,0,-1.65,.5,0],3));jibGeo.computeVertexNormals();
    const jib=new THREE.Mesh(jibGeo,jibMat);jib.castShadow=true;boat.add(jib);
-   const foilMat=new THREE.MeshStandardMaterial({color:0x9caeb7,metalness:.65,roughness:.28});
    for(const z of [-1.35,1.35]){
      const foil=new THREE.Mesh(new THREE.BoxGeometry(.12,1.3,.12),foilMat);
      foil.position.set(0,-.35,z);boat.add(foil);
