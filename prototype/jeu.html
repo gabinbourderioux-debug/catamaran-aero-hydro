@@ -323,8 +323,8 @@ try{
  const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,0,0);controls.maxPolarAngle=Math.PI*.48;controls.minDistance=18;controls.maxDistance=100;
  scene.add(new THREE.HemisphereLight(0xdff5ff,0x17394b,2.1));
  const sun=new THREE.DirectionalLight(0xfff0d2,2.4);sun.position.set(-35,55,25);sun.castShadow=true;scene.add(sun);
- const sea=new THREE.Mesh(new THREE.PlaneGeometry(150,210,40,60),new THREE.MeshStandardMaterial({color:0x167da0,roughness:.48,metalness:.08,wireframe:false}));sea.rotation.x=-Math.PI/2;sea.position.set(0,-.8,-75);sea.receiveShadow=true;scene.add(sea);
- const grid=new THREE.GridHelper(150,30,0x8dd4e4,0x438fa9);grid.position.set(0,-.72,-75);scene.add(grid);
+ const sea=new THREE.Mesh(new THREE.PlaneGeometry(150,125,40,30),new THREE.MeshStandardMaterial({color:0x167da0,roughness:.48,metalness:.08,wireframe:false}));sea.rotation.x=-Math.PI/2;sea.position.set(0,-.8,0);sea.receiveShadow=true;scene.add(sea);
+ const grid=new THREE.GridHelper(150,30,0x8dd4e4,0x438fa9);grid.position.set(0,-.72,0);scene.add(grid);
  const boat=new THREE.Group();scene.add(boat);
  const hullMat=new THREE.MeshStandardMaterial({color:0xe6edf2,roughness:.35,metalness:.18});
  const darkMat=new THREE.MeshStandardMaterial({color:0x17324a,roughness:.55});
@@ -337,12 +337,12 @@ try{
  box(boat,.35,.15,.65,darkMat,0,.6,1.05);
  const buoys=[];
  for(let i=0;i<4;i++){const g=new THREE.Group();const buoy=new THREE.Mesh(new THREE.CylinderGeometry(.45,.58,1.1,16),new THREE.MeshStandardMaterial({color:0xff6a38,roughness:.5}));buoy.position.y=.2;buoy.castShadow=true;g.add(buoy);const top=new THREE.Mesh(new THREE.SphereGeometry(.48,12,8),new THREE.MeshStandardMaterial({color:0xffdf7a}));top.position.y=.78;g.add(top);scene.add(g);buoys.push(g);}
- const start=new THREE.Mesh(new THREE.BoxGeometry(7,.12,.25),new THREE.MeshStandardMaterial({color:0xf4f4e8}));start.position.set(0,-.15,-3);scene.add(start);
- const windArrow=new THREE.ArrowHelper(new THREE.Vector3(0,0,-1),new THREE.Vector3(-8,1,5),9,0xffd15c,1.6,1);scene.add(windArrow);
+ const start=new THREE.Mesh(new THREE.BoxGeometry(7,.12,.25),new THREE.MeshStandardMaterial({color:0xf4f4e8}));start.position.set(0,-.15,-43.2);scene.add(start);
+ const windArrow=new THREE.ArrowHelper(new THREE.Vector3(0,0,-1),new THREE.Vector3(-8,1,5),9,0xffd15c,1.6,1);scene.add(windArrow);const currentArrow=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(8,1,5),7,0x55e6d0,1.4,1);scene.add(currentArrow);
  let state={x:300,y:845,heading:0,marks:[],next:0,wind:{x:0,y:15},current:{x:0,y:0}};
  function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
  new ResizeObserver(resize).observe(canvas);
- window.__jeu3dUpdate=s=>{state=s;boat.position.set((s.x-300)*.12,.1,-(s.y-440)*.12);boat.rotation.y=-s.heading;buoys.forEach((g,i)=>{const p=s.marks[i];g.position.set((p.x-300)*.12,0,-(p.y-440)*.12);g.children[0].material.color.set(i<s.next?0x36b37e:0xff6a38);});windArrow.position.set(-8,1,6);windArrow.setDirection(new THREE.Vector3(s.wind.x,0,-s.wind.y).normalize());};
+ window.__jeu3dUpdate=s=>{state=s;boat.position.set((s.x-300)*.12,.1,-(s.y-440)*.12);boat.rotation.y=s.heading+Math.PI;buoys.forEach((g,i)=>{const p=s.marks[i];g.position.set((p.x-300)*.12,0,-(p.y-440)*.12);g.children[0].material.color.set(i<s.next?0x36b37e:0xff6a38);});windArrow.position.set(-8,1,6);windArrow.setDirection(new THREE.Vector3(s.wind.x,0,-s.wind.y).normalize());currentArrow.setDirection(new THREE.Vector3(s.current.x,0,-s.current.y).normalize());currentArrow.setLength(Math.max(.01,Math.hypot(s.current.x,s.current.y)*2.5),1.2,.9);};
  function animate(){requestAnimationFrame(animate);controls.target.lerp(boat.position,.035);controls.update();renderer.render(scene,camera);}animate();
 }catch(err){console.error('Rendu 3D indisponible',err);canvas.style.display='none';document.getElementById('jeu2d-wrap').style.display='block';document.getElementById('vue-3d').disabled=true;document.getElementById('vue-3d').textContent='3D indisponible';document.getElementById('vue-2d').classList.add('actif');}
 </script>
