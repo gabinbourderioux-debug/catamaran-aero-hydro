@@ -55,7 +55,25 @@
 </head>
 <body>
 <header class="hero hero--page"><div class="badge">Laboratoire expérimental · bêta</div><h1>Studio interactif du catamaran</h1><p>Modélise les interactions entre le vent, les voiles, les coques et les foils. Modifie les paramètres et observe leurs effets.</p></header>
-<div class="prototype-ribbon"><span>BÊTA — des erreurs ou dysfonctionnements peuvent survenir</span><a href="index.html">Accueil du site</a><a href="jeu-3d.html">Jeu 3D</a></div>
+<nav class="sommaire" aria-label="Navigation principale">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="aero.html#aero">La voile</a></li><li><a href="aero.html#vent-apparent">Vent apparent</a></li><li><a href="aero.html#vent-terrain">Vent changeant</a></li></ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="hydro.html#hydro">Les coques</a></li><li><a href="foils.html">Les foils</a></li><li><a href="stabilite.html">La stabilité</a></li></ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="meteo.html#vent">La météo en direct</a></li><li><a href="topo-meteo.html">Topo météo</a></li></ul>
+    </li>
+    <li class="deroulant"><a href="simulation.html" aria-haspopup="true">Simulation <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="simulateur.html">Vent apparent</a></li><li><a href="jeu-3d.html">Jeu de navigation 3D</a></li><li><a href="studio.html#modele">Modèle 3D du catamaran</a></li></ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li><li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
 <main class="lab">
 <div class="lab-intro"><div><h2>Centre de simulation</h2><p>Un environnement de manipulation et de comparaison. Les résultats sont calculés localement dans ton navigateur.</p></div><span class="lab-status"><i class="lab-dot"></i> Modèle pédagogique actif</span></div>
 <nav class="lab-nav"><a href="#modele">Vue 3D</a><a href="#aero">Aérodynamique</a><a href="#hydro">Hydrodynamique</a><a href="#navigation">Navigation</a><a href="#donnees">Données</a><a href="#historique">Historique</a></nav>

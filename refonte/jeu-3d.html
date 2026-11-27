@@ -79,14 +79,7 @@
   @media(max-width:600px){#jeu3d{height:360px}.jeu-reglages{grid-template-columns:1fr 1fr}.jeu-reglage{padding:9px}.stats-jeu{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 </style>
-<style>
-.prototype-ribbon{position:sticky;top:0;z-index:90;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;background:var(--marine,#1C2430);border-bottom:2px solid #FFCC00;box-shadow:0 4px 16px rgba(0,0,0,.14)}
-.prototype-ribbon span{color:#E8D48B;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-.prototype-ribbon a{color:#fff;text-decoration:none;padding:6px 11px;border:1px solid rgba(255,255,255,.25);border-radius:8px;font-size:.86rem;font-weight:700}
-.prototype-ribbon a:hover{background:#FFCC00;color:#1C2430}
-.prototype-ribbon a:first-of-type{background:#FFCC00;color:#1C2430}
-@media(max-width:600px){.prototype-ribbon{gap:6px;padding:7px}.prototype-ribbon span{width:100%;text-align:center}.prototype-ribbon a{font-size:.78rem;padding:6px 8px}}
-</style>
+
 </head>
 <body>
 
@@ -94,36 +87,24 @@
   <h1>Mini-jeu : la course de bouées</h1>
   <p>À la barre : règle le vent et les courants, remonte au près, accélère au portant et franchis les quatre marques. Passe de la carte 2D à la vue 3D immersive.</p>
 </header>
-<div class="prototype-ribbon"><span>BÊTA — des erreurs ou dysfonctionnements peuvent survenir</span><a href="index.html">Accueil du site</a><a href="studio.html">Studio 3D</a></div>
 
-<nav class="sommaire" aria-label="Navigation">
+
+<nav class="sommaire" aria-label="Navigation principale">
   <ul>
     <li><a href="index.html">Accueil</a></li>
     <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
-      <ul>
-        <li><a href="aero.html#aero">La voile</a></li>
-        <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
-        <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
-        <li><a href="simulateur.html">Le simulateur</a></li>
-        <li><a href="jeu.html">Le mini-jeu</a></li>
-        <li><a href="polaire.html">La polaire de vitesse</a></li>
-      </ul>
+      <ul><li><a href="aero.html#aero">La voile</a></li><li><a href="aero.html#vent-apparent">Vent apparent</a></li><li><a href="aero.html#vent-terrain">Vent changeant</a></li></ul>
     </li>
     <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
-      <ul>
-        <li><a href="hydro.html#hydro">Les coques</a></li>
-        <li><a href="foils.html">Les foils</a></li>
-        <li><a href="stabilite.html">La stabilité</a></li>
-      </ul>
+      <ul><li><a href="hydro.html#hydro">Les coques</a></li><li><a href="foils.html">Les foils</a></li><li><a href="stabilite.html">La stabilité</a></li></ul>
     </li>
     <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
-      <ul>
-        <li><a href="meteo.html#vent">La météo en direct</a></li>
-        <li><a href="topo-meteo.html">Topo météo</a></li>
-      </ul>
+      <ul><li><a href="meteo.html#vent">La météo en direct</a></li><li><a href="topo-meteo.html">Topo météo</a></li></ul>
     </li>
-    <li><a href="manoeuvres.html">Manœuvres</a></li>
-    <li><a href="qcm.html">QCM</a></li>
+    <li class="deroulant"><a href="simulation.html" aria-haspopup="true">Simulation <span aria-hidden="true">▾</span></a>
+      <ul><li><a href="simulateur.html">Vent apparent</a></li><li><a href="jeu-3d.html">Jeu de navigation 3D</a></li><li><a href="studio.html#modele">Modèle 3D du catamaran</a></li></ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li><li><a href="qcm.html">QCM</a></li>
   </ul>
 </nav>
 
