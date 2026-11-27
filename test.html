@@ -89,7 +89,8 @@ function execute(){
 save();
 const html=values.html||"",css=values.css||"",js=values.js||"";
 const openTag="<scr"+"ipt>",closeTag="<"+"/scr"+"ipt>";
-const endScript="<"+"/script";\nconst safe=js.split(endScript).join("<\\\\/script");
+const endScript="<"+"/script";
+const safe=js.split(endScript).join("<\\\\/script");
 const documentText='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;color:#172536;font-family:system-ui,sans-serif}'+css+'</style></head><body>'+html+openTag+'try{'+safe+'}catch(error){const box=document.createElement("pre");box.style.color="#b42318";box.textContent=error;document.body.appendChild(box)}'+closeTag+'</body></html>';
 document.getElementById("preview").srcdoc=documentText;
 document.getElementById("preview-status").textContent="Aperçu mis à jour";
