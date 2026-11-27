@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur du vent apparent — Aérodynamique du Catamaran</title>
+<meta name="description" content="Bouge deux curseurs (vent réel et vitesse du bateau) et regarde le triangle des vitesses se construire en direct : le vent apparent apparaît avec la même méthode que le schéma du cours.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="icone-192.png">
+<meta property="og:title" content="Simulateur du vent apparent — Aérodynamique du Catamaran">
+<meta property="og:description" content="Bouge deux curseurs (vent réel et vitesse du bateau) et regarde le triangle des vitesses se construire en direct : le vent apparent apparaît avec la même méthode que le schéma du cours.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/simulateur.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
+<script src="stats.js" defer></script>
+<style>
+  .curseurs{display:grid;grid-template-columns:250px 1fr;gap:10px 16px;align-items:center;margin:18px 0 6px;max-width:680px}
+  .curseurs label{font-weight:700;color:var(--titre)}
+  .curseurs output{color:var(--bleu);font-weight:800}
+  .curseurs input[type=range]{width:100%;accent-color:var(--bleu);cursor:pointer}
+  #dessin svg{touch-action:none}
+  .actions-sim{margin:8px 0 4px}
+  .verdict{font-size:1.02rem}
+  .verdict b{color:var(--titre)}
+  .comparer{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:12px 0 2px;font-size:.95rem}
+  .comparer .case{display:inline-flex;align-items:center;gap:6px;background:var(--carte);border:1px solid var(--bordure);border-radius:8px;padding:4px 10px;cursor:pointer}
+  .comparer input{accent-color:var(--bleu);cursor:pointer}
+  #effets{font-size:.93rem;color:var(--txt);margin:6px 0 2px}
+  @media(max-width:640px){.curseurs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Simulateur : le vent apparent en direct</h1>
+  <p>Bouge les deux curseurs et regarde la construction se dessiner : le vent réel arrive, le bateau fabrique son vent de vitesse, les reportés se croisent — et le vent apparent sort du triangle.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="aero.html#aero">La voile</a></li>
+        <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+        <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="hydro.html#hydro">Les coques</a></li>
+        <li><a href="foils.html">Les foils</a></li>
+        <li><a href="stabilite.html">La stabilité</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="meteo.html#vent">La météo en direct</a></li>
+        <li><a href="topo-meteo.html">Topo météo</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="simulateur.html" aria-haspopup="true">Simulation <span aria-hidden="true">&#9662;</span></a>
+      <ul>
+        <li><a href="simulateur.html">Simulateur de vent apparent</a></li>
+        <li><a href="jeu.html">Mini-jeu de navigation</a></li>
+        <li><a href="jeu-3d.html">Mini-jeu de navigation 3D</a></li>
+      </ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+
+<section class="carteforce" id="simu">
+  <h2><span class="num">1</span> Le triangle des vitesses, curseurs en main</h2>
+  <p>C'est exactement la construction de la <a href="aero.html#vent-apparent">figure 3 du cours</a> :
+  le <b style="color:#1d4ed8">vent réel</b> arrive vers le bateau, le <b style="color:#059669">vent vitesse</b>
+  arrive de droit devant (le vent que le bateau fabrique en avançant), les deux reportés en
+  <b>pointillés gris</b> se croisent, et le <b style="color:#7c3aed">vent apparent</b> va du
+  <b>croisement des reportés</b> jusqu'au bateau. <b>Bonus : tire sur le rond bleu du vent réel
+  pour changer sa direction, de face à 0° jusqu’au vent arrière à 180°</b> — le triangle se recalcule tout seul. Coche ensuite une case pour <b>superposer un môle, une risée ou une veine de courant</b> : les mêmes effets que les <a href="aero.html#vent-terrain">figures 4, 5 et 6 du cours</a>, sur ton propre triangle.</p>
+
+  <div class="curseurs">
+    <label for="inVR">Vent réel : <output id="oVR">15</output> nd</label>
+    <input type="range" id="inVR" min="0" max="30" step="1" value="15">
+    <label for="inVB">Vitesse du bateau : <output id="oVB">10</output> nd</label>
+    <input type="range" id="inVB" min="0" max="30" step="1" value="10">
+  </div>
+  <div class="actions-sim">
+    <button class="btn" id="exCours" type="button">Revenir à l'exemple du cours (15 nd / 10 nd)</button>
+  </div>
+
+  <div class="comparer">
+    <b>Superposer au triangle :</b>
+    <span class="case"><input type="checkbox" id="ckGarde"><label for="ckGarde">garder cette situation (mémoire)</label></span>
+    <span class="case"><input type="checkbox" id="ckRisee"><label for="ckRisee">une risée : le vent grossit (+5 nd)</label></span>
+    <span class="case"><input type="checkbox" id="ckMole"><label for="ckMole">un môle : le vent s’écroule (−8 nd)</label></span>
+    <span class="case"><input type="checkbox" id="ckCourant"><label for="ckCourant">une veine de courant portante (+5 nd sur la route)</label></span>
+  </div>
+
+  <div class="figure" id="dessin" aria-live="polite"></div>
+  <div id="effets" aria-live="polite"></div>
+
+  <div class="encadre bleu verdict" id="verdict"></div>
+
+  <div class="encadre">
+    <b>Les trois réflexes à tester :</b> laisse le vent réel à 15 et pousse la vitesse du bateau
+    (le vent apparent <b>grossit et remonte vers l'avant</b>) ; mets le vent réel à 0
+    (il ne reste que le vent de vitesse) ; mets le bateau à 0 (on sent exactement le vent réel).
+    Tu viens de <b>voir</b> pourquoi un catamaran rapide « fabrique son propre vent ».
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> ·  · 
+  
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+<script>
+const inVR = document.getElementById('inVR'), inVB = document.getElementById('inVB');
+const oVR = document.getElementById('oVR'), oVB = document.getElementById('oVB');
+const ckRisee = document.getElementById('ckRisee'), ckMole = document.getElementById('ckMole'),
+  ckCourant = document.getElementById('ckCourant'), ckGarde = document.getElementById('ckGarde');
+let fige = null;
+
+const S = 12;
+const B = [360, 480];
+let DIR_R = [0.301, -0.953];
+let dernierW = null;
+
+function normaliserDir(dx, dy){
+  const L = Math.hypot(dx, dy);
+  if(L < 1) return DIR_R.slice();
+  return [dx / L, -Math.abs(dy / L)];
+}
+
+function ligne(a, b, col, w, marker, dash){
+  return '<line x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) +
+    '" y2="' + b[1].toFixed(1) + '" stroke="' + col + '" stroke-width="' + w + '"' +
+    (dash ? ' stroke-dasharray="6 5"' : '') +
+    (marker ? ' marker-end="url(#' + marker + ')"' : '') + '/>';
+}
+function texte(x, y, t, col, taille, ancre, gras){
+  return '<text x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" font-size="' + (taille || 12.5) + '"' +
+    (gras ? ' font-weight="bold"' : '') + ' fill="' + col + '"' +
+    (ancre ? ' text-anchor="' + ancre + '"' : '') + '>' + t + '</text>';
+}
+
+function dessiner(){
+  const vr = +inVR.value, vb = +inVB.value;
+  oVR.textContent = vr; oVB.textContent = vb;
+
+  dernierW = null;
+  const A = [B[0] + vb * S, B[1]];
+  const W = [B[0] + vr * S * DIR_R[0], B[1] + vr * S * DIR_R[1]];
+  if(vr > 0) dernierW = W;
+  const C = [A[0] + W[0] - B[0], A[1] + W[1] - B[1]];
+  const va = Math.hypot(C[0] - B[0], C[1] - B[1]) / S;
+  const ang = Math.round(Math.abs(Math.atan2(C[1] - B[1], C[0] - B[0]) * 180 / Math.PI));
+
+  const defs = '<defs>' +
+    '<marker id="mrVR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>' +
+    '<marker id="mrVV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>' +
+    '<marker id="mrVA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>' +
+    '</defs>';
+
+  let g = '';
+  g += ligne(A, C, '#94a3b8', 2, null, true);
+  g += ligne(W, C, '#94a3b8', 2, null, true);
+  if(vr > 0){
+    g += ligne(W, B, '#1d4ed8', 3.5, 'mrVR');
+    g += '<circle cx="' + W[0].toFixed(1) + '" cy="' + W[1].toFixed(1) + '" r="9" fill="#1d4ed8" stroke="#F4F4F1" stroke-width="2" style="cursor:grab"><title>Tire sur ce rond pour tourner le vent réel</title></circle>';
+  }
+  if(vb > 0) g += ligne(A, B, '#059669', 3.5, 'mrVV');
+  if(vr > 0 || vb > 0) g += ligne(C, B, '#7c3aed', 3.5, 'mrVA');
+
+  g += '<circle cx="' + B[0] + '" cy="' + B[1] + '" r="6" fill="#1C2430"/>';
+  g += texte(B[0] - 96, B[1] + 26, 'le bateau (il file vers la droite \u2192)', '#334155', 12);
+  if(vr > 0 || vb > 0){
+    g += '<circle cx="' + C[0].toFixed(1) + '" cy="' + C[1].toFixed(1) + '" r="5" fill="#FFCC00" stroke="#1C2430" stroke-width="1.5"/>';
+  }
+
+  const labVR = [(W[0] + B[0]) / 2, (W[1] + B[1]) / 2];
+  const labVV = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+  const labVA = [(C[0] + B[0]) / 2, (C[1] + B[1]) / 2];
+  if(vr > 0) g += texte(labVR[0] + 12, labVR[1], 'vent réel = ' + vr + ' nd', '#1d4ed8', 12.5, null, true);
+  if(vb > 0) g += texte(labVV[0], labVV[1] - 16, 'vent vitesse = ' + vb + ' nd', '#059669', 12.5, 'middle', true);
+  if(vr > 0 || vb > 0){
+    g += texte(labVA[0] - 14, labVA[1] + 4, 'vent apparent \u2248 ' + va.toFixed(1) + ' nd', '#7c3aed', 12.5, 'end', true);
+    g += texte(C[0], C[1] - 12, 'le croisement des reportés', '#475569', 11, 'middle');
+  }
+  const listeEff = [];
+  let gardeIdentique = false;
+  function triangleEffet(vr2, vb2, dir2, nom, col){
+    if(vr2 === vr && vb2 === vb && dir2[0] === DIR_R[0] && dir2[1] === DIR_R[1]) return false;
+    const A2 = [B[0] + vb2 * S, B[1]];
+    const W2 = [B[0] + vr2 * S * dir2[0], B[1] + vr2 * S * dir2[1]];
+    const C2 = [A2[0] + W2[0] - B[0], A2[1] + W2[1] - B[1]];
+    const va2 = Math.hypot(C2[0] - B[0], C2[1] - B[1]) / S;
+    g += ligne(A2, C2, col, 2, null, true);
+    g += ligne(W2, C2, col, 2, null, true);
+    if(vr2 > 0) g += ligne(W2, B, col, 2, 'mrVR');
+    if(vb2 > 0) g += ligne(A2, B, col, 2, 'mrVV');
+    g += ligne(C2, B, col, 2.5, 'mrVA');
+    g += '<circle cx="' + C2[0].toFixed(1) + '" cy="' + C2[1].toFixed(1) + '" r="4" fill="' + col + '"/>';
+    g += texte(C2[0], Math.min(632, C2[1] + 22), nom + ' : \u2248 ' + va2.toFixed(1) + ' nd', col, 12, 'middle', true);
+    listeEff.push({nom: nom, va: va2, d: va2 - va, col: col});
+    return true;
+  }
+  if(ckGarde.checked && fige){
+    if(!triangleEffet(fige.vr, fige.vb, fige.dir, 'gardée', '#64748b')) gardeIdentique = true;
+  }
+  if(ckRisee.checked) triangleEffet(Math.min(30, vr + 5), vb, DIR_R, 'risée', '#d97706');
+  if(ckMole.checked) triangleEffet(Math.max(0, vr - 8), vb, DIR_R, 'môle', '#e11d48');
+  if(ckCourant.checked) triangleEffet(vr, vb + 5, DIR_R, 'courant', '#0e7490');
+
+  g += texte(30, 24, 'La construction de la figure 3, en direct', '#1C2430', 15, null, true);
+  g += texte(30, 620, 'Échelle : 12 px = 1 nd — tire sur le rond bleu pour tourner le vent réel, du vent de face au vent arrière.', '#64748b', 11.5);
+
+  document.getElementById('dessin').innerHTML =
+    '<svg viewBox="0 0 920 640" role="img" aria-label="Triangle des vitesses interactif">' + defs + g + '</svg>';
+
+  const angR = vr > 0 ? Math.round(Math.acos(Math.max(-1, Math.min(1, DIR_R[0]))) * 180 / Math.PI) : 0;
+  const ecart = va - vr;
+  const fmt = () => (ecart >= 0 ? '+' + ecart.toFixed(1) : '\u2212' + Math.abs(ecart).toFixed(1));
+  let msg = 'Vent apparent estimé : ';
+  if(vr === 0 && vb === 0) msg += '<b>0 nd';
+  else if(vb === 0) msg += '<b>' + vr + ' nd</b> (le vent réel, sans effet de vitesse)';
+  else msg += '<b>\u2248 ' + va.toFixed(1) + ' nd</b>, arrivant à <b>' + ang + '\u00b0</b> de la route';
+  if(vr === 0 && vb === 0) msg += '</b>.';
+  let suite;
+  if(vb === 0 && vr === 0) suite = 'Tout est calme… gonfle les curseurs !';
+  else if(vb === 0) suite = 'Bateau arrêté : tu sens exactement le vent réel.';
+  else if(vr === 0) suite = 'Plus aucun vrai vent : il ne reste que le vent que tu fabriques — utile pour rentrer au moteur, pas pour briller.';
+  else if(angR < 70) suite = 'Le vrai vent vient de ~' + angR + '\u00b0 de la route (côté près) : ' + fmt() + ' nd sur le réel — le turbo du catamaran ! Plus tu vas vite, plus le vent apparent remonte vers l\u2019avant.';
+  else if(angR <= 110) suite = 'Le vrai vent arrive de ~' + angR + '\u00b0 de la route, presque de travers : ' + fmt() + ' nd sur le réel, et il faiblit dès que tu descends vers le vent arrière.';
+  else suite = 'Vent d\u2019arrière (~' + angR + '\u00b0 de la route) : le bateau fuit devant son propre vent, donc il perd ' + Math.abs(ecart).toFixed(1) + ' nd sur le réel — le régime du grand largue, voiles largues.';
+  document.getElementById('verdict').innerHTML = msg + ' ' + suite;
+  const boEffets = document.getElementById('effets');
+  if(listeEff.length === 0) boEffets.textContent = gardeIdentique
+    ? 'Situation gardée ! Bouge les curseurs ou tire le rond bleu : l’ancienne situation reste dessinée pour la comparaison.'
+    : 'Coche une case ci-dessus pour superposer un effet sur le triangle.';
+  else boEffets.innerHTML = listeEff.map(e => '<span style="color:' + e.col + ';font-weight:bold">' + e.nom + ' : ≈ ' + e.va.toFixed(1) + ' nd (' + (e.d >= 0 ? '+' : '−') + Math.abs(e.d).toFixed(1) + ')</span>').join(' · ');
+}
+
+inVR.addEventListener('input', dessiner);
+inVB.addEventListener('input', dessiner);
+document.getElementById('exCours').addEventListener('click', () => {
+  inVR.value = 15; inVB.value = 10; DIR_R = [0.301, -0.953]; dessiner();
+});
+[ckRisee, ckMole, ckCourant].forEach(ck => ck.addEventListener('change', dessiner));
+ckGarde.addEventListener('change', () => {
+  fige = ckGarde.checked ? {vr: +inVR.value, vb: +inVB.value, dir: DIR_R.slice()} : null;
+  dessiner();
+});
+
+const dessin = document.getElementById('dessin');
+let enDrag = false;
+dessin.addEventListener('pointerdown', e => {
+  const svg = dessin.querySelector('svg'), W = dernierW;
+  if(!svg || !W || +inVR.value <= 0) return;
+  const r = svg.getBoundingClientRect();
+  if(r.width <= 0) return;
+  const x = (e.clientX - r.left) * 920 / r.width;
+  const y = (e.clientY - r.top) * 640 / r.height;
+  if(Math.hypot(x - W[0], y - W[1]) <= 20){ enDrag = true; e.preventDefault(); }
+});
+window.addEventListener('pointermove', e => {
+  if(!enDrag) return;
+  const svg = dessin.querySelector('svg');
+  if(!svg) return;
+  const r = svg.getBoundingClientRect();
+  if(r.width <= 0) return;
+  const dx = (e.clientX - r.left) * 920 / r.width - B[0];
+  const dy = (e.clientY - r.top) * 640 / r.height - B[1];
+  DIR_R = normaliserDir(dx, dy);
+  dessiner();
+});
+window.addEventListener('pointerup', () => { enDrag = false; });
+
+dessiner();
+</script>
+
+</body>
+</html>

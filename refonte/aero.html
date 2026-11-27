@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aérodynamique du catamaran — La voile et le vent apparent</title>
+<meta name="description" content="Tout sur l'aérodynamique des voiles de catamaran : portance, traînée, angle d'attaque, finesse, décrochage, et le triangle du vent apparent.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="icone-192.png">
+<meta property="og:title" content="Aérodynamique du catamaran — La voile et le vent apparent">
+<meta property="og:description" content="Tout sur l'aérodynamique des voiles de catamaran : portance, traînée, angle d'attaque, finesse, décrochage, et le triangle du vent apparent.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/aero.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
+<script src="stats.js" defer></script>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>La voile : une aile dressée, et le vent apparent</h1>
+  <p>Comment l'air qui s'écoule sur une voile creuse produit la force qui fait vivre le catamaran — et pourquoi un bateau rapide nourrit son propre vent.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="aero.html#aero">La voile</a></li>
+        <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+        <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="hydro.html#hydro">Les coques</a></li>
+        <li><a href="foils.html">Les foils</a></li>
+        <li><a href="stabilite.html">La stabilité</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="meteo.html#vent">La météo en direct</a></li>
+        <li><a href="topo-meteo.html">Topo météo</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="simulateur.html" aria-haspopup="true">Simulation <span aria-hidden="true">&#9662;</span></a>
+      <ul>
+        <li><a href="simulateur.html">Simulateur de vent apparent</a></li>
+        <li><a href="jeu.html">Mini-jeu de navigation</a></li>
+        <li><a href="jeu-3d.html">Mini-jeu de navigation 3D</a></li>
+      </ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+<div class="sommaire-page"><b>Sommaire :</b> <a href="#aero">1. Aérodynamique : la voile est une aile dressée</a> · <a href="#vent-apparent">2. Le vent apparent : le turbo du multicoque</a> · <a href="#vent-terrain">3. Quand le vent change : môle, risée et veine de courant</a></div>
+<section class="carteforce" id="aero">
+  <h2><span class="num">1</span> Aérodynamique : la voile est une aile dressée</h2>
+  <p>Contrairement à l'idée reçue du bateau « poussé par le vent », une voile moderne fonctionne
+  comme <b>l'aile d'un avion à la verticale</b>. Le vent s'écoule sur ses deux faces : accéléré sur
+  l'extrados (face au vent, la plus bombée) → <b>dépression</b> ; ralenti sur l'intrados (face sous
+  le vent) → <b>surpression</b>. La différence de pression crée la <b>portance</b>, orientée
+  perpendiculairement à l'écoulement du vent apparent.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 470" role="img" aria-label="Profil de voile : écoulement, portance, traînée, angle d'attaque">
+      <defs>
+        <marker id="flA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="860" height="470" fill="#F4F4F1"/>
+
+      <text x="34" y="176" font-size="15" fill="#1d4ed8" font-weight="bold">Vent apparent</text>
+      <line x1="30" y1="225" x2="150" y2="222" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#flA)"/>
+      <line x1="30" y1="352" x2="150" y2="349" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#flA)"/>
+
+      <path d="M60,150 C 260,118 520,128 830,205" fill="none" stroke="#64748b" stroke-width="2" opacity=".65" marker-end="url(#flA)"/>
+      <path d="M60,222 C 220,178 360,168 480,196 C 600,222 720,236 830,244" fill="none" stroke="#64748b" stroke-width="2.2" opacity=".8" marker-end="url(#flA)"/>
+      <path d="M60,345 C 240,356 420,362 830,352" fill="none" stroke="#64748b" stroke-width="2" opacity=".65" marker-end="url(#flA)"/>
+      <path d="M60,412 C 260,420 560,420 830,404" fill="none" stroke="#64748b" stroke-width="2" opacity=".65" marker-end="url(#flA)"/>
+
+      <ellipse cx="420" cy="192" rx="155" ry="20" fill="#1d4ed8" opacity=".12"/>
+      <text x="420" y="160" font-size="15" fill="#1d4ed8" font-weight="bold" text-anchor="middle">− Dépression (dos bombé de la voile : face sous le vent)</text>
+      <ellipse cx="430" cy="272" rx="150" ry="13" fill="#b91c1c" opacity=".10"/>
+      <text x="420" y="312" font-size="15" fill="#b91c1c" font-weight="bold" text-anchor="middle">+ Surpression (creux de la voile : face au vent)</text>
+
+      <path d="M210,300 C 330,206 500,215 650,250 C 500,227 330,218 210,300 Z" fill="#e2e8f0" stroke="none"/>
+      <path d="M210,300 C 330,206 500,215 650,250" fill="none" stroke="#1C2430" stroke-width="5" stroke-linecap="round"/>
+      <path d="M210,300 C 330,218 500,227 650,250" fill="none" stroke="#1C2430" stroke-width="5" stroke-linecap="round"/>
+      <line x1="210" y1="300" x2="650" y2="250" stroke="#1C2430" stroke-width="1.6" stroke-dasharray="7 6" opacity=".65"/>
+
+      <line x1="60" y1="300" x2="210" y2="300" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 5"/>
+      <line x1="210" y1="300" x2="92" y2="311" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M 80,300 A 130,130 0 0 1 81,315" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+      <text x="66" y="336" font-size="13" fill="#7c3aed" font-weight="bold">corde · angle d'attaque α</text>
+
+      <line x1="430" y1="233" x2="430" y2="105" stroke="#e11d48" stroke-width="5.5" marker-end="url(#flA)"/>
+      <text x="444" y="113" font-size="16" fill="#e11d48" font-weight="bold">Portance L</text>
+      <line x1="430" y1="233" x2="618" y2="233" stroke="#0f766e" stroke-width="5.5" marker-end="url(#flA)"/>
+      <text x="626" y="239" font-size="16" fill="#0f766e" font-weight="bold">Traînée D</text>
+      <line x1="430" y1="233" x2="596" y2="150" stroke="#7c3aed" stroke-width="3" stroke-dasharray="7 6" marker-end="url(#flA)"/>
+      <text x="604" y="166" font-size="15" fill="#7c3aed" font-weight="bold">Résultante F</text>
+
+      <line x1="210" y1="300" x2="150" y2="268" stroke="#475569" stroke-width="1.5"/>
+      <text x="146" y="262" font-size="13" fill="#334155" text-anchor="end">guindant (bord d'attaque)</text>
+      <line x1="650" y1="250" x2="706" y2="222" stroke="#475569" stroke-width="1.5"/>
+      <text x="710" y="216" font-size="13" fill="#334155">écoute (bord de fuite)</text>
+
+      <line x1="700" y1="296" x2="752" y2="330" stroke="#64748b" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#flA)"/>
+      <text x="762" y="286" font-size="12" fill="#475569" text-anchor="middle">l'air est dévié vers le bas</text>
+    </svg>
+    <figcaption>Fig. 2 — Section d'une voile (une seule toile courbée, creux légèrement exagéré pour la
+    lisibilité) : l'air freiné dans le <b>creux</b> (face au vent) est mis en <b>surpression +</b> ; accéléré
+    sur le <b>dos bombé</b> (face sous le vent), il est mis en <b>dépression −</b>. La combinaison des deux
+    crée la <b>portance</b>, perpendiculaire au vent apparent, la <b>traînée</b> suivant l'écoulement.
+    L'<b>angle d'attaque α</b> mesure l'ouverture entre la corde (trait pointillé) et le vent apparent.</figcaption>
+  </div>
+
+  <h3>La « finesse » : le rapport portance / traînée</h3>
+  <p>La qualité d'un profil s'apprécie par sa <b>finesse</b>, c'est le rapport portance/traînée :</p>
+  <div class="formule">f = L / D
+    <small>L = portance (Lift) &nbsp;•&nbsp; D = traînée (Drag). Une voile bien réglée atteint f ≈ 4 à 6, une voile mal bordée tombe sous 2.</small>
+  </div>
+  <p>Toute la finesse d'un coureur de catamaran consiste à <b>border juste assez</b> pour garder un
+  écoulement attaché : si l'angle d'attaque est trop grand, le flux <b>décroche</b>, la portance
+  s'effondre et la traînée explose — la voile « faseye » et le bateau ralentit.</p>
+
+  <div class="encadre vert">
+    <b>Réglages qui pilotent l'aéro :</b> la tension de bordure (camber), le bord d'attaque, la
+    tension d'écoute, le <b>vrillage</b> (choquer le haut des voiles pour suivre la rotation du vent
+    en altitude) et l'angle d'attaque global réglé par l'écoute. Sur un catamaran de sport, le
+    trapexe du barreur et du régleur sert aussi à contrer le couple de gîte (voir la page Stabilité).
+  </div>
+</section>
+
+<section class="carteforce" id="vent-apparent">
+  <h2><span class="num">2</span> Le vent apparent : le turbo du multicoque</h2>
+  <p>C'est <b>le</b> secret de la vitesse des catamarans. Ce que ressent la voile n'est pas le vent
+  réel, mais la <b>somme vectorielle</b> du vent réel et du « vent virtuel » créé par la vitesse du
+  bateau lui-même. Plus le catamaran accélère, plus le vent apparent <b>remonte et grossit</b> :
+  le bateau nourrit son propre moteur.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 430" role="img" aria-label="Construction vectorielle du vent apparent : un point figure le bateau ; le vent vitesse (10 nd) arrive depuis droit devant, le vent réel (15 nd) arrive par le côté ; on reporte chaque vecteur au début de l'autre en pointillés ; les reportés se croisent, et le vent apparent (20 nd) va de ce croisement jusqu'au bateau.">
+      <defs>
+        <marker id="flB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="860" height="430" fill="#F4F4F1"/>
+      <text x="30" y="38" font-size="16" fill="#1C2430" font-weight="bold">Construction : vent apparent = vent réel + vent vitesse</text>
+
+      <line x1="200" y1="370" x2="808" y2="370" stroke="#94a3b8" stroke-width="2" stroke-dasharray="10 8" marker-end="url(#flB)"/>
+      <text x="806" y="352" font-size="13" fill="#64748b" text-anchor="end">route</text>
+
+      <circle cx="410" cy="370" r="7" fill="#ffffff" stroke="#1C2430" stroke-width="3"/>
+      <text x="392" y="396" font-size="12.5" fill="#1C2430" font-weight="bold" text-anchor="end">le bateau</text>
+
+      <circle cx="610" cy="370" r="4" fill="none" stroke="#1C2430" stroke-width="2"/>
+      <text x="624" y="364" font-size="11.5" fill="#475569">là où va le bateau</text>
+
+      <line x1="610" y1="370" x2="410" y2="370" stroke="#059669" stroke-width="5.5" marker-end="url(#flB)"/>
+      <text x="510" y="401" font-size="15" fill="#059669" font-weight="bold" text-anchor="middle">Vent vitesse = 10 nd (créé par la vitesse du bateau)</text>
+
+      <circle cx="488" cy="80" r="5" fill="#1C2430"/>
+      <line x1="488" y1="80" x2="410" y2="370" stroke="#1d4ed8" stroke-width="5.5" marker-end="url(#flB)"/>
+      <text x="476" y="62" font-size="15" fill="#1d4ed8" font-weight="bold" text-anchor="end">Vent réel VR = 15 nd</text>
+
+      <line x1="688" y1="80" x2="488" y2="80" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#flB)"/>
+      <text x="575" y="102" font-size="12.5" fill="#059669" font-weight="bold" text-anchor="middle">Vent vitesse (reporté au début du vent réel)</text>
+      <line x1="688" y1="80" x2="610" y2="370" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#flB)"/>
+      <text x="658" y="222" font-size="12.5" fill="#1d4ed8" font-weight="bold">VR (reporté)</text>
+
+      <circle cx="688" cy="80" r="6" fill="#7c3aed"/>
+      <text x="610" y="54" font-size="12.5" fill="#7c3aed" font-weight="bold" text-anchor="middle">croisement des vecteurs reportés</text>
+
+      <line x1="688" y1="80" x2="410" y2="370" stroke="#7c3aed" stroke-width="5.5" marker-end="url(#flB)"/>
+      <text x="518" y="198" font-size="14" fill="#7c3aed" font-weight="bold" text-anchor="middle">VA ≈ 20 nd</text>
+
+      <path d="M 470,370 A 60,60 0 0 0 451.5,326.7" fill="none" stroke="#1C2430" stroke-width="2"/>
+      <text x="520" y="322" font-size="14" fill="#1C2430" font-weight="bold">≈ 46°</text>
+      <text x="520" y="338" font-size="11.5" fill="#475569">du vent apparent</text>
+
+      <text x="430" y="424" font-size="13.5" fill="#334155" text-anchor="middle">En filant 10 nd sous 15 nd de vent réel, le catamaran subit un vent vitesse de 10 nd de face : il ressent un vent apparent d'environ 20 nd, à ~45° de sa route.</text>
+    </svg>
+    <figcaption>Fig. 3 — Triangle des vitesses : le point blanc, c'est le bateau. Deux vents arrivent
+    sur lui : le <b>vent vitesse</b> (vert) — 10 nd, créé par son déplacement — qui vient de droit
+    devant, et le <b>vent réel</b> (bleu) — 15 nd. On reporte chaque vecteur en pointillés au début
+    de l'autre : le vent réel reporté au début du vent vitesse, le vent vitesse reporté au début du
+    vent réel. Les deux reportés <b>se croisent</b>, et le <b>vent apparent</b> (violet) va de ce
+    croisement jusqu'au bateau : ≈ 20 nd, plus fort et plus debout que le vent réel. C'est lui qui
+    alimente la voile.</figcaption>
+  </div>
+
+  <div class="encadre bleu">
+    <b>Conséquence clé :</b> plus le bateau va vite, plus le vent apparent tourne vers l'avant.
+    Le barreur peut donc <b>resserrer la route</b> (choisir une allure plus près du vent) tout en
+    gardant de la puissance. C'est pour cela qu'un catamaran de sport remonte au près à plus de
+    45° du vent réel tout en naviguant à 1,5 à 2 fois la vitesse du vent. Ce cercle vertueux
+    s'arrête quand la traînée hydrodynamique équilibre la force vélique.
+  </div>
+</section>
+
+<section class="carteforce" id="vent-terrain">
+  <h2><span class="num">3</span> Quand le vent change : môle, risée et veine de courant</h2>
+  <p>Sur l'eau, le vent réel et la vitesse du bateau changent tout le temps : un <b>môle</b> coupe
+  le flux, une <b>risée</b> le renforce, une <b>veine de courant</b> emporte le bateau. On reprend
+  donc exactement la construction de la fig. 3 — point-bateau, vent vitesse de droit devant,
+  vent réel qui arrive, reportés en pointillés, croisement, vent apparent du croisement au
+  bateau — et on regarde ce que devient ce triangle dans chaque cas. Traits clairs : avant ;
+  couleurs pleines : après.</p>
+
+  <h3>Le môle : le vent réel s'écroule</h3>
+  <p>Le vent ne contourne pas poliment un obstacle long : sous le vent du môle (ou de toute
+  pointe), le flux est réduit, dévié et tourbillonnant. Ici le vent réel chute de <b>15 à 7 nd</b>.
+  Pour bien isoler l'effet du môle, la construction garde le vent vitesse constant à 10 nd : le
+  croisement des reportés se rapproche du bateau et le vent apparent s'effondre de <b>≈ 20 à
+  ≈ 14 nd</b>.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 500" role="img" aria-label="Construction du vent apparent dans l'ombre du môle : le vent réel fond de 15 à 7 nœuds, le vent vitesse reste à 10 nœuds, le vent apparent s'effondre d'environ 20 à environ 14 nœuds.">
+      <defs>
+        <marker id="fl10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="860" height="500" fill="#F4F4F1"/>
+      <text x="30" y="34" font-size="15" fill="#1C2430" font-weight="bold">Le môle : le vent réel s'écroule, le triangle du vent apparent aussi</text>
+
+      <line x1="250" y1="450" x2="830" y2="450" stroke="#94a3b8" stroke-width="2" stroke-dasharray="10 8" marker-end="url(#fl10)"/>
+      <text x="826" y="432" font-size="13" fill="#64748b" text-anchor="end">route</text>
+
+      <circle cx="430" cy="450" r="7" fill="#ffffff" stroke="#1C2430" stroke-width="3"/>
+      <text x="415" y="436" font-size="12.5" fill="#1C2430" font-weight="bold" text-anchor="end">le bateau</text>
+
+      <rect x="30" y="110" width="16" height="200" fill="#94a3b8" stroke="#1C2430" stroke-width="1.5"/>
+      <text x="38" y="98" font-size="11.5" fill="#334155" font-weight="bold" text-anchor="middle">le môle</text>
+      <line x1="6" y1="150" x2="24" y2="150" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#fl10)"/>
+      <line x1="6" y1="190" x2="24" y2="190" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#fl10)"/>
+      <line x1="48" y1="160" x2="100" y2="164" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 4" opacity=".8" marker-end="url(#fl10)"/>
+
+      <circle cx="630" cy="450" r="4" fill="none" stroke="#1C2430" stroke-width="2"/>
+      <text x="646" y="444" font-size="11.5" fill="#475569">là où va le bateau</text>
+
+
+      <line x1="520" y1="165" x2="430" y2="450" stroke="#1d4ed8" stroke-width="3" opacity=".38" marker-end="url(#fl10)"/>
+      <circle cx="520" cy="165" r="4" fill="#1d4ed8" opacity=".5"/>
+      <text x="506" y="150" font-size="11.5" fill="#64748b" text-anchor="end">avant le môle : VR = 15 nd</text>
+
+      <line x1="720" y1="165" x2="520" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".35" marker-end="url(#fl10)"/>
+      <line x1="720" y1="165" x2="630" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".35" marker-end="url(#fl10)"/>
+      <line x1="720" y1="165" x2="430" y2="450" stroke="#7c3aed" stroke-width="3" stroke-dasharray="7 6" opacity=".38" marker-end="url(#fl10)"/>
+      <circle cx="720" cy="165" r="5" fill="#7c3aed" opacity=".5"/>
+      <text x="655" y="250" font-size="11.5" fill="#64748b" text-anchor="start">VA avant ≈ 20 nd</text>
+
+      <line x1="630" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="5.5" marker-end="url(#fl10)"/>
+      <text x="530" y="476" font-size="12" fill="#059669" font-weight="bold" text-anchor="middle">Vent vitesse = 10 nd (inchangé)</text>
+
+      <line x1="472" y1="317" x2="430" y2="450" stroke="#1d4ed8" stroke-width="5.5" marker-end="url(#fl10)"/>
+      <circle cx="472" cy="317" r="5" fill="#1d4ed8"/>
+      <text x="452" y="300" font-size="12.5" fill="#1d4ed8" font-weight="bold" text-anchor="end">VR = 7 nd</text>
+
+      <line x1="672" y1="317" x2="472" y2="317" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl10)"/>
+      <line x1="672" y1="317" x2="630" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl10)"/>
+      <circle cx="672" cy="317" r="6" fill="#7c3aed"/>
+      <text x="680" y="296" font-size="11.5" fill="#7c3aed" font-weight="bold" text-anchor="middle">croisement des reportés</text>
+
+      <line x1="672" y1="317" x2="430" y2="450" stroke="#7c3aed" stroke-width="5.5" marker-end="url(#fl10)"/>
+      <text x="480" y="432" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="start">VA ≈ 14 nd</text>
+    </svg>
+    <figcaption>Fig. 4 — Dans l'ombre du môle, le vent réel fond (15 → 7 nd, bleu) ; le vent
+    vitesse reste à 10 nd — on ne compte pas le ralentissement du bateau. Les reportés viennent
+    se croiser plus près du bateau : le vent apparent s'effondre de ≈ 20 à ≈ 14 nd. Traits
+    clairs : avant le môle ; couleurs pleines + pointillés : dans l'abri.</figcaption>
+  </div>
+
+  <p><b>✔ Dans notre sens :</b> l'abri sert à se calmer : le vent réel fond, le vent apparent
+  fond avec lui. Et au <b>bout du môle</b>, le flux se referme en rafale : la construction
+  repart avec un vent réel regonflé. C'est l'accélération que tout le monde sent à la sortée
+  d'une pointe.</p>
+  <p><b>✖ Contre nous :</b> entrer par mégarde dans l'ombre = le vent réel fond : faseyage, on
+  stoppe net, on dérive avec le courant. Il faut viser la sortie (le bout du môle) en remettant
+  toute la toile dès qu'on sent la rafale se refermer.</p>
+
+  <h3>La risée : le vent réel grossit d'un coup</h3>
+  <p>Une risée, c'est une couche d'air plus fort qui descend du ciel et avance sur l'eau — elle
+  s'annonce par les <b>nappes sombres</b> qui chiffonnent la surface. Ici le vent réel passe de
+  <b>15 à 20 nd</b> sur le même axe, et le vent vitesse ne bouge pas : le croisement des reportés
+  s'éloigne, le triangle grandit, le vent apparent passe de <b>≈ 20 à ≈ 25 nd</b>.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 500" role="img" aria-label="Construction du vent apparent dans une risée : le vent réel grossit de 15 à 20 nœuds sur le même axe, le vent vitesse reste à 10 nœuds, le vent apparent grandit d'environ 20 à environ 25 nœuds.">
+      <defs>
+        <marker id="fl11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="860" height="500" fill="#F4F4F1"/>
+      <text x="30" y="34" font-size="15" fill="#1C2430" font-weight="bold">La risée : le vent réel grossit d'un coup, le triangle grandit</text>
+
+      <line x1="250" y1="450" x2="830" y2="450" stroke="#94a3b8" stroke-width="2" stroke-dasharray="10 8" marker-end="url(#fl11)"/>
+      <text x="826" y="432" font-size="13" fill="#64748b" text-anchor="end">route</text>
+
+      <circle cx="430" cy="450" r="7" fill="#ffffff" stroke="#1C2430" stroke-width="3"/>
+      <text x="412" y="476" font-size="12.5" fill="#1C2430" font-weight="bold" text-anchor="end">le bateau</text>
+
+      <circle cx="630" cy="450" r="4" fill="none" stroke="#1C2430" stroke-width="2"/>
+      <text x="646" y="444" font-size="11.5" fill="#475569">là où va le bateau</text>
+
+      <line x1="630" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="5.5" marker-end="url(#fl11)"/>
+      <text x="530" y="476" font-size="12" fill="#059669" font-weight="bold" text-anchor="middle">Vent vitesse = 10 nd</text>
+
+      <line x1="520" y1="165" x2="430" y2="450" stroke="#1d4ed8" stroke-width="3" opacity=".38" marker-end="url(#fl11)"/>
+      <circle cx="520" cy="165" r="4" fill="#1d4ed8" opacity=".5"/>
+      <text x="506" y="150" font-size="11.5" fill="#64748b" text-anchor="end">avant la risée : VR = 15 nd</text>
+
+      <line x1="720" y1="165" x2="520" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".35" marker-end="url(#fl11)"/>
+      <line x1="720" y1="165" x2="630" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".35" marker-end="url(#fl11)"/>
+      <line x1="720" y1="165" x2="430" y2="450" stroke="#7c3aed" stroke-width="3" stroke-dasharray="7 6" opacity=".38" marker-end="url(#fl11)"/>
+      <circle cx="720" cy="165" r="5" fill="#7c3aed" opacity=".5"/>
+      <text x="735" y="160" font-size="11.5" fill="#64748b">VA avant ≈ 20 nd</text>
+
+      <line x1="550" y1="70" x2="430" y2="450" stroke="#1d4ed8" stroke-width="5.5" marker-end="url(#fl11)"/>
+      <circle cx="550" cy="70" r="5" fill="#1d4ed8"/>
+      <text x="485" y="255" font-size="12.5" fill="#1d4ed8" font-weight="bold" text-anchor="end">dans la risée : VR = 20 nd</text>
+
+      <line x1="750" y1="70" x2="550" y2="70" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl11)"/>
+      <line x1="750" y1="70" x2="630" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl11)"/>
+      <circle cx="750" cy="70" r="6" fill="#7c3aed"/>
+      <text x="760" y="52" font-size="11.5" fill="#7c3aed" font-weight="bold" text-anchor="middle">croisement des reportés</text>
+      <text x="650" y="88" font-size="11.5" fill="#059669" font-weight="bold" text-anchor="middle">vent vitesse (reporté)</text>
+      <text x="688" y="300" font-size="11.5" fill="#1d4ed8" font-weight="bold">VR reporté</text>
+
+      <line x1="750" y1="70" x2="430" y2="450" stroke="#7c3aed" stroke-width="5.5" marker-end="url(#fl11)"/>
+      <text x="550" y="418" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="middle">VA ≈ 25 nd</text>
+    </svg>
+    <figcaption>Fig. 5 — La risée renforce le vent réel (15 → 20 nd : la flèche bleue s'allonge
+    le long du même axe) ; le vent vitesse ne bouge pas. Le croisement des reportés s'éloigne et
+    le vent apparent grandit : ≈ 20 → ≈ 25 nd, un peu plus ouvert (≈ 50°) le temps que le bateau
+    accélère.</figcaption>
+  </div>
+
+  <p><b>✔ Dans notre sens :</b> la risée nous rattrape <b>par l'arrière</b> — le vent apparent
+  grossit d'un coup, le catamaran accélère ; une fois lancé, son vent apparent tourne vers
+  l'avant (mécanique de la fig. 3) et on peut <b>serrer un peu plus</b> la route sans décrocher.
+  C'est le moteur des trains de risées que les régatiers enchaînent.</p>
+  <p><b>✖ Contre nous :</b> elle débarque <b>de face</b> au près : le vent apparent gonfle et se
+  redresse brutalement — un mur de puissance. Il faut <b>percher</b>, <b>choquer un peu</b>,
+  tenir la barre, puis le bateau accélère et tout se rééquilibre.</p>
+
+  <h3>La veine de courant : le courant s'ajoute à la vitesse du bateau</h3>
+  <p>Ici l'air ne change pas : c'est <b>le bateau qui bouge plus (ou moins) vite</b>. Le courant
+  embarque la coque et l'eau, donc il grossit (ou fait fondre) le vent vitesse — celui-là même
+  qui fabrique le triangle de la fig. 3 :</p>
+  <div class="formule">vent ressenti = vent réel − (vitesse sur l'eau + courant)
+    <small>Une veine de +5 nd qui porte le bateau = +5 nd dans le vent vitesse.</small>
+  </div>
+  <p>Ici, une veine portante de <b>+5 nd</b> fait passer le vent vitesse de <b>10 à 15 nd</b> :
+  le croisement des reportés recule et le vent apparent passe de <b>≈ 20 à ≈ 24 nd</b>, en se
+  refermant vers l'avant (≈ 36°). Au près serré, une veine portante joue exactement comme une
+  <b>risée permanente</b>.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 500" role="img" aria-label="Construction du vent apparent dans une veine de courant portante de 5 nœuds : le vent vitesse grossit de 10 à 15 nœuds, le vent réel ne change pas, le vent apparent passe d'environ 20 à environ 24 nœuds en se refermant.">
+      <defs>
+        <marker id="fl12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+      <rect width="860" height="500" fill="#F4F4F1"/>
+      <text x="30" y="34" font-size="15" fill="#1C2430" font-weight="bold">La veine de courant : le courant s'ajoute à la vitesse du bateau</text>
+
+      <line x1="250" y1="450" x2="830" y2="450" stroke="#94a3b8" stroke-width="2" stroke-dasharray="10 8" marker-end="url(#fl12)"/>
+      <text x="826" y="432" font-size="13" fill="#64748b" text-anchor="end">route</text>
+
+      <circle cx="430" cy="450" r="7" fill="#ffffff" stroke="#1C2430" stroke-width="3"/>
+      <text x="412" y="476" font-size="12.5" fill="#1C2430" font-weight="bold" text-anchor="end">le bateau</text>
+
+      <circle cx="630" cy="450" r="4" fill="none" stroke="#94a3b8" stroke-width="2"/>
+      <text x="646" y="444" font-size="11.5" fill="#64748b">là où il allait</text>
+
+      <line x1="730" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="5.5" marker-end="url(#fl12)"/>
+      <text x="580" y="436" font-size="12" fill="#059669" font-weight="bold" text-anchor="middle">vent vitesse = 15 nd (courant compris)</text>
+
+      <line x1="630" y1="450" x2="430" y2="450" stroke="#059669" stroke-width="3" opacity=".38"/>
+      <text x="530" y="474" font-size="11.5" fill="#64748b" text-anchor="middle">sans courant : 10 nd</text>
+
+      <line x1="520" y1="165" x2="430" y2="450" stroke="#1d4ed8" stroke-width="5.5" marker-end="url(#fl12)"/>
+      <circle cx="520" cy="165" r="5" fill="#1d4ed8"/>
+      <text x="506" y="150" font-size="11.5" fill="#1d4ed8" font-weight="bold" text-anchor="end">VR = 15 nd (inchangé)</text>
+
+      <line x1="720" y1="165" x2="520" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".35"/>
+      <line x1="720" y1="165" x2="630" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".35" marker-end="url(#fl12)"/>
+      <line x1="720" y1="165" x2="430" y2="450" stroke="#7c3aed" stroke-width="3" stroke-dasharray="7 6" opacity=".38" marker-end="url(#fl12)"/>
+      <circle cx="720" cy="165" r="5" fill="#7c3aed" opacity=".5"/>
+      <text x="735" y="157" font-size="11.5" fill="#64748b" text-anchor="start">VA avant ≈ 20 nd</text>
+
+      <line x1="820" y1="165" x2="520" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl12)"/>
+      <line x1="820" y1="165" x2="730" y2="450" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 6" opacity=".8" marker-end="url(#fl12)"/>
+      <circle cx="820" cy="165" r="6" fill="#7c3aed"/>
+      <text x="776" y="143" font-size="11.5" fill="#7c3aed" font-weight="bold" text-anchor="middle">croisement des reportés</text>
+      <text x="800" y="330" font-size="11.5" fill="#1d4ed8" font-weight="bold">VR reporté</text>
+
+      <line x1="820" y1="165" x2="430" y2="450" stroke="#7c3aed" stroke-width="5.5" marker-end="url(#fl12)"/>
+      <text x="466" y="432" font-size="13" fill="#7c3aed" font-weight="bold" text-anchor="start">VA ≈ 24 nd</text>
+
+      <line x1="430" y1="492" x2="560" y2="492" stroke="#0891b2" stroke-width="3" marker-end="url(#fl12)"/>
+      <text x="575" y="497" font-size="11.5" fill="#0e7490" font-weight="bold">le courant porte (+5 nd)</text>
+    </svg>
+    <figcaption>Fig. 6 — Une veine de courant portante de +5 nd embarque le bateau : c'est sa
+    vitesse totale qui grossit, donc son vent vitesse (10 → 15 nd, vert). Le croisement des
+    reportés recule et le vent apparent passe de ≈ 20 à ≈ 24 nd en se refermant (≈ 36°). Au près
+    serré, une veine portante joue comme une risée permanente ; au portant, l'effet s'inverse :
+    chaque nœud de courant retire un nœud au vent ressenti.</figcaption>
+  </div>
+
+  <p><b>✔ Dans notre sens :</b> au près et au reaching, plus de vitesse totale = plus de vent
+  apparent : la veine pousse le bateau <b>et</b> nourrit sa voile. Au portant, c'est l'inverse :
+  en filant avec le vent, chaque nœud de courant retire un nœud au vent ressenti — c'est le
+  « vent de marée » : à l'ancre dans une veine qui court dans le sens du vent, on sent moins
+  de vent.</p>
+  <p><b>✖ Contre nous :</b> la vitesse totale s'écroule : au près, le vent apparent faiblit (le
+  courant « vole » du vent) ; au portant, il grossit (le vent nous rattrape). Et quand le vent
+  réel tombe, une veine contraire peut faire dériver à contre-objectif — d'où le réflexe
+  régatier de choisir sa veine comme on choisit une risée : par la couleur de l'eau.</p>
+
+  <div class="encadre bleu">
+    <b>Le réflexe :</b> à chaque changement — môle, risée ou courant — reprendre la construction
+    de la fig. 3 avec les nouvelles flèches. Le môle fait fondre le <b>vent réel</b>, la risée le
+    regonfle, le courant change le <b>vent vitesse</b>. Jamais le vent du matin ne compte : seul
+    le vent apparent de l'instant fait la vitesse du bateau.
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> ·  · 
+  
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+</body>
+</html>

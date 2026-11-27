@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les foils du catamaran — Décoller et voler</title>
+<meta name="description" content="Physique des foils de catamaran : portance immergée, ½ρV²SCL, courbes de traînée, vitesse de décollage, mode vol.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="icone-192.png">
+<meta property="og:title" content="Les foils du catamaran — Décoller et voler">
+<meta property="og:description" content="Physique des foils de catamaran : portance immergée, ½ρV²SCL, courbes de traînée, vitesse de décollage, mode vol.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/foils.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
+<script src="stats.js" defer></script>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Les foils : remplacer la traînée de coque par de la portance</h1>
+  <p>Comment de petites ailes immergées soulèvent le bateau et repoussent le mur de vitesse.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="aero.html#aero">La voile</a></li>
+        <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+        <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="hydro.html#hydro">Les coques</a></li>
+        <li><a href="foils.html">Les foils</a></li>
+        <li><a href="stabilite.html">La stabilité</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="meteo.html#vent">La météo en direct</a></li>
+        <li><a href="topo-meteo.html">Topo météo</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="simulateur.html" aria-haspopup="true">Simulation <span aria-hidden="true">&#9662;</span></a>
+      <ul>
+        <li><a href="simulateur.html">Simulateur de vent apparent</a></li>
+        <li><a href="jeu.html">Mini-jeu de navigation</a></li>
+        <li><a href="jeu-3d.html">Mini-jeu de navigation 3D</a></li>
+      </ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+<div class="sommaire-page"><b>Sommaire :</b> <a href="#foils">1. Les foils : transformer la traînée en portance, puis voler</a></div>
+<section class="carteforce" id="foils">
+  <h2><span class="num">1</span> Les foils : transformer la traînée en portance, puis voler</h2>
+  <p>Un <b>foil</b> est une aile immergée. En accélérant, il produit une portance verticale qui
+  <b>soulève les coques hors de l'eau</b>. L'eau est 800 fois plus dense que l'air : une petite
+  surface de foil génère une portance énorme : elle suffit à substituer une faible traînée d'aile à la forte traînée de
+  coque. C'est le décollage (« le vol »).</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 470" role="img" aria-label="Profil de foil : portance, traînée induite, tourbillon marginal, déjaugeage">
+      <defs><marker id="fle5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="470" fill="#F4F4F1"/>
+      <!-- eau -->
+      <line x1="0" y1="120" x2="840" y2="120" stroke="#0891b2" stroke-width="2.5"/>
+      <text x="22" y="110" font-size="14" fill="#0e7490">surface</text>
+
+      <!-- coque soulevee -->
+      <rect x="120" y="30" width="260" height="46" rx="23" fill="#cbd5e1" stroke="#1C2430" stroke-width="3"/>
+      <text x="250" y="58" font-size="13" fill="#1C2430" text-anchor="middle">coque sortie de l'eau</text>
+      <line x1="250" y1="78" x2="250" y2="240" stroke="#1C2430" stroke-width="8"/>
+      <!-- foil J -->
+      <path d="M250,240 C 250,300 258,330 330,348" fill="none" stroke="#1C2430" stroke-width="9" stroke-linecap="round"/>
+
+      <!-- profil foil -->
+      <path d="M300,352 C 360,318 480,322 540,352 C 480,372 360,376 300,352 Z" fill="#e2e8f0" stroke="#1C2430" stroke-width="4"/>
+      <line x1="300" y1="352" x2="540" y2="352" stroke="#1C2430" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+      <!-- ecoulement -->
+      <path d="M120,335 C 210,325 250,330 295,340" fill="none" stroke="#1d4ed8" stroke-width="2.2" marker-end="url(#fle5)"/>
+      <path d="M120,365 C 210,370 250,368 295,360" fill="none" stroke="#1d4ed8" stroke-width="2.2" marker-end="url(#fle5)"/>
+      <path d="M545,345 C 620,352 700,364 790,376" fill="none" stroke="#1d4ed8" stroke-width="2.2" marker-end="url(#fle5)" opacity=".8"/>
+      <text x="70" y="312" font-size="14" fill="#1d4ed8" font-weight="bold">écoulement</text>
+      <text x="765" y="400" font-size="13" fill="#1d4ed8">aval dévié vers le bas (downwash)</text>
+
+      <!-- portance -->
+      <line x1="420" y1="330" x2="420" y2="205" stroke="#e11d48" stroke-width="5" marker-end="url(#fle5)"/>
+      <text x="432" y="212" font-size="16" fill="#e11d48" font-weight="bold">Portance du foil</text>
+      <line x1="420" y1="362" x2="560" y2="362" stroke="#0f766e" stroke-width="4" marker-end="url(#fle5)"/>
+      <text x="568" y="368" font-size="14" fill="#0f766e" font-weight="bold">traînée</text>
+
+      <!-- vortex de safran -->
+      <path d="M545,352 c 26,4 38,16 34,30 c -3,11 -15,12 -20,3 c -4,-8 4,-13 10,-10" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="600" y="318" font-size="12" fill="#64748b">tourbillon marginal</text>
+
+      <text x="420" y="446" font-size="14" fill="#334155" text-anchor="middle">La portance ½ ρ V² S C_L croît avec le carré de la vitesse : dès que V est assez grand, le bateau « vole ».</text>
+    </svg>
+    <figcaption>Fig. 5 — Un foil en J porté par la coque : sa portance verticale remplace la portance
+    d'Archimède ; la surface mouillée chute et la vitesse grimpe d'un cran.</figcaption>
+  </div>
+
+  <h3>Vitesse de décollage : la course entre deux traînées</h3>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 420" role="img" aria-label="Courbe de traînée : mode déplacement contre mode vol, point de déjaugeage">
+      <defs><marker id="fle6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="420" fill="#fff"/>
+      <!-- axes -->
+      <line x1="80" y1="350" x2="800" y2="350" stroke="#1C2430" stroke-width="2.5"/>
+      <line x1="80" y1="350" x2="80" y2="40" stroke="#1C2430" stroke-width="2.5"/>
+      <text x="770" y="386" font-size="15" fill="#1C2430" font-weight="bold">Vitesse →</text>
+      <text x="36" y="46" font-size="15" fill="#1C2430" font-weight="bold">Traînée</text>
+
+      <!-- grille temps horizontale -->
+      <line x1="80" y1="270" x2="800" y2="270" stroke="#e2e8f0"/>
+      <line x1="80" y1="190" x2="800" y2="190" stroke="#e2e8f0"/>
+      <line x1="80" y1="110" x2="800" y2="110" stroke="#e2e8f0"/>
+
+      <!-- trajectoire displacement -->
+      <path d="M90,344 C 200,336 300,326 360,300 C 420,268 450,180 470,80" fill="none" stroke="#1d4ed8" stroke-width="4.5"/>
+      <text x="478" y="72" font-size="14" fill="#1d4ed8" font-weight="bold">Traînée des coques (déplacement) : mur au-delà de la vitesse de carène</text>
+
+      <!-- trajectoire foil -->
+      <path d="M90,344 C 220,332 340,306 470,268 C 580,238 680,224 790,218" fill="none" stroke="#e11d48" stroke-width="4.5"/>
+      <text x="680" y="256" font-size="14" fill="#e11d48" font-weight="bold">Traînée en mode « vol » : beaucoup plus plate</text>
+
+      <!-- croisement -->
+      <line x1="410" y1="350" x2="410" y2="270" stroke="#059669" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <circle cx="410" cy="276" r="8" fill="#059669"/>
+      <text x="410" y="390" font-size="15" fill="#059669" font-weight="bold" text-anchor="middle">vitesse de décollage</text>
+      <text x="410" y="408" font-size="13" fill="#059669" text-anchor="middle">l'hydrofoil devient plus efficace que la coque</text>
+    </svg>
+    <figcaption>Fig. 6 — Courbes de traînée : en déplacement la résistance explose (mur de vitesse) ;
+    en vol elle ne croît que lentement. Le décollage se produit au croisement des deux modes.</figcaption>
+  </div>
+
+  <div class="encadre">
+    <b>Le compromis du foil :</b> à basse vitesse, un foil traîne plus qu'une coque sage
+    (il pèse et il produit sa propre traînée). Il faut donc soit de la vitesse ou du vent pour
+    décoller, soit des foils rétractables qui rentrent dans la coque. Le réglage (angle d'incidence, position
+    longitudinale) décide de la vitesse de décollage et de l'altitude de vol — donc de la stabilité
+    en tangage.
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> ·  · 
+  
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+</body>
+</html>
