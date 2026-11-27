@@ -1,24 +1,14 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulation — Catamaran</title>
-<meta name="description" content="Espace de simulation du catamaran : vent apparent, jeu de navigation en 3D et modèle 3D interactif.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="theme-color" content="#1C2430">
-<link rel="stylesheet" href="style.css">
-<script src="darkmode.js"></script><script src="stats.js" defer></script>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Simulation 3D des fluides — Catamaran</title><link rel="icon" type="image/svg+xml" href="favicon.svg"><meta name="theme-color" content="#1C2430"><link rel="stylesheet" href="style.css"><script src="darkmode.js"></script><script src="stats.js" defer></script>
 <style>
 .lab-wrap{max-width:1220px;margin:auto;padding:30px 22px 76px}.lab-nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 26px;padding:9px;background:var(--carte);border:1px solid var(--bordure);border-radius:13px;box-shadow:var(--ombre);position:sticky;top:10px;z-index:15}.lab-tab,.action{border:1px solid var(--bordure);border-radius:9px;padding:10px 14px;background:var(--carte);color:var(--txt);font:inherit;font-weight:650;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}.lab-tab:hover,.action:hover{border-color:var(--bleu);transform:translateY(-1px)}.lab-tab:focus-visible,.action:focus-visible,.lab-control input:focus-visible,.lab-control select:focus-visible{outline:3px solid color-mix(in srgb,var(--cyan) 55%,transparent);outline-offset:2px}.lab-tab[aria-selected=true],.action.primary{background:var(--marine);color:#fff;border-color:var(--marine)}.lab-panel{display:none;animation:labIn .2s ease-out}.lab-panel.active{display:block}@keyframes labIn{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.lab-card{background:var(--carte);border:1px solid var(--bordure);border-radius:15px;padding:22px;margin:16px 0;box-shadow:var(--ombre)}.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.lab-control label{display:flex;justify-content:space-between;gap:12px;font-weight:650;color:var(--titre);margin-bottom:7px}.lab-control output{color:var(--bleu);font-variant-numeric:tabular-nums}.lab-control input[type=range],.lab-control select{width:100%;accent-color:var(--cyan)}.lab-control select,.lab-control input[type=text]{padding:9px;border:1px solid var(--bordure);border-radius:8px;background:var(--carte);color:var(--txt)}.lab-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.lab-metric{background:var(--fond);border:1px solid var(--bordure);border-radius:11px;padding:13px}.lab-metric small{display:block;color:var(--gris)}.lab-metric strong{display:block;font-size:1.45rem;color:var(--titre);font-variant-numeric:tabular-nums}.lab-figure{background:var(--figure-fond);border:1px solid var(--bordure);border-radius:12px;padding:12px;overflow:hidden}.lab-figure svg{width:100%;height:auto;display:block}.lab-muted{color:var(--gris);font-size:.92rem}.lab-warning{border-left:4px solid var(--corail);background:var(--err-fond);padding:12px 15px;border-radius:8px}.lab-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.lab-table-wrap{overflow-x:auto;border-radius:10px}.lab-table-wrap table{min-width:680px;margin:10px 0}.lab-table-wrap th{position:sticky;top:0}.lab-table-wrap button{padding:5px 9px;border:1px solid var(--bordure);border-radius:7px;background:var(--carte);color:var(--txt);cursor:pointer}#coefChart{width:100%;height:auto}#catamaran3d canvas{touch-action:pan-y}.lab-muted{line-height:1.55}.lab-warning a{color:var(--bleu);font-weight:700}.lab-metric{min-height:91px}.lab-metric strong{overflow-wrap:anywhere}.lab-control input[type=range]{cursor:pointer}.lab-card h3{margin-top:4px}@media(max-width:700px){.lab-wrap{padding:20px 12px 55px}.lab-card{padding:15px}.lab-nav{top:4px;gap:6px;padding:7px}.lab-tab{flex:1 1 30%;padding:9px 8px;font-size:.88rem}#catamaran3d{height:410px!important;min-height:340px!important}}@media(prefers-reduced-motion:reduce){.lab-panel{animation:none}.lab-tab,.action{transition:none}}
-</style>
-</head>
-<body>
-<header class="hero hero--page">
-  <div class="badge">Outils interactifs</div>
-  <h1>Simulation du catamaran</h1>
-  <p>Explore les phénomènes de navigation, prends la barre dans le jeu 3D et observe le catamaran sous tous les angles avec son modèle interactif.</p>
-</header>
+
+/* Page Simulation : afficher uniquement le vrai module 3D du Labo. */
+.lab-nav{display:none!important}
+#panel-aero,#panel-simu,#panel-meteo,#panel-essais{display:none!important}
+#panel-3d{display:block!important}
+</style></head><body>
+<header class="hero hero--page"><span class="badge">Simulation interactive</span><h1>Simulation 3D du catamaran</h1><p>Modèle 3D avec réglages de voile, chariot, vent et safrans, et visualisation des écoulements d’air et d’eau.</p></header>
 <nav class="sommaire" aria-label="Navigation principale">
   <ul>
     <li><a href="index.html">Accueil</a></li>
@@ -32,25 +22,36 @@
       <ul><li><a href="meteo.html#vent">La météo en direct</a></li><li><a href="topo-meteo.html">Topo météo</a></li></ul>
     </li>
     <li class="deroulant"><a href="simulation.html" aria-haspopup="true">Simulation <span aria-hidden="true">▾</span></a>
-      <ul><li><a href="simulateur.html">Vent apparent</a></li><li><a href="jeu-3d.html">Jeu de navigation 3D</a></li><li><a href="labo.html#panel-3d">Modèle 3D interactif</a></li><li><a href="#panel-3d">Simulation des fluides</a></li></ul>
+      <ul><li><a href="simulateur.html">Vent apparent</a></li><li><a href="jeu-3d.html">Jeu de navigation 3D</a></li><li><a href="#panel-3d">Modèle 3D avec fluides</a></li></ul>
     </li>
     <li><a href="manoeuvres.html">Manœuvres</a></li><li><a href="qcm.html">QCM</a></li>
   </ul>
 </nav>
-<main class="conteneur">
-<section class="carteforce">
-  <h2><span class="num">1</span> Jeu de navigation en 3D</h2>
-  <p>Prends les commandes du catamaran, règle les conditions de navigation et franchis les bouées. La vue 3D permet de suivre le bateau pendant la course.</p>
-  <div class="cartes-liens">
-    <a class="carte-lien" href="jeu-3d.html">
-      <h3>Ouvrir le jeu 3D</h3>
-      <p>Dirige le catamaran, ajuste ta trajectoire et passe les marques dans le bon ordre.</p>
-      <span class="lire">Lancer le jeu →</span>
-    </a>
-  </div>
+<main class="lab-wrap">
+
+<section class="lab-panel active" id="panel-aero"><h2><span class="num">A</span> Laboratoire aérodynamique</h2><p>Modifie la forme théorique du profil et l'angle d'incidence. Observe les coefficients et les forces estimées.</p>
+<div class="lab-card lab-grid"><div class="lab-control"><label for="profile">Profil <output id="profileOut">Voile creuse</output></label><select id="profile"><option value="0.08">Profil fin</option><option value="0.16" selected>Voile creuse</option><option value="0.23">Profil très creux</option><option value="0.12">Section de foil</option></select></div><div class="lab-control"><label for="incidence">Angle d'incidence <output id="incidenceOut">6°</output></label><input id="incidence" type="range" min="-5" max="22" step=".5" value="6"></div><div class="lab-control"><label for="speedA">Vent apparent <output id="speedAOut">12 m/s</output></label><input id="speedA" type="range" min="2" max="35" step=".5" value="12"></div><div class="lab-control"><label for="areaA">Surface de référence <output id="areaAOut">25 m²</output></label><input id="areaA" type="range" min="5" max="60" value="25"></div></div>
+<div class="lab-card"><div class="lab-figure"><svg viewBox="0 0 760 280" role="img" aria-label="Profil de voile schématique et vecteurs de forces"><defs><marker id="arrLift" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#059669"/></marker><marker id="arrDrag" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#C79A00"/></marker></defs><line x1="70" y1="150" x2="690" y2="150" stroke="var(--gris)" stroke-dasharray="5 6"/><path id="profileShape" d="M150 150 Q370 100 610 150 Q370 166 150 150Z" fill="#FFCC00" fill-opacity=".35" stroke="#C79A00" stroke-width="3"/><line id="liftVector" x1="370" y1="145" x2="370" y2="55" stroke="#059669" stroke-width="5" marker-end="url(#arrLift)"/><line id="dragVector" x1="370" y1="145" x2="465" y2="145" stroke="#C79A00" stroke-width="5" marker-end="url(#arrDrag)"/><text x="385" y="52" fill="#059669" font-size="16">Portance</text><text x="475" y="150" fill="#C79A00" font-size="16">Traînée</text><text x="24" y="255" fill="var(--gris)" font-size="13">Profil et vecteurs schématiques, non issus d'une CFD.</text></svg></div><div class="lab-metrics" style="margin-top:14px"><div class="lab-metric"><small>Coefficient Cl estimé</small><strong id="clA">—</strong></div><div class="lab-metric"><small>Coefficient Cd estimé</small><strong id="cdA">—</strong></div><div class="lab-metric"><small>Portance estimée</small><strong id="liftA">—</strong><small>N</small></div><div class="lab-metric"><small>Traînée estimée</small><strong id="dragA">—</strong><small>N</small></div></div></div>
+<div class="lab-card"><h3>Comparaison des coefficients</h3><div class="lab-figure"><svg id="coefChart" viewBox="0 0 700 230" role="img" aria-label="Graphique des coefficients en fonction de l'incidence"><g stroke="var(--bordure)"><line x1="50" y1="20" x2="50" y2="190"/><line x1="50" y1="190" x2="670" y2="190"/><line x1="50" y1="105" x2="670" y2="105"/></g><path id="clCurve" fill="none" stroke="#059669" stroke-width="3"/><path id="cdCurve" fill="none" stroke="#C79A00" stroke-width="3"/><text x="55" y="15" fill="var(--gris)" font-size="12">Coefficients indicatifs</text><text x="55" y="215" fill="var(--gris)" font-size="12">−5°</text><text x="650" y="215" fill="var(--gris)" font-size="12">22°</text></svg></div><p class="lab-muted">Courbes pédagogiques arbitraires pour visualiser une tendance, pas des données expérimentales de profil réel.</p></div></section>
+<section class="lab-panel" id="panel-simu"><h2><span class="num">B</span> Simulateur global de catamaran</h2><p>Un modèle longitudinal simplifié relie la puissance vélique, la résistance des coques et la portance des foils. Les résultats servent à comparer des scénarios, pas à prédire la vitesse réelle d'un bateau.</p>
+<div class="lab-card lab-grid"><div class="lab-control"><label for="trueWind">Vent réel <output id="trueWindOut">12 nd</output></label><input id="trueWind" type="range" min="3" max="35" value="12"></div><div class="lab-control"><label for="twa">Angle du vent réel <output id="twaOut">90°</output></label><input id="twa" type="range" min="30" max="180" value="90"></div><div class="lab-control"><label for="boatMass">Masse totale <output id="boatMassOut">450 kg</output></label><input id="boatMass" type="range" min="250" max="1200" step="10" value="450"></div><div class="lab-control"><label for="sailArea">Surface de voile <output id="sailAreaOut">28 m²</output></label><input id="sailArea" type="range" min="10" max="55" value="28"></div><div class="lab-control"><label for="foilArea">Surface portante totale des foils <output id="foilAreaOut">0,18 m²</output></label><input id="foilArea" type="range" min=".05" max=".8" step=".01" value=".18"></div><div class="lab-control"><label for="boatSpeed">Vitesse actuelle <output id="boatSpeedOut">8 nd</output></label><input id="boatSpeed" type="range" min="0" max="35" step=".5" value="8"></div></div>
+<div class="lab-card"><div class="lab-metrics"><div class="lab-metric"><small>Vent apparent calculé</small><strong id="appWind">—</strong><small>m/s · approximation vectorielle</small></div><div class="lab-metric"><small>Force vélique utile</small><strong id="sailForce">—</strong><small>N</small></div><div class="lab-metric"><small>Traînée estimée</small><strong id="hullDrag">—</strong><small>N</small></div><div class="lab-metric"><small>Portance des foils</small><strong id="foilLift">—</strong><small>N</small></div><div class="lab-metric"><small>Accélération longitudinale</small><strong id="accel">—</strong><small>m/s² estimés</small></div><div class="lab-metric"><small>Équilibre vertical</small><strong id="vertical">—</strong><small>indication simplifiée</small></div></div><div class="lab-figure" style="margin-top:16px"><svg viewBox="0 0 760 230" role="img" aria-label="Schéma conceptuel du catamaran et de ses forces"><path d="M180 110 L580 110 L540 145 L220 145Z" fill="#FFCC00" fill-opacity=".3" stroke="#C79A00" stroke-width="3"/><path d="M230 145 L260 190 M530 145 L500 190" stroke="#1C2430" stroke-width="8" stroke-linecap="round"/><path d="M380 110 L380 30" stroke="#1C2430" stroke-width="5"/><path d="M380 34 Q440 72 380 106Z" fill="#FFCC00" fill-opacity=".45" stroke="#C79A00" stroke-width="2"/><path d="M245 190 L275 190 M485 190 L515 190" stroke="#059669" stroke-width="5"/><text x="400" y="25" fill="var(--gris)" font-size="14">Voile</text><text x="530" y="208" fill="#059669" font-size="14">Foils</text></svg></div></div><div class="lab-warning">Ce calcul ne résout pas l'équilibre complet d'un multicoque : pas de géométrie de coque, de polaire mesurée, de ventilation/cavitation, de contrôle d'assiette, ni de couplage dynamique 6 degrés de liberté. Ne l'utilise pas pour dimensionner ou piloter un bateau.</div></section>
+<section class="lab-panel" id="panel-meteo"><h2><span class="num">C</span> Tableau de bord météo & navigation</h2>
+<p>Conditions actuelles et prévisions horaires pour les zones de navigation. Les données sont récupérées en direct auprès d'Open-Meteo.</p>
+<div class="lab-card lab-grid">
+<div class="lab-control"><label for="spot">Zone de navigation</label><select id="spot"><option value="47.5,-3.0">Golfe du Morbihan</option><option value="43.3,5.4">Marseille</option><option value="46.15,-1.15">La Rochelle</option><option value="42.7,3.0">Leucate</option><option value="48.4,-4.5">Brest</option></select></div>
+<div class="lab-control"><label for="forecastDay">Période affichée</label><select id="forecastDay"><option value="0">Aujourd'hui · 24 prochaines heures</option><option value="1">Demain · 24 heures</option></select></div>
+<div class="lab-control"><label>Actualisation</label><button class="action primary" id="refreshWeather">Actualiser les conditions</button></div>
+</div>
+<div id="weatherStatus" class="lab-muted" role="status" aria-live="polite">Chargement des données météo…</div>
+<div class="lab-card"><h3>Conditions actuelles</h3><div class="lab-metrics">
+<div class="lab-metric"><small>Vent moyen</small><strong id="wxWind">—</strong></div><div class="lab-metric"><small>Rafales</small><strong id="wxGust">—</strong></div><div class="lab-metric"><small>Direction du vent</small><strong id="wxDir">—</strong></div><div class="lab-metric"><small>Hauteur des vagues</small><strong id="wxWave">—</strong></div><div class="lab-metric"><small>Période des vagues</small><strong id="wxPeriod">—</strong></div><div class="lab-metric"><small>Température de l'air</small><strong id="wxTemp">—</strong></div><div class="lab-metric"><small>Température de mer</small><strong id="wxSea">—</strong></div><div class="lab-metric"><small>Précipitations</small><strong id="wxRain">—</strong></div>
+</div><p class="lab-muted" id="wxTime"></p></div>
+<div class="lab-card"><h3>Prévisions horaires</h3><p class="lab-muted">Vent, rafales, direction, vagues et précipitations. Les heures sont celles du fuseau horaire local du spot.</p><div class="lab-table-wrap"><table><thead><tr><th>Heure</th><th>Vent</th><th>Rafales</th><th>Direction</th><th>Vagues</th><th>Période</th><th>Pluie</th></tr></thead><tbody id="weatherRows"><tr><td colspan="7">En attente des données…</td></tr></tbody></table></div></div>
+<div class="lab-warning">Ce tableau est une aide à la préparation, pas un bulletin de sécurité. Les modèles peuvent être imprécis localement et les données peuvent manquer. Les marées et courants ne sont pas inclus : consulte les prédictions du <a href="https://maree.shom.fr/" target="_blank" rel="noopener">SHOM</a> et les bulletins de <a href="https://meteofrance.com/meteo-marine" target="_blank" rel="noopener">Météo-France Marine</a> avant de naviguer. Vérifie également les conditions sur place.</div>
 </section>
-<section class="lab-panel active" id="panel-3d">
-<h2><span class="num">2</span> Modèle 3D interactif du catamaran</h2>
+<section class="lab-panel" id="panel-3d">
+<h2><span class="num">1</span> Modèle 3D interactif — simulation des fluides</h2>
 <p>Modèle 3D interactif : règle le vent, l’écoute et le chariot, puis observe le déplacement de la voile et les écoulements d’air et d’eau. Les décollements et tourbillons sont représentés par un modèle pédagogique simplifié, pas par un calcul CFD.</p>
 <div class="lab-card">
 <div class="lab-grid">
@@ -69,19 +70,81 @@
 </div>
 <div class="lab-warning">Cette visualisation est un modèle géométrique de démonstration. Elle ne représente pas exactement un bateau réel et ne calcule pas sa stabilité, sa résistance structurelle ni ses performances. Les réglages modifient la géométrie affichée, pas une simulation hydrodynamique validée.</div>
 </section>
-<section class="carteforce">
-  <h2><span class="num">4</span> Simulateur du vent apparent</h2>
-  <p>Fais varier le vent réel et la vitesse du bateau pour visualiser le triangle des vitesses et le vent apparent.</p>
-  <div class="cartes-liens">
-    <a class="carte-lien" href="simulateur.html">
-      <h3>Ouvrir le simulateur</h3>
-      <p>Modifie les curseurs et observe en direct la direction et la vitesse du vent apparent.</p>
-      <span class="lire">Lancer le simulateur →</span>
-    </a>
-  </div>
-</section>
-</main>
-<footer><div class="auteur">Gabin Bourderioux</div><div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — espace simulation.</div><button id="bascule-theme" class="btn-theme" type="button"></button></footer>
+<section class="lab-panel" id="panel-essais"><h2><span class="num">E</span> Carnet d'expérimentation</h2><p>Enregistre localement les paramètres de tes essais pour comparer les configurations. Les données restent dans ce navigateur.</p><div class="lab-card lab-grid"><div class="lab-control"><label for="trialName">Nom de l'essai</label><input id="trialName" type="text" maxlength="60" placeholder="Ex. voile creuse, vent 12 nd"></div><div class="lab-control"><label>Configuration actuelle</label><p class="lab-muted" id="trialSummary">Paramètres du simulateur B.</p></div></div><div class="lab-actions"><button class="action primary" id="saveTrial">Enregistrer cette configuration</button><button class="action" id="exportTrials">Exporter les essais (.json)</button><button class="action" id="clearTrials">Effacer le carnet</button></div><div class="lab-card lab-table-wrap"><table><thead><tr><th>Essai</th><th>Vent</th><th>Voile</th><th>Masse</th><th>Vitesse saisie</th><th>Action</th></tr></thead><tbody id="trialRows"><tr><td colspan="6">Aucun essai enregistré.</td></tr></tbody></table></div></section>
+<div class="lab-card lab-muted"><strong>Statut scientifique :</strong> les modules A et B utilisent des coefficients simplifiés et explicitement non validés expérimentalement. Le module C affiche des données externes avec leur heure de référence. Le module D sauvegarde uniquement dans le stockage local du navigateur.</div></main>
+<footer><div class="auteur">Simulation 3D — Catamaran</div><div class="auteur-sous">Modèle pédagogique interactif des écoulements</div><br><a href="index.html" style="color:#E8D48B">Accueil</a> · <br><button id="bascule-theme" class="btn-theme" type="button"></button></footer>
+<script>
+const $=id=>document.getElementById(id);document.querySelectorAll('.lab-tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.lab-tab').forEach(b=>b.setAttribute('aria-selected',String(b===btn)));document.querySelectorAll('.lab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+btn.dataset.tab));}));
+const fmt=(n,d=0)=>Number(n).toLocaleString('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d});
+function coeff(a,camber){const stall=Math.max(.35,1-Math.max(0,a-13)*.055),cl=Math.max(-.35,Math.min(1.45,(.10+5*a*Math.PI/180+camber*1.6)))*stall,cd=.014+.018*cl*cl+Math.max(0,a-12)*.0028+Math.max(0,-a-3)*.002;return{cl,cd};}
+function updateA(){const a=+$('incidence').value,v=+$('speedA').value,S=+$('areaA').value,cam=+$('profile').value,q=.5*1.225*v*v,c=coeff(a,cam),L=q*S*c.cl,D=q*S*c.cd;$('incidenceOut').textContent=fmt(a,1)+'°';$('speedAOut').textContent=fmt(v,1)+' m/s';$('areaAOut').textContent=S+' m²';$('profileOut').textContent=$('profile').selectedOptions[0].textContent;$('clA').textContent=fmt(c.cl,2);$('cdA').textContent=fmt(c.cd,3);$('liftA').textContent=fmt(L);$('dragA').textContent=fmt(D);const h=45+Math.min(90,Math.abs(L)/Math.max(1,q*S*1.45)*90),w=30+Math.min(110,D/Math.max(1,q*S*.06)*110);$('liftVector').setAttribute('y2',145-h);$('dragVector').setAttribute('x2',370+w);$('profileShape').setAttribute('d','M150 150 Q370 '+(90+cam*300)+' 610 150 Q370 '+(160+cam*30)+' 150 150Z');let p1='',p2='';for(let i=0;i<=54;i++){const x=-5+i*.5,z=coeff(x,cam),px=50+i*620/54,y1=180-(z.cl+.4)/1.9*150,y2=180-z.cd/.12*150;p1+=(i?' L':'M')+px.toFixed(1)+' '+y1.toFixed(1);p2+=(i?' L':'M')+px.toFixed(1)+' '+y2.toFixed(1);}$('clCurve').setAttribute('d',p1);$('cdCurve').setAttribute('d',p2);}
+['profile','incidence','speedA','areaA'].forEach(id=>$(id).addEventListener('input',updateA));updateA();
+function updateB(){const knots=+$('trueWind').value,theta=+$('twa').value*Math.PI/180,m=+$('boatMass').value,S=+$('sailArea').value,Af=+$('foilArea').value,boatKn=+$('boatSpeed').value,v=knots*.514444,bv=boatKn*.514444,apparent=Math.sqrt(v*v+bv*bv-2*v*bv*Math.cos(theta)),aw=Math.max(.1,apparent),awa=Math.atan2(v*Math.sin(theta),v*Math.cos(theta)-bv)*180/Math.PI,sCl=Math.max(.15,Math.min(1.1,.18+Math.sin(Math.min(awa,150)*Math.PI/180)*.9)),sCd=.04+.05*sCl*sCl,q=.5*1.225*aw*aw,useful=q*S*sCl*Math.max(.15,Math.sin(theta)),foil=q*Af,drag=18*bv*bv+Math.max(0,bv-4)**2*2.5+q*Af*.08+q*S*sCd,acc=(useful-drag)/m,weight=m*9.81;$('trueWindOut').textContent=knots+' nd';$('twaOut').textContent=fmt(theta*180/Math.PI)+'°';$('boatMassOut').textContent=m+' kg';$('sailAreaOut').textContent=S+' m²';$('foilAreaOut').textContent=fmt(Af,2)+' m²';$('boatSpeedOut').textContent=fmt(boatKn,1)+' nd';$('appWind').textContent=fmt(aw,1);$('sailForce').textContent=fmt(useful);$('hullDrag').textContent=fmt(drag);$('foilLift').textContent=fmt(foil);$('accel').textContent=fmt(acc,2);$('vertical').textContent=fmt(foil/weight*100,1)+' %';$('trialSummary').textContent='Vent '+knots+' nd · voile '+S+' m² · masse '+m+' kg · vitesse '+boatKn+' nd';}
+['trueWind','twa','boatMass','sailArea','foilArea','boatSpeed'].forEach(id=>$(id).addEventListener('input',updateB));updateB();
+const spots={'47.5,-3.0':'Golfe du Morbihan','43.3,5.4':'Marseille','46.15,-1.15':'La Rochelle','42.7,3.0':'Leucate','48.4,-4.5':'Brest'};
+function dir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round((((d%360)+360)%360)/45)%8];}
+function cell(v,unit,d=0){return v==null?'—':fmt(v,d)+(unit||'');}
+function setCell(id,value){$(id).textContent=value;}
+async function loadWeather(){
+ const [lat,lon]=$('spot').value.split(',');
+ const day=+$('forecastDay').value;
+ $('weatherStatus').textContent='Récupération des prévisions…';
+ $('refreshWeather').disabled=true;
+ const hourly='wind_speed_10m,wind_gusts_10m,wind_direction_10m,precipitation_probability,temperature_2m';
+ const marine='wave_height,wave_period,wave_direction,sea_surface_temperature';
+ const base='?latitude='+lat+'&longitude='+lon+'&timezone=auto&forecast_days=3';
+ try{
+  const urls=[
+   'https://api.open-meteo.com/v1/forecast'+base+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation&hourly='+hourly,
+   'https://marine-api.open-meteo.com/v1/marine'+base+'&current=wave_height,wave_period,wave_direction,sea_surface_temperature&hourly='+marine
+  ];
+  const responses=await Promise.all(urls.map(url=>fetch(url)));
+  if(!responses[0].ok)throw Error('Service météo indisponible ('+responses[0].status+').');
+  const weather=await responses[0].json();
+  const sea=responses[1].ok?await responses[1].json():null;
+  const c=weather.current||{},m=sea&&sea.current||{};
+  setCell('wxWind',cell(c.wind_speed_10m==null?null:c.wind_speed_10m/1.852,' nd',1));
+  setCell('wxGust',cell(c.wind_gusts_10m==null?null:c.wind_gusts_10m/1.852,' nd',1));
+  setCell('wxDir',c.wind_direction_10m==null?'—':dir(c.wind_direction_10m)+' · '+c.wind_direction_10m+'°');
+  setCell('wxWave',cell(m.wave_height,' m',1));
+  setCell('wxPeriod',cell(m.wave_period,' s',1));
+  setCell('wxTemp',cell(c.temperature_2m,' °C',1));
+  setCell('wxSea',cell(m.sea_surface_temperature,' °C',1));
+  setCell('wxRain',cell(c.precipitation,' mm',1));
+  setCell('wxTime','Relevé : '+(c.time||'heure non précisée')+' · '+spots[$('spot').value]+' · Fuseau : '+(weather.timezone||'local'));
+  const rows=$('weatherRows');rows.replaceChildren();
+  const wh=weather.hourly||{},mh=sea&&sea.hourly||{},times=wh.time||[];
+  const nowIndex=Math.max(0,times.findIndex(t=>t>=((c.time||'').slice(0,13))));
+  let begin=nowIndex,end=Math.min(times.length,begin+24);
+  if(day===1){const today=(c.time||times[nowIndex]||'').slice(0,10);const nextDay=times.findIndex(t=>t.slice(0,10)>today);if(nextDay>=0){begin=nextDay;const tomorrow=(times[begin]||'').slice(0,10);const afterTomorrow=times.findIndex((t,i)=>i>begin&&t.slice(0,10)>tomorrow);end=afterTomorrow>=0?afterTomorrow:Math.min(times.length,begin+24);}}
+  for(let i=begin;i<end;i++){
+   const tr=document.createElement('tr');
+   const time=times[i]||'';
+   const vals=[
+    time.slice(5,10).split('-').reverse().join('/')+' '+time.slice(11,16),
+    cell(wh.wind_speed_10m&&wh.wind_speed_10m[i]!=null?wh.wind_speed_10m[i]/1.852:null,' nd',1),
+    cell(wh.wind_gusts_10m&&wh.wind_gusts_10m[i]!=null?wh.wind_gusts_10m[i]/1.852:null,' nd',1),
+    wh.wind_direction_10m&&wh.wind_direction_10m[i]!=null?dir(wh.wind_direction_10m[i]):'—',
+    cell(mh.wave_height&&mh.wave_height[i]!=null?mh.wave_height[i]:null,' m',1),
+    cell(mh.wave_period&&mh.wave_period[i]!=null?mh.wave_period[i]:null,' s',1),
+    cell(wh.precipitation_probability&&wh.precipitation_probability[i]!=null?wh.precipitation_probability[i]:null,' %',0)
+   ];
+   vals.forEach((v,j)=>{const td=document.createElement('td');td.textContent=v;tr.append(td);});
+   rows.append(tr);
+  }
+  if(!sea)setCell('weatherStatus','Météo chargée. Les données marines ne sont momentanément pas disponibles.');
+  else setCell('weatherStatus','Prévisions chargées. Sources : Open-Meteo Forecast et Marine API. Les heures sont locales.');
+  if(!rows.children.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=7;td.textContent='Prévisions horaires indisponibles pour cette période.';tr.append(td);rows.append(tr);}
+ }catch(e){setCell('weatherStatus','Impossible de charger les données : '+e.message);}
+ finally{$('refreshWeather').disabled=false;}
+}
+$('refreshWeather').addEventListener('click',loadWeather);
+$('spot').addEventListener('change',loadWeather);
+$('forecastDay').addEventListener('change',loadWeather);
+const KEY='catamaranLabTrialsV1';function trials(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}function renderTrials(){const a=trials();$('trialRows').replaceChildren();if(!a.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent='Aucun essai enregistré.';tr.append(td);$('trialRows').append(tr);return;}a.forEach((t,i)=>{const tr=document.createElement('tr');[t.name,t.wind+' nd',t.sail+' m²',t.mass+' kg',t.speed+' nd'].forEach(x=>{const td=document.createElement('td');td.textContent=x;tr.append(td)});const td=document.createElement('td'),b=document.createElement('button');b.textContent='Supprimer';b.addEventListener('click',()=>{const z=trials();z.splice(i,1);localStorage.setItem(KEY,JSON.stringify(z));renderTrials()});td.append(b);tr.append(td);$('trialRows').append(tr);});}
+$('saveTrial').addEventListener('click',()=>{const a=trials();a.push({name:$('trialName').value.trim()||'Essai '+(a.length+1),wind:+$('trueWind').value,sail:+$('sailArea').value,mass:+$('boatMass').value,speed:+$('boatSpeed').value,created:new Date().toISOString()});localStorage.setItem(KEY,JSON.stringify(a));$('trialName').value='';renderTrials()});$('clearTrials').addEventListener('click',()=>{if(confirm('Effacer tous les essais enregistrés dans ce navigateur ?')){localStorage.removeItem(KEY);renderTrials()}});$('exportTrials').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(trials(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='essais-catamaran.json';a.click();URL.revokeObjectURL(url)});renderTrials();loadWeather();
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
@@ -217,5 +280,4 @@ if(host){
  }catch(error){status.textContent='Impossible de créer le modèle 3D : '+error.message;console.error(error);}
 }
 </script>
-</body>
-</html>
+</body></html>
