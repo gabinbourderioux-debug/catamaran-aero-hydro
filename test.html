@@ -14,20 +14,6 @@
 <script src="darkmode.js"></script>
 <script src="stats.js" defer></script>
 <style>
-  .test-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 18px;padding:7px;background:var(--carte);border:1px solid var(--bordure);border-radius:13px}
-  .test-tab{border:1px solid transparent;border-radius:9px;padding:11px 18px;background:transparent;color:var(--txt);font:inherit;font-weight:750;cursor:pointer}
-  .test-tab:hover{background:var(--fond)}
-  .test-tab.active{background:var(--cyan);color:#1C2430}
-  .test-panel{padding:8px 0 20px}
-  .test-panel[hidden]{display:none}
-  .test-panel>h3{margin:8px 0;font-size:1.15rem;color:var(--titre)}
-  .simulation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0 28px}
-  .simulation-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;min-height:175px;padding:19px;border:1px solid var(--bordure);border-radius:13px;background:var(--carte);color:var(--txt);text-decoration:none;box-shadow:var(--ombre);transition:transform .16s,border-color .16s}
-  .simulation-card:hover{transform:translateY(-3px);border-color:var(--cyan)}
-  .simulation-card strong{font-size:1.08rem;color:var(--titre)}
-  .simulation-card>span:not(.simulation-tag){font-size:.9rem;line-height:1.5;color:var(--gris)}
-  .simulation-card>b{margin-top:auto;color:var(--cyan);font-size:.9rem}
-  .simulation-tag{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
   .porte{max-width:430px;margin:50px auto 0;background:#fff;padding:34px 30px;border-radius:16px;box-shadow:var(--ombre);text-align:center}
   .porte p{color:#1e293b}
   .code-case{display:flex;gap:10px;justify-content:center;margin:20px 0 8px}
@@ -57,7 +43,7 @@
 
 <header class="hero hero--page">
   <h1>Zone test</h1>
-  <p>L'atelier privé : un endroit pour essayer des idées, du code, des mises en page — sans toucher au site.</p>
+  <p>Espace de prototypage : teste du HTML, du CSS et du JavaScript sans modifier le site publié.</p>
 </header>
 
 <main class="conteneur">
@@ -87,26 +73,11 @@
   </div>
 
   <div class="atelier" id="atelier">
-    <h2 style="font-size:1.2rem"><span class="num">✓</span> Espace de prototypage</h2>
+    <h2 style="font-size:1.2rem"><span class="num">✓</span> Atelier de code</h2>
     <p class="encadre" style="margin:12px 0">Cette zone n’est pas confidentielle : le contrôle du code est effectué dans le navigateur. Les pages publiées restent accessibles à toute personne connaissant leur adresse.</p>
-    <nav class="test-tabs" role="tablist" aria-label="Sections de la zone test">
-      <button class="test-tab active" type="button" role="tab" aria-selected="true" aria-controls="panel-simulations" id="tab-simulations" data-panel="simulations">Simulations</button>
-      <button class="test-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-code" id="tab-code" data-panel="code">Prototypage / Code</button>
-    </nav>
-    <section class="test-panel active" id="panel-simulations" role="tabpanel" aria-labelledby="tab-simulations">
-      <h3>Centre des simulations</h3>
-      <p>Retrouve ici les outils de calcul, les expériences scientifiques, les modèles 3D et les essais de navigation.</p>
-      <div class="simulation-grid">
-        <a class="simulation-card" href="atelier.html"><span class="simulation-tag">Calculs &amp; essais</span><strong>Atelier interactif</strong><span>Forces, foils, polaire, mini-jeu et QCM.</span><b>Ouvrir la simulation →</b></a>
-        <a class="simulation-card" href="labo.html"><span class="simulation-tag">Laboratoire</span><strong>Laboratoire scientifique</strong><span>Voiles, foils, écoulements, simulateur, météo et carnet d’essais.</span><b>Ouvrir le laboratoire →</b></a>
-        <a class="simulation-card" href="prototype/experience.html"><span class="simulation-tag">Modèle 3D</span><strong>Studio interactif</strong><span>Modèle 3D du catamaran, aérodynamique, hydrodynamique et navigation.</span><b>Ouvrir le Studio →</b></a>
-        <a class="simulation-card" href="prototype/jeu.html"><span class="simulation-tag">Navigation</span><strong>Jeu de course</strong><span>Parcours de bouées, réglages du vent, courants et vues 2D / 3D.</span><b>Lancer le jeu →</b></a>
-        <a class="simulation-card" href="prototype/index.html"><span class="simulation-tag">Version complète</span><strong>Copie du site</strong><span>Version indépendante du site avec ses graphiques, son modèle 3D et ses simulations.</span><b>Ouvrir la copie →</b></a>
-      </div>
-    </section>
-    <section class="test-panel" id="panel-code" role="tabpanel" aria-labelledby="tab-code" hidden>
-      <h3>Atelier de code</h3>
-      <p>Écris ton HTML, ton CSS et ton JavaScript, puis appuie sur <b>Exécuter</b> pour afficher le résultat. Rien n'est publié : c'est ton brouillon.</p>
+    <section class="test-panel active" id="panel-code" role="region" aria-label="Atelier de code">
+      <h3>Éditeur HTML / CSS / JavaScript</h3>
+      <p>Teste ton code ici. Les modifications restent dans ton navigateur et ne touchent pas au site publié.</p>
       <div class="gruillez">
         <div><h3>HTML</h3><textarea id="ta-html" spellcheck="false"></textarea></div>
         <div><h3>CSS</h3><textarea id="ta-css" spellcheck="false"></textarea></div>
@@ -125,7 +96,7 @@
 
 <footer>
   <div class="auteur">Gabin Bourderioux</div>
-  <div class="auteur-sous">Zone de test privée.</div>
+  <div class="auteur-sous">Espace de prototypage local.</div>
   <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="https://www.instagram.com/gabin_brdx/" target="_blank" rel="noopener" style="color:#E8D48B">📸 Instagram</a>
   <button id="bascule-theme" class="btn-theme" type="button"></button>
 </footer>
@@ -137,21 +108,6 @@ const porte = document.getElementById('porte');
 const atelier = document.getElementById('atelier');
 const codeEl = document.getElementById('code');
 const errEl = document.getElementById('err');
-
-document.querySelectorAll('.test-tab').forEach(function (tab) {
-  tab.addEventListener('click', function () {
-    document.querySelectorAll('.test-tab').forEach(function (b) {
-      const active = b === tab;
-      b.classList.toggle('active', active);
-      b.setAttribute('aria-selected', active ? 'true' : 'false');
-    });
-    document.querySelectorAll('.test-panel').forEach(function (panel) {
-      const active = panel.id === 'panel-' + tab.dataset.panel;
-      panel.hidden = !active;
-      panel.classList.toggle('active', active);
-    });
-  });
-});
 
 function ouvrirAtelier() {
   porte.style.display = 'none';
