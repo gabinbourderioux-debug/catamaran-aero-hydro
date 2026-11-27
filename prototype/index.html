@@ -26,6 +26,14 @@
 .prototype-ribbon a:hover{background:#FFCC00;color:#1C2430}
 .prototype-ribbon a:first-of-type{background:#FFCC00;color:#1C2430}
 @media(max-width:600px){.prototype-ribbon{gap:6px;padding:7px}.prototype-ribbon span{width:100%;text-align:center}.prototype-ribbon a{font-size:.78rem;padding:6px 8px}}
+
+.copy-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 18px;padding:7px;background:var(--carte);border:1px solid var(--bordure);border-radius:13px}
+.copy-tab{border:1px solid transparent;border-radius:9px;padding:11px 16px;background:transparent;color:var(--txt);font:inherit;font-weight:750;cursor:pointer}
+.copy-tab:hover{background:var(--fond)}
+.copy-tab.active{background:var(--cyan);color:#1C2430}
+.copy-panel[hidden]{display:none}
+.copy-panel>h3{margin:8px 0;color:var(--titre)}
+.copy-panel>.cartes-liens{margin-top:16px}
 </style>
 </head>
 <body>
@@ -119,71 +127,37 @@
   </div>
 </section>
 
-<section class="carteforce">
-  <h2><span class="num">2</span> Aller plus loin, page par page</h2>
-  <p>Chaque thème est développé sur sa propre page, avec les schémas, les formules et les ordres de grandeur :</p>
-  <div class="cartes-liens">
-<a class="carte-lien" href="experience.html"><h3>Studio interactif — nouvelle version</h3><p>Graphiques manipulables, modèle 3D du catamaran, réglages et historique des simulations.</p><span class="lire">Explorer le studio →</span></a>
-    <a class="carte-lien" href="aero.html">
-      <h3>La voile, une aile dressée</h3>
-      <p>Dépression sur l'extrados, angle d'attaque, finesse portance/traînée, décrochage.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="aero.html#vent-apparent">
-      <h3>Le vent apparent</h3>
-      <p>Le turbo du multicoque : somme vectorielle vitesse du bateau + vent réel, exemple chiffré.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="hydro.html">
-      <h3>Les coques et la traînée</h3>
-      <p>Frottement, résistance de vagues, vitesse de carène, demi-carènes élancées.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="foils.html">
-      <h3>Les foils et le décollage</h3>
-      <p>Portance immergée ½ρV²SCL, courbes de traînée, vitesse de déjaugeage, mode vol.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="stabilite.html">
-      <h3>Stabilité &amp; équilibre</h3>
-      <p>Couple de redressement P×b, couple de gîte, polaire de vitesse, chiffres clés.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="simulateur.html">
-      <h3>Simulateur du vent apparent</h3>
-      <p>Bouge les curseurs du vent et de la vitesse : le triangle des vitesses se construit en direct.</p>
-      <span class="lire">Essayer →</span>
-    </a>
-    <a class="carte-lien" href="jeu.html">
-      <h3>Mini-jeu : la course de bouées</h3>
-      <p>À la barre : vire, empanne et joue des allures pour boucler le parcours le plus vite possible.</p>
-      <span class="lire">Jouer →</span>
-    </a>
-    <a class="carte-lien" href="polaire.html">
-      <h3>Polaire de vitesse interactive</h3>
-      <p>Choisis le vent réel et promène ton doigt sur la courbe : la vitesse du bateau selon l'allure.</p>
-      <span class="lire">Explorer →</span>
-    </a>
-    <a class="carte-lien" href="topo-meteo.html">
-      <h3>Topo météo : le cours</h3>
-      <p>Lire les nuages, la dépression, les fronts, la tempête et la marée — tout réuni.</p>
-      <span class="lire">Lire le cours →</span>
-    </a>
-    <a class="carte-lien" href="manoeuvres.html">
-      <h3>Manœuvres pas à pas</h3>
-      <p>Virement de bord et empannage expliqués à vue de dessus, avec l'erre, les pièges et les réflexes.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="qcm.html">
-      <h3>QCM : teste-toi !</h3>
-      <p>5 questions par partie + un QCM général de 10 questions, avec correction et explications.</p>
-      <span class="lire">Lire la page →</span>
-    </a>
-    <a class="carte-lien" href="meteo.html">
-      <h3>Météo, vent &amp; marées</h3>
-      <p>Le vent en direct en nœuds, l'état de la mer et le coefficient de marée du jour, spot par spot.</p>
-      <span class="lire">Voir la météo →</span>
-    </a>
+<section class="carteforce" id="navigation-copie">
+  <h2><span class="num">2</span> Explorer le site</h2>
+  <p>Les contenus pédagogiques et les outils de simulation sont maintenant séparés.</p>
+  <nav class="copy-tabs" role="tablist" aria-label="Rubriques de la copie du site">
+    <button class="copy-tab active" id="copy-tab-cours" type="button" role="tab" aria-selected="true" aria-controls="copy-panel-cours" data-copy-tab="cours">Cours &amp; connaissances</button>
+    <button class="copy-tab" id="copy-tab-simulations" type="button" role="tab" aria-selected="false" aria-controls="copy-panel-simulations" data-copy-tab="simulations">Simulations &amp; expériences</button>
+  </nav>
+  <div class="copy-panel" id="copy-panel-cours" role="tabpanel" aria-labelledby="copy-tab-cours">
+    <h3>Cours &amp; connaissances</h3>
+    <p>Les explications physiques, les schémas et les cours sur le fonctionnement du catamaran.</p>
+    <div class="cartes-liens">
+      <a class="carte-lien" href="aero.html"><h3>La voile, une aile dressée</h3><p>Dépression sur l'extrados, angle d'attaque, finesse portance/traînée, décrochage.</p><span class="lire">Lire la page →</span></a>
+      <a class="carte-lien" href="aero.html#vent-apparent"><h3>Le vent apparent</h3><p>Somme vectorielle vitesse du bateau + vent réel, avec exemple chiffré.</p><span class="lire">Lire la page →</span></a>
+      <a class="carte-lien" href="hydro.html"><h3>Les coques et la traînée</h3><p>Frottement, résistance de vagues, vitesse de carène et demi-carènes élancées.</p><span class="lire">Lire la page →</span></a>
+      <a class="carte-lien" href="foils.html"><h3>Les foils et le décollage</h3><p>Portance immergée, traînée, vitesse de déjaugeage et mode vol.</p><span class="lire">Lire la page →</span></a>
+      <a class="carte-lien" href="stabilite.html"><h3>Stabilité &amp; équilibre</h3><p>Couple de redressement, couple de gîte et stabilité du multicoque.</p><span class="lire">Lire la page →</span></a>
+      <a class="carte-lien" href="topo-meteo.html"><h3>Topo météo : le cours</h3><p>Nuages, dépression, fronts, tempête et marée.</p><span class="lire">Lire le cours →</span></a>
+      <a class="carte-lien" href="manoeuvres.html"><h3>Manœuvres pas à pas</h3><p>Virement de bord et empannage expliqués à vue de dessus.</p><span class="lire">Lire la page →</span></a>
+      <a class="carte-lien" href="qcm.html"><h3>QCM : teste-toi !</h3><p>Questions, corrections et explications pour vérifier tes connaissances.</p><span class="lire">S'entraîner →</span></a>
+    </div>
+  </div>
+  <div class="copy-panel" id="copy-panel-simulations" role="tabpanel" aria-labelledby="copy-tab-simulations" hidden>
+    <h3>Simulations &amp; expériences</h3>
+    <p>Tous les outils interactifs sont regroupés dans cet onglet.</p>
+    <div class="cartes-liens">
+      <a class="carte-lien" href="experience.html"><h3>Studio interactif 3D</h3><p>Modèle 3D du catamaran, forces, écoulements d'air et d'eau, réglages et historique des essais.</p><span class="lire">Lancer le Studio →</span></a>
+      <a class="carte-lien" href="simulateur.html"><h3>Simulateur du vent apparent</h3><p>Modifie le vent réel et la vitesse du bateau : le triangle des vitesses se construit en direct.</p><span class="lire">Lancer le simulateur →</span></a>
+      <a class="carte-lien" href="jeu.html"><h3>Jeu de navigation 2D / 3D</h3><p>Parcours de bouées, réglages du vent, courants et pilotage du catamaran.</p><span class="lire">Jouer →</span></a>
+      <a class="carte-lien" href="polaire.html"><h3>Polaire de vitesse interactive</h3><p>Choisis la force du vent et explore la vitesse du bateau selon l'allure.</p><span class="lire">Explorer la polaire →</span></a>
+      <a class="carte-lien" href="meteo.html"><h3>Météo, vent &amp; marées</h3><p>Outil météo avec vent, état de la mer et informations de marée.</p><span class="lire">Ouvrir la météo →</span></a>
+    </div>
   </div>
 </section>
 
@@ -196,5 +170,20 @@
   <button id="bascule-theme" class="btn-theme" type="button"></button>
 </footer>
 
+
+<script>
+document.querySelectorAll('[data-copy-tab]').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('[data-copy-tab]').forEach(function(button){
+      const active=button===tab;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-selected',active?'true':'false');
+    });
+    document.querySelectorAll('.copy-panel').forEach(function(panel){
+      panel.hidden=panel.id!=='copy-panel-'+tab.dataset.copyTab;
+    });
+  });
+});
+</script>
 </body>
 </html>
