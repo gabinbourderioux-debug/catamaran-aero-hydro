@@ -2,167 +2,164 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Zone test — Gabin</title>
+<title>Zone test — Atelier de prototypage</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1C2430">
-  <link rel="apple-touch-icon" href="icone-192.png">
 <link rel="stylesheet" href="style.css">
 <script src="darkmode.js"></script>
 <script src="stats.js" defer></script>
 <style>
-  .porte{max-width:430px;margin:50px auto 0;background:#fff;padding:34px 30px;border-radius:16px;box-shadow:var(--ombre);text-align:center}
-  .porte p{color:#1e293b}
-  .code-case{display:flex;gap:10px;justify-content:center;margin:20px 0 8px}
-  .code-case input{font-size:1.5rem;letter-spacing:.35em;text-align:center;width:170px;padding:10px 6px 10px 14px;
-    border:2px solid #e2e8f0;border-radius:10px;font-family:inherit;color:#1C2430}
-  .code-case input:focus{outline:none;border-color:var(--cyan)}
-  .pave{display:grid;grid-template-columns:repeat(3,68px);gap:10px;justify-content:center;margin:16px 0 6px}
-  .pave button{font-size:1.25rem;font-weight:600;padding:12px 0;border:1px solid #e2e8f0;border-radius:10px;
-    background:#fff;color:#1C2430;cursor:pointer;transition:.12s}
-  .pave button:hover{background:var(--fond)}
-  .err{color:var(--corail);font-size:.9rem;min-height:1.3em;margin:4px 0 10px}
-  .btn-entrer{background:var(--cyan);color:#1C2430;border:none;border-radius:10px;padding:11px 26px;
-    font-weight:700;font-size:.95rem;cursor:pointer}
-  .btn-entrer:hover{background:#E6B800}
-  .atelier{display:none}
-  .gruillez{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
-  .gruillez h3{margin:0 0 6px;font-size:.95rem;color:var(--titre)}
-  .gruillez textarea{width:100%;min-height:190px;font-family:'Courier New',monospace;font-size:.85rem;
-    border:1px solid #e2e8f0;border-radius:10px;padding:10px;resize:vertical;background:#fff;color:#1e293b}
-  .gruillez textarea:focus{outline:none;border-color:var(--cyan)}
-  #apercu{width:100%;min-height:430px;border:1px solid #e2e8f0;border-radius:10px;background:#fff}
-  .barre-atelier{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 4px}
-  @media(max-width:760px){.gruillez{grid-template-columns:1fr}}
+:root{--zt-ink:#172536;--zt-muted:#64748b;--zt-line:#dce4ec;--zt-paper:#f4f7fa;--zt-blue:#0c7895;--zt-dark:#111c29}
+body{background:var(--zt-paper)}
+.hero--page{padding-bottom:30px}
+.hero--page h1{letter-spacing:-.035em}
+.zone{max-width:1220px;margin:26px auto 64px;padding:0 22px}
+.lock{max-width:390px;margin:54px auto;background:#fff;border:1px solid var(--zt-line);border-radius:16px;padding:30px;box-shadow:0 12px 35px #15283b0d}
+.lock h2{margin:0 0 8px;font-size:1.35rem;color:var(--zt-ink)}
+.lock p{color:var(--zt-muted);line-height:1.55}
+.lock input{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid var(--zt-line);border-radius:9px;font:inherit;letter-spacing:.25em;margin:10px 0}
+.lock input:focus{outline:2px solid #8bd1df;border-color:var(--zt-blue)}
+.primary{border:0;border-radius:9px;background:var(--zt-blue);color:#fff;font:600 .94rem inherit;padding:12px 18px;cursor:pointer}
+.primary:hover{filter:brightness(.93)}
+.lock .primary{width:100%}
+.error{min-height:1.3em;color:#b42318!important;font-size:.88rem}
+.note{font-size:.8rem;color:var(--zt-muted)!important;margin:14px 0 0}
+.workspace{display:none}
+.intro{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 18px}
+.intro h2{margin:0;color:var(--zt-ink);font-size:1.45rem}
+.intro p{margin:5px 0 0;color:var(--zt-muted);font-size:.92rem}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.step{background:#fff;border:1px solid var(--zt-line);border-radius:11px;padding:13px 15px;display:flex;gap:11px;align-items:center}
+.step b{display:grid;place-items:center;flex:0 0 27px;height:27px;border-radius:50%;background:#e5f4f7;color:#086b83;font-size:.85rem}
+.step strong{display:block;color:var(--zt-ink);font-size:.88rem}
+.step span{display:block;color:var(--zt-muted);font-size:.78rem;margin-top:2px}
+.workbench{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:stretch}
+.panel{min-width:0;background:#fff;border:1px solid var(--zt-line);border-radius:13px;overflow:hidden}
+.panel-head{min-height:53px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--zt-line)}
+.panel-head h3{margin:0;color:var(--zt-ink);font-size:.95rem}
+.panel-head small{color:var(--zt-muted);font-size:.78rem}
+.tabs{display:flex;gap:4px;padding:10px 12px 0;border-bottom:1px solid var(--zt-line)}
+.tab{border:0;background:transparent;color:var(--zt-muted);font:600 .84rem inherit;padding:9px 13px;border-radius:7px 7px 0 0;cursor:pointer;border-bottom:2px solid transparent}
+.tab[aria-selected=true]{color:var(--zt-blue);background:#edf7f9;border-bottom-color:var(--zt-blue)}
+.editor-wrap{background:var(--zt-dark);padding:12px}
+.editor-label{display:flex;justify-content:space-between;color:#aab8c7;font-size:.75rem;padding:0 2px 8px}
+#code-editor{display:block;box-sizing:border-box;width:100%;height:430px;resize:vertical;border:0;border-radius:7px;padding:15px;background:#111c29;color:#e5edf5;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2;white-space:pre;overflow:auto}
+#code-editor:focus{outline:1px solid #55b8cc}
+.editor-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;flex-wrap:wrap}
+.hint{font-size:.76rem;color:var(--zt-muted)}
+.secondary{background:#fff;border:1px solid var(--zt-line);color:var(--zt-ink);border-radius:8px;padding:10px 13px;font:600 .83rem inherit;cursor:pointer}
+.preview-tools{display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;background:#23a26d;border-radius:50%;display:inline-block;margin-right:6px}
+.preview-frame{display:block;width:100%;height:490px;border:0;background:#fff}
+.preview-foot{border-top:1px solid var(--zt-line);padding:10px 14px;color:var(--zt-muted);font-size:.77rem;display:flex;justify-content:space-between;gap:8px}
+.help{margin-top:15px;padding:15px 17px;border:1px solid var(--zt-line);border-radius:11px;background:#fff;color:var(--zt-muted);font-size:.85rem;line-height:1.55}
+.help strong{color:var(--zt-ink)}
+footer{margin-top:55px}
+@media(max-width:850px){.workbench{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.preview-frame{height:390px}#code-editor{height:340px}.intro{align-items:flex-start;flex-direction:column}}
+@media(max-width:480px){.zone{padding:0 13px;margin-top:18px}.panel-head{padding:0 12px}.tab{padding:9px 10px}.preview-frame{height:330px}}
 </style>
 </head>
 <body>
-
 <header class="hero hero--page">
   <h1>Zone test</h1>
-  <p>Espace de prototypage : teste du HTML, du CSS et du JavaScript sans modifier le site publié.</p>
+  <p>Un espace simple pour créer, tester et vérifier des idées sans modifier le site publié.</p>
 </header>
 
-<main class="conteneur">
+<main class="zone">
+  <section class="lock" id="lock" aria-labelledby="lock-title">
+    <h2 id="lock-title">Accéder à l’atelier</h2>
+    <p>Entre le code pour ouvrir ton espace de prototypage.</p>
+    <form id="unlock-form">
+      <input id="access-code" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Code à 4 chiffres" aria-label="Code d’accès" required>
+      <p class="error" id="access-error" aria-live="polite"></p>
+      <button class="primary" type="submit">Ouvrir l’atelier</button>
+    </form>
+    <p class="note">Note : ce code masque l’interface, mais ne constitue pas une protection de sécurité. Le contenu du site reste accessible par son adresse publique.</p>
+  </section>
 
-  <div class="porte" id="porte">
-    <p><b>Accès à la zone de travail.</b> Entre le <b>code</b> :</p>
-    <div class="code-case">
-      <input id="code" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="····"
-        aria-label="mot de passe" title="mot de passe" autofocus>
+  <section class="workspace" id="workspace">
+    <div class="intro">
+      <div><h2>Atelier de prototypage</h2><p>Modifie le code à gauche, puis lance l’aperçu à droite.</p></div>
+      <button class="secondary" id="reset-all" type="button">Réinitialiser le projet</button>
     </div>
-    <div class="pave">
-      <button type="button" data-ch="1">1</button>
-      <button type="button" data-ch="2">2</button>
-      <button type="button" data-ch="3">3</button>
-      <button type="button" data-ch="4">4</button>
-      <button type="button" data-ch="5">5</button>
-      <button type="button" data-ch="6">6</button>
-      <button type="button" data-ch="7">7</button>
-      <button type="button" data-ch="8">8</button>
-      <button type="button" data-ch="9">9</button>
-      <button type="button" data-ch="C">C</button>
-      <button type="button" data-ch="0">0</button>
+
+    <div class="steps" aria-label="Mode d’emploi">
+      <div class="step"><b>1</b><div><strong>Écrire</strong><span>HTML, CSS ou JavaScript</span></div></div>
+      <div class="step"><b>2</b><div><strong>Exécuter</strong><span>Mettre à jour l’aperçu</span></div></div>
+      <div class="step"><b>3</b><div><strong>Vérifier</strong><span>Observer le résultat à droite</span></div></div>
     </div>
-    <p class="err" id="err"></p>
-    <button class="btn-entrer" id="entrer">Entrer</button>
-    <p style="font-size:.8rem;color:#94a3b8;margin-top:14px">Ce code masque simplement l’interface : les fichiers publiés restent accessibles par leur URL.</p>
-  </div>
 
-  <div class="atelier" id="atelier">
-    <h2 style="font-size:1.2rem"><span class="num">✓</span> Atelier de code</h2>
-    <p class="encadre" style="margin:12px 0">Cette zone n’est pas confidentielle : le contrôle du code est effectué dans le navigateur. Les pages publiées restent accessibles à toute personne connaissant leur adresse.</p>
-    <section class="test-panel active" id="panel-code" role="region" aria-label="Atelier de code">
-      <h3>Éditeur HTML / CSS / JavaScript</h3>
-      <p>Teste ton code ici. Les modifications restent dans ton navigateur et ne touchent pas au site publié.</p>
-      <div class="gruillez">
-        <div><h3>HTML</h3><textarea id="ta-html" spellcheck="false"></textarea></div>
-        <div><h3>CSS</h3><textarea id="ta-css" spellcheck="false"></textarea></div>
-        <div><h3>JavaScript</h3><textarea id="ta-js" spellcheck="false"></textarea></div>
-        <div><h3>Aperçu</h3><iframe id="apercu" title="Aperçu isolé du test" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe></div>
-      </div>
-      <div class="barre-atelier">
-        <button class="btn-entrer" id="executer">Exécuter</button>
-        <button class="pave-reset" id="nettoyer" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:11px 18px;cursor:pointer;color:#1C2430">Nettoyer les cases</button>
-        <span style="font-size:.85rem;color:var(--gris)">Les cases se sauvegardent dans ton navigateur.</span>
-      </div>
-    </section>
-  </div>
+    <div class="workbench">
+      <section class="panel" aria-label="Éditeur de code">
+        <div class="panel-head"><h3>Éditeur</h3><small id="save-status">Sauvegarde locale activée</small></div>
+        <div class="tabs" role="tablist" aria-label="Langage">
+          <button class="tab" id="tab-html" role="tab" aria-selected="true" aria-controls="code-editor" data-lang="html">HTML</button>
+          <button class="tab" id="tab-css" role="tab" aria-selected="false" aria-controls="code-editor" data-lang="css">CSS</button>
+          <button class="tab" id="tab-js" role="tab" aria-selected="false" aria-controls="code-editor" data-lang="js">JavaScript</button>
+        </div>
+        <div class="editor-wrap">
+          <div class="editor-label"><span id="language-name">HTML</span><span>Modifications enregistrées automatiquement</span></div>
+          <textarea id="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code source" placeholder="Écris ton code ici…"></textarea>
+        </div>
+        <div class="editor-actions">
+          <span class="hint">Raccourci : ⌘ / Ctrl + Entrée</span>
+          <button class="primary" id="run-code" type="button">Exécuter le code</button>
+        </div>
+      </section>
 
+      <section class="panel" aria-label="Aperçu du résultat">
+        <div class="panel-head">
+          <h3>Aperçu</h3>
+          <div class="preview-tools"><small><span class="dot"></span>Environnement isolé</small><button class="secondary" id="refresh-preview" type="button">Actualiser</button></div>
+        </div>
+        <iframe id="preview" class="preview-frame" title="Aperçu du code exécuté" sandbox="allow-scripts"></iframe>
+        <div class="preview-foot"><span id="preview-status">En attente d’exécution</span><span>Le code ne modifie pas le site publié.</span></div>
+      </section>
+    </div>
+
+    <aside class="help"><strong>À quoi servent les trois langages ?</strong><br>
+      HTML définit les éléments de la page. CSS règle leur apparence. JavaScript ajoute les interactions. Chaque langage possède son onglet : tu peux passer de l’un à l’autre sans perdre ton travail.
+    </aside>
+  </section>
 </main>
 
 <footer>
   <div class="auteur">Gabin Bourderioux</div>
-  <div class="auteur-sous">Espace de prototypage local.</div>
-  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> · <a href="https://www.instagram.com/gabin_brdx/" target="_blank" rel="noopener" style="color:#E8D48B">📸 Instagram</a>
+  <div class="auteur-sous">Zone de prototypage</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l’accueil</a>
   <button id="bascule-theme" class="btn-theme" type="button"></button>
 </footer>
 
 <script>
-const CODE_HASH = 2085926382; // mot de passe haché (djb2) : il n'apparaît jamais en clair
-function hach(s) { let x = 5381; for (const ch of s) x = ((x * 33) ^ ch.charCodeAt(0)) >>> 0; return x; }
-const porte = document.getElementById('porte');
-const atelier = document.getElementById('atelier');
-const codeEl = document.getElementById('code');
-const errEl = document.getElementById('err');
-
-function ouvrirAtelier() {
-  porte.style.display = 'none';
-  atelier.style.display = 'block';
-  ['html', 'css', 'js'].forEach(function (k) {
-    const el = document.getElementById('ta-' + k);
-    el.value = localStorage.getItem('zoneTest-' + k) || '';
-    el.addEventListener('input', function () { localStorage.setItem('zoneTest-' + k, el.value); });
-  });
-  executer();
-}
-
-function essayer() {
-  if (hach(codeEl.value) === CODE_HASH) {
-    sessionStorage.setItem('zoneTest-ok', '1');
-    ouvrirAtelier();
-    codeEl.value = '';
-    errEl.textContent = '';
-  } else {
-    errEl.textContent = 'Mot de passe faux. Réessaie.';
-    codeEl.value = '';
-  }
-}
-
-document.querySelectorAll('.pave button').forEach(function (b) {
-  b.addEventListener('click', function () {
-    if (b.dataset.ch === 'C') codeEl.value = '';
-    else if (codeEl.value.length < 4) codeEl.value += b.dataset.ch;
-    if (codeEl.value.length === 4) essayer();
-  });
-});
-document.getElementById('entrer').addEventListener('click', essayer);
-codeEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') essayer(); });
-codeEl.addEventListener('input', function () { if (codeEl.value.length === 4) essayer(); });
-
-function executer() {
-  const h = document.getElementById('ta-html').value;
-  const c = document.getElementById('ta-css').value;
-  const j = document.getElementById('ta-js').value;
-  const doc = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-    '<style>body{font-family:sans-serif;margin:12px;color:#1e293b}' + c + '</style></head><body>' +
-    h + '<scr' + 'ipt>try{' + j + '}catch(e){const p=document.createElement(\'pre\');p.style.color=\'#e11d48\';p.textContent=String(e);document.body.appendChild(p)}</scr' + 'ipt></body></html>';
-  document.getElementById('apercu').srcdoc = doc;
-}
-document.getElementById('executer').addEventListener('click', executer);
-document.getElementById('nettoyer').addEventListener('click', function () {
-  ['html', 'css', 'js'].forEach(function (k) {
-    document.getElementById('ta-' + k).value = '';
-    localStorage.removeItem('zoneTest-' + k);
-  });
-  executer();
-});
-
-if (sessionStorage.getItem('zoneTest-ok') === '1') ouvrirAtelier();
+(function(){
+  const HASH=2085926382;
+  const store={html:'zoneTest-html',css:'zoneTest-css',js:'zoneTest-js'};
+  const starter={
+    html:'<main class="carte">\\n  <h1>Mon premier test</h1>\\n  <p>Modifie ce texte pour commencer.</p>\\n  <button id="action">Clique ici</button>\\n  <p id="message"></p>\\n</main>',
+    css:'body {\\n  font-family: system-ui, sans-serif;\\n  background: #f1f5f9;\\n  padding: 24px;\\n}\\n.carte {\\n  max-width: 520px;\\n  margin: 30px auto;\\n  padding: 24px;\\n  background: white;\\n  border-radius: 14px;\\n}\\nbutton {\\n  padding: 10px 16px;\\n  cursor: pointer;\\n}',
+    js:"document.getElementById('action').addEventListener('click', () => {\\n  document.getElementById('message').textContent = 'Ça fonctionne !';\\n});"
+  };
+  const lock=document.getElementById('lock');
+  const workspace=document.getElementById('workspace');
+  const code=document.getElementById('code-editor');
+  const tabs=[...document.querySelectorAll('.tab')];
+  let active='html';
+  const values={};
+  function hash(s){let x=5381;for(const ch of s)x=((x*33)^ch.charCodeAt(0))>>>0;return x;}
+  function open(){lock.style.display='none';workspace.style.display='block';['html','css','js'].forEach(k=>{values[k]=localStorage.getItem(store[k]);if(values[k]===null)values[k]=starter[k];});show('html');run();}
+  function show(lang){if(values[active]!==undefined)values[active]=code.value;active=lang;code.value=values[lang];tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.lang===lang)));document.getElementById('language-name').textContent=lang==='js'?'JavaScript':lang.toUpperCase();code.setAttribute('aria-label','Code '+lang.toUpperCase());}
+  function save(){values[active]=code.value;localStorage.setItem(store[active],code.value);document.getElementById('save-status').textContent='Modifications sauvegardées';}
+  function run(){save();const html=values.html||'';const css=values.css||'';const js=values.js||'';const safeJs=js.replace(/<\\/script/gi,'<\\\\/script');const doc='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;font-family:system-ui,sans-serif;color:#172536}'+css+'</style></head><body>'+html+'<script>try{'+safeJs+'}catch(e){const p=document.createElement("pre");p.style.cssText="color:#b42318;white-space:pre-wrap";p.textContent="Erreur JavaScript : "+e;document.body.appendChild(p)}<\\/script></body></html>';document.getElementById('preview').srcdoc=doc;document.getElementById('preview-status').textContent='Aperçu mis à jour';}
+  tabs.forEach(t=>t.addEventListener('click',()=>{save();show(t.dataset.lang);}));
+  code.addEventListener('input',save);
+  document.getElementById('run-code').addEventListener('click',run);
+  document.getElementById('refresh-preview').addEventListener('click',run);
+  code.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();run();}});
+  document.getElementById('reset-all').addEventListener('click',()=>{if(!confirm('Effacer ton code et restaurer les exemples de départ ?'))return;['html','css','js'].forEach(k=>{values[k]=starter[k];localStorage.removeItem(store[k]);});show('html');run();});
+  document.getElementById('unlock-form').addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('access-code');if(hash(input.value)===HASH){sessionStorage.setItem('zoneTest-ok','1');open();}else{document.getElementById('access-error').textContent='Code incorrect. Réessaie.';input.value='';input.focus();}});
+  if(sessionStorage.getItem('zoneTest-ok')==='1')open();
+})();
 </script>
-
 </body>
 </html>
