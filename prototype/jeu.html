@@ -52,6 +52,23 @@
   .btn-jeu:hover{background:#E6B800}
   #msg-jeu{min-height:1.4em;text-align:center;font-weight:700;color:var(--vert)}
   #msg-jeu.alerte{color:var(--corail)}
+  .jeu-reglages{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:14px 0}
+  .jeu-reglages label{display:flex;justify-content:space-between;gap:8px;font-weight:700;color:var(--titre);font-size:.9rem}
+  .jeu-reglages input[type=range]{width:100%;accent-color:var(--cyan);margin:9px 0 2px}
+  .jeu-reglages select{width:100%;margin-top:8px;padding:8px;border:1px solid var(--bordure);border-radius:8px;background:var(--carte);color:var(--txt)}
+  .jeu-reglage{padding:11px 12px;border:1px solid var(--bordure);border-radius:10px;background:var(--fond)}
+  .jeu-reglage output{color:var(--bleu);font-variant-numeric:tabular-nums}
+  .jeu-options{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin:10px 0}
+  .jeu-options label{display:flex;align-items:center;gap:7px;font-size:.9rem}
+  .jeu-options input{accent-color:var(--cyan)}
+  .jeu-actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+  .btn-jeu.secondaire{background:var(--carte);color:var(--txt);border:1px solid var(--bordure)}
+  .stats-jeu{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:12px 0}
+  .stat-jeu{padding:10px;border:1px solid var(--bordure);border-radius:9px;background:var(--fond);text-align:center}
+  .stat-jeu small{display:block;color:var(--gris);font-size:.78rem}
+  .stat-jeu strong{font-size:1.15rem;color:var(--titre);font-variant-numeric:tabular-nums}
+  .jeu-aide{font-size:.85rem;color:var(--gris);text-align:center}
+  @media(max-width:600px){.pad{gap:38px}.btn-pad{width:76px;height:76px}.jeu-actions .btn-jeu{flex:1 1 130px;padding:11px 12px}}
 </style>
 <style>
 .prototype-ribbon{position:sticky;top:0;z-index:90;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;background:var(--marine,#1C2430);border-bottom:2px solid #FFCC00;box-shadow:0 4px 16px rgba(0,0,0,.14)}
@@ -104,12 +121,20 @@
 <main class="conteneur">
 <section class="carteforce" id="jeu-sec">
   <h2><span class="num">1</span> Le parcours : 4 bouées dans l'ordre</h2>
-  <p>Ligne de départ en bas, puis bouée 1 tout en haut (au près : il faudra <b>virer</b>), bouée 2 à droite (le reaching), bouée 3 à gauche, et retour à la ligne d'arrivée (au portant : attention à l'<b>empannage</b>). La bouée suivante est entourée d'un anneau rouge ; les bouées passées deviennent vertes.</p>
+  <p>Ligne de départ en bas, puis bouée 1 au près, bouée 2 au reaching, bouée 3 à gauche et retour à l'arrivée. Adapte ton cap aux variations du vent et franchis les marques dans l'ordre.</p>
+  <div class="jeu-reglages">
+    <div class="jeu-reglage"><label for="reg-vent">Force du vent <output id="reg-vent-val">15 nd</output></label><input id="reg-vent" type="range" min="6" max="25" value="15" step="1"></div>
+    <div class="jeu-reglage"><label for="reg-angle">Direction du vent <output id="reg-angle-val">0°</output></label><input id="reg-angle" type="range" min="-60" max="60" value="0" step="5"></div>
+    <div class="jeu-reglage"><label for="reg-difficulte">Difficulté</label><select id="reg-difficulte"><option value="facile">Débutant</option><option value="normal" selected>Équipage régulier</option><option value="expert">Expert</option></select></div>
+  </div>
+  <div class="jeu-options"><label><input id="reg-rafales" type="checkbox" checked> Rafales et bascules de vent</label><label><input id="reg-trace" type="checkbox" checked> Afficher ma trajectoire</label></div>
 
-  <div class="bandeau">
-    <span id="chrono-jeu"><b>Chrono :</b> 0,0 s</span>
-    <span id="vitesse-jeu"><b>Vitesse :</b> 0,0 nd</span>
-    <span id="allure-jeu"><b>Allure :</b> —</span>
+  <div class="stats-jeu">
+    <div class="stat-jeu"><small>Chrono</small><strong id="chrono-jeu">0,0 s</strong></div>
+    <div class="stat-jeu"><small>Vitesse</small><strong id="vitesse-jeu">0,0 nd</strong></div>
+    <div class="stat-jeu"><small>Allure</small><strong id="allure-jeu">—</strong></div>
+    <div class="stat-jeu"><small>Bouées</small><strong id="progression-jeu">0 / 4</strong></div>
+    <div class="stat-jeu"><small>Pénalités</small><strong id="penalites-jeu">0 s</strong></div>
   </div>
 
   <div class="figure">
@@ -120,7 +145,7 @@
     <rect class="eau" width="600" height="880"/>
     <g id="vagues"></g>
     <g id="fleches-vent"></g>
-    <text class="vent" x="530" y="40">VENT</text>
+    <text class="vent" x="530" y="40">VENT</text><text class="vent" id="vent-affiche" x="500" y="62">15 nd · 0°</text>
     <line class="dept" x1="170" y1="800" x2="430" y2="800"/>
     <g class="mq" id="mq-3"><circle cx="120" cy="620" r="14"/><text x="120" y="625" text-anchor="middle">3</text></g>
     <g class="mq" id="mq-1"><circle cx="150" cy="160" r="14"/><text x="150" y="165" text-anchor="middle">1</text></g>
@@ -149,9 +174,12 @@
     <button id="btn-bab" class="btn-pad" type="button" aria-label="Barre à bâbord">←</button>
     <button id="btn-tri" class="btn-pad" type="button" aria-label="Barre à tribord">→</button>
   </div>
-  <div style="text-align:center;margin:10px 0">
-    <button id="btn-depart" class="btn-jeu" type="button">Départ (ou touche Espace)</button>
+  <div class="jeu-actions">
+    <button id="btn-depart" class="btn-jeu" type="button">Départ (Espace)</button>
+    <button id="btn-pause" class="btn-jeu secondaire" type="button">Pause (P)</button>
+    <button id="btn-reset" class="btn-jeu secondaire" type="button">Réinitialiser</button>
   </div>
+  <p class="jeu-aide">Clavier : ← / → ou A / D pour barrer · Espace pour démarrer · P pour mettre en pause. Sur téléphone, maintiens les boutons de barre.</p>
   <div id="msg-jeu"></div>
   <div class="bandeau"><span id="record-jeu"></span></div>
 </section>
@@ -159,7 +187,9 @@
 <section class="carteforce" id="regles">
   <h2><span class="num">2</span> Comment jouer</h2>
   <ol>
-    <li><b>À la barre</b> : flèches ← et → du clavier, ou les deux gros boutons ronds sous le plan d'eau sur téléphone.</li>
+    <li><b>À la barre</b> : flèches ← et → ou touches A / D. Sur téléphone, maintiens les boutons ronds pour barrer.</li>
+    <li><b>Réglages</b> : choisis la force et la direction du vent ainsi que la difficulté avant le départ. Active les rafales pour un vent variable.</li>
+    <li><b>Pénalités</b> : toucher une limite du plan d'eau ajoute 3 secondes. Évite les bords pour conserver ton temps.</li>
     <li><b>Regarde la flèche rouge VA</b> : c'est ton vent apparent, dessiné en direct autour du bateau. Plus elle est longue, plus tu as de puissance.</li>
     <li><b>Faseie ?</b> Si la flèche VA s'aligne avec le nez du bateau (moins de 25°), les voiles faseient : abats un peu pour retrouver de la vitesse — le même piège que celui du virement de bord.</li>
     <li><b>L'allure fait la vitesse</b> : au travers et au reaching, tu vas jusqu'à 25 % plus vite que le vent ; au vent arrière tu es lent, et ton vent apparent faiblit avec toi.</li>
