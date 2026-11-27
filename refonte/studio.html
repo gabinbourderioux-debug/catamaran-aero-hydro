@@ -340,9 +340,21 @@ if(host){
    const deck=new THREE.Mesh(new THREE.BoxGeometry(5.5,.1,.56),deckMat);deck.position.set(0,.42,z);deck.castShadow=true;boat.add(deck);
   }
   makeHull(-1.65);makeHull(1.65);
+  // Détails de coque : listons, étraves et éléments de pont.
+  for(const z of [-1.65,1.65]){
+   const stripePts=[];
+   for(let i=0;i<=36;i++){const t=i/36,x=-3.12+6.24*t,w=.24+.34*Math.pow(Math.sin(Math.PI*t),.55);stripePts.push(new THREE.Vector3(x,.31,z+w*.92));}
+   const stripe=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(stripePts),64,.018,6,false),new THREE.MeshStandardMaterial({color:0x42a9c5,metalness:.35,roughness:.3}));
+   boat.add(stripe);
+   const bow=new THREE.Mesh(new THREE.SphereGeometry(.19,16,10),hullMat);bow.scale.set(1.5,.55,.72);bow.position.set(-3.12,.22,z);boat.add(bow);
+   const stern=new THREE.Mesh(new THREE.BoxGeometry(.34,.16,.52),deckMat);stern.position.set(2.72,.43,z);boat.add(stern);
+  }
   const beam1=new THREE.Mesh(new THREE.BoxGeometry(.24,.18,3.8),darkMat);beam1.position.set(-1.35,.55,0);boat.add(beam1);
   const beam2=beam1.clone();beam2.position.x=1.35;boat.add(beam2);
   const tramp=new THREE.Mesh(new THREE.BoxGeometry(2.5,.045,2.75),new THREE.MeshStandardMaterial({color:0x8795a5,roughness:1,transparent:true,opacity:.8}));tramp.position.set(0,.55,0);boat.add(tramp);
+  const trampLineMat=new THREE.LineBasicMaterial({color:0xd9e1e7,transparent:true,opacity:.55});
+  for(let z=-1.3;z<=1.31;z+=.22){const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-1.22,.58,z),new THREE.Vector3(1.22,.58,z)]),trampLineMat);boat.add(l);}
+  for(let x=-1.2;x<=1.21;x+=.22){const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,.58,-1.32),new THREE.Vector3(x,.58,1.32)]),trampLineMat);boat.add(l);}
   const mast=new THREE.Mesh(new THREE.CylinderGeometry(.045,.065,6.1,12),darkMat);mast.position.set(-.35,3.55,0);boat.add(mast);
   const sailGroup=new THREE.Group();boat.add(sailGroup);
   const sailGeo=new THREE.BufferGeometry(),rows=18,cols=10,verts=[],indices=[];
@@ -351,17 +363,29 @@ if(host){
   sailGeo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));sailGeo.setIndex(indices);
   const sail=new THREE.Mesh(sailGeo,sailMat);sail.castShadow=true;sailGroup.add(sail);
   const boom=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,2.75,10),darkMat);boom.rotation.z=Math.PI/2;boom.position.set(.98,.72,0);sailGroup.add(boom);
-  function updateSail(area){
+  function updateSail(area,windAngle,travelerValue){
    const scale=.72+area/45*.65,arr=sailGeo.attributes.position.array;let k=0;
-   for(let r=0;r<=rows;r++){const v=r/rows;for(let q=0;q<=cols;q++){const t=q/cols;const x=-.32+t*2.65*scale*(1-v),y=.72+v*5.82,z=.18*Math.sin(Math.PI*t)*Math.sin(Math.PI*v);arr[k++]=x;arr[k++]=y;arr[k++]=z;}}
+   // Le creux varie avec l'angle du vent ; le vrillage augmente quand le vent vient du travers/arrière et quand le chariot choque l'écoute.
+   const a=Math.max(0,Math.min(180,Math.abs(windAngle)))*Math.PI/180;
+   const camber=.075+.30*Math.sin(a);
+   const twist=Math.max(0,Math.min(.30,.035+.16*Math.sin(a)+Math.max(0,travelerValue)/100*.10));
+   for(let r=0;r<=rows;r++){const v=r/rows;for(let q=0;q<=cols;q++){const t=q/cols;
+    const chord=t*2.65*scale*(1-v),x=-.32+chord+twist*v*v*(t-.5)*.9;
+    const y=.72+v*5.82,z=camber*Math.sin(Math.PI*t)*Math.sin(Math.PI*v)+twist*v*v*(t-.5)*.45;
+    arr[k++]=x;arr[k++]=y;arr[k++]=z;
+   }}
    sailGeo.attributes.position.needsUpdate=true;sailGeo.computeVertexNormals();boom.scale.y=scale;
+   boom.rotation.y=-travelerValue/100*.20;
   }
   const track=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.55,10),foilMat);track.rotation.x=Math.PI/2;track.position.set(2.55,.57,0);boat.add(track);
   const traveler=new THREE.Group();traveler.position.set(2.55,.62,0);boat.add(traveler);
   const car=new THREE.Mesh(new THREE.BoxGeometry(.28,.13,.32),new THREE.MeshStandardMaterial({color:0xd9a522,metalness:.55,roughness:.3}));traveler.add(car);
   const pulley=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.11,16),darkMat);pulley.rotation.x=Math.PI/2;pulley.position.y=.12;traveler.add(pulley);
   const sheetLines=[];
-  for(let i=0;i<3;i++){const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x263b4b,transparent:true,opacity:.9}));boat.add(line);sheetLines.push(line);}
+  for(let i=0;i<3;i++){const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x263b4b,transparent:true,opacity:.95}));boat.add(line);sheetLines.push(line);}
+  const blockMat=new THREE.MeshStandardMaterial({color:0x252f39,metalness:.55,roughness:.28});
+  const boomBlock=new THREE.Mesh(new THREE.CylinderGeometry(.075,.075,.16,12),blockMat);boomBlock.rotation.x=Math.PI/2;boomBlock.position.set(2.25,.78,0);sailGroup.add(boomBlock);
+  const carBlock=new THREE.Mesh(new THREE.CylinderGeometry(.085,.085,.20,12),blockMat);carBlock.rotation.x=Math.PI/2;carBlock.position.set(0,.18,0);traveler.add(carBlock);
   const foilGroups=[];
   for(const z of [-1.65,1.65]){const g=new THREE.Group();g.position.set(.45,.25,z);boat.add(g);const strut=new THREE.Mesh(new THREE.BoxGeometry(.075,1.05,.075),foilMat);strut.position.y=-.38;g.add(strut);const wing=new THREE.Mesh(new THREE.BoxGeometry(.95,.075,.22),foilMat);wing.position.set(.05,-.88,0);g.add(wing);foilGroups.push(g);}
   const rudderGroups=[];
@@ -391,11 +415,16 @@ if(host){
   function controls(){
    const area=+$('modelSail').value,trim=+$('modelTrim').value,travel=+$('modelTraveler').value,foil=+$('modelFoil').value,rudder=+$('modelRudder').value,wind=+$('modelWind').value;
    $('modelSailOut').textContent=area+' m²';$('modelTrimOut').textContent=trim+'°';$('modelTravelerOut').textContent=travel===0?'Centre':(travel<0?'Bâbord ':'Tribord ')+Math.abs(travel)+' %';$('modelFoilOut').textContent=foil+'°';$('modelRudderOut').textContent=rudder+'°';$('modelWindOut').textContent=wind+'°';
-   updateSail(area);const effectiveTrim=THREE.MathUtils.clamp(trim+travel/100*6,0,50);sailGroup.rotation.y=effectiveTrim*Math.PI/180;traveler.position.z=travel/100*1.55;
+   const effectiveTrim=THREE.MathUtils.clamp(trim+travel/100*8,0,50);
+   const trimEffective=90-effectiveTrim;
+   const relativeWind=((wind-trimEffective+540)%360)-180;
+   alpha=Math.abs(relativeWind);if(alpha>180)alpha=360-alpha;
+   updateSail(area,relativeWind,travel);
+   sailGroup.rotation.y=effectiveTrim*Math.PI/180;
+   traveler.position.z=travel/100*1.72;
    foilGroups.forEach(g=>g.rotation.z=foil*Math.PI/180);rudderGroups.forEach(g=>g.rotation.y=rudder*Math.PI/180);
    const rad=wind*Math.PI/180;windDir.set(-Math.cos(rad),0,-Math.sin(rad)).normalize();windSide.set(-windDir.z,0,windDir.x).normalize();
    windArrow.setDirection(windDir);windArrow.position.copy(new THREE.Vector3(-.1,3.1,0).addScaledVector(windDir,-4));windArrow.setLength(2.2,.25,.16);
-   const trimEffective=90-effectiveTrim;alpha=Math.abs(((wind-trimEffective+540)%360)-180);if(alpha>180)alpha=360-alpha;
    stall=THREE.MathUtils.clamp((alpha-15)/28,0,1);
    rudderStall=THREE.MathUtils.clamp((Math.abs(rudder)-15)/18,0,1);
    $('sailAlpha').textContent=alpha.toFixed(0)+'°';$('sailFlowState').textContent=stall<.12?'Attaché':stall<.65?'Début de décollement':'Décollé · tourbillons';
