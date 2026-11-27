@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script>
+  if (!window.structuredClone) window.structuredClone = function (o) { return JSON.parse(JSON.stringify(o)); };
+  if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r);
+      this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r);
+      this.arcTo(x, y, x + w, y, r);
+      this.closePath();
+      return this;
+    };
+  }
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <meta name="theme-color" content="#1C2430">
+  <title>Atelier interactif — Zone test de Gabin</title>
+  <style>
+    :root {
+      --bg-deep: #071324;
+      --bg-navy: #0d213c;
+      --bg-card: #122b4d;
+      --bg-card-hover: #173660;
+      --bg-input: #09192e;
+      --border: rgba(125, 211, 252, 0.16);
+      --border-strong: rgba(56, 189, 248, 0.42);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --cyan: #22d3ee;
+      --cyan-soft: rgba(34, 211, 238, 0.14);
+      --teal: #2dd4bf;
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.16);
+      --coral: #fb7185;
+      --coral-soft: rgba(251, 113, 133, 0.16);
+      --green: #34d399;
+      --green-soft: rgba(52, 211, 153, 0.16);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 12px 30px rgba(2, 8, 20, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top right, #112d52 0%, var(--bg-deep) 55%, #050d18 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* En-tête et progression */
+    header.app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(7, 19, 36, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 20px 10px;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan), #0284c7);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #04101f;
+      font-size: 1.05rem;
+      box-shadow: 0 6px 18px rgba(34, 211, 238, 0.25);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    .status-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 5px 11px;
+      border-radius: 999px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-pill strong {
+      color: var(--cyan);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(148, 163, 184, 0.16);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--teal));
+      transition: width 0.35s ease;
+    }
+
+    /* Navigation par onglets */
+    nav.tab-nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    nav.tab-nav::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    nav.tab-nav::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 999px;
+    }
+
+    .tab-btn {
+      appearance: none;
+      border: 1px solid transparent;
+      background: rgba(18, 43, 77, 0.65);
+      color: var(--text-muted);
+      padding: 8px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-card-hover);
+      border-color: var(--border);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.22), rgba(45, 212, 191, 0.14));
+      color: #ffffff;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.25);
+    }
+
+    .tab-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.35);
+    }
+
+    .tab-btn.visited .tab-dot {
+      background: var(--teal);
+    }
+
+    .tab-btn.active .tab-dot {
+      background: var(--cyan);
+    }
+
+    /* Conteneur principal */
+    main.container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 22px 20px 56px;
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-head {
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .section-head p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Grilles et cartes */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 960px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(18, 43, 77, 0.92), rgba(12, 31, 56, 0.95));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #e0f2fe;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .canvas-box {
+      background: #061120;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 0;
+      min-width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      height: auto;
+      border-radius: var(--radius-sm);
+      background: #061222;
+    }
+
+    /* Contrôles, boutons et curseurs */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .control-group {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    .control-val {
+      color: var(--cyan);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      background: var(--bg-deep);
+      color: var(--text-main);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(2, 132, 199, 0.25));
+      color: #fff;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.34), rgba(2, 132, 199, 0.4));
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.12);
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(148, 163, 184, 0.22);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* Indicateurs KPI */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .kpi {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+
+    .kpi span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .kpi strong {
+      font-size: 1.12rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--cyan);
+    }
+
+    /* Alertes et fiches résumé */
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 13px 15px;
+      margin-top: 12px;
+      font-size: 0.88rem;
+      border-left: 4px solid var(--cyan);
+      background: rgba(34, 211, 238, 0.08);
+    }
+
+    .callout.warn {
+      border-left-color: var(--amber);
+      background: var(--amber-soft);
+      color: #fef3c7;
+    }
+
+    .callout.danger {
+      border-left-color: var(--coral);
+      background: var(--coral-soft);
+      color: #ffe4e6;
+    }
+
+    .callout.ok {
+      border-left-color: var(--green);
+      background: var(--green-soft);
+      color: #d1fae5;
+    }
+
+    .summary-card {
+      margin-top: 18px;
+      background: linear-gradient(135deg, rgba(13, 33, 60, 0.95), rgba(18, 43, 77, 0.95));
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 820px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .summary-card ul {
+      padding-left: 18px;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .summary-card li {
+      margin-bottom: 6px;
+    }
+
+    .mistake-box {
+      background: var(--coral-soft);
+      border: 1px solid rgba(251, 113, 133, 0.35);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      color: #ffe4e6;
+    }
+
+    .mistake-box strong {
+      display: block;
+      color: var(--coral);
+      margin-bottom: 4px;
+    }
+
+    /* Sous-onglets internes */
+    .subtabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .subtab-btn {
+      appearance: none;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .subtab-btn.active {
+      background: var(--cyan-soft);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Glossaire & QCM */
+    .glossary-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .glossary-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .glossary-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .glossary-item strong {
+      color: var(--cyan);
+      font-size: 0.95rem;
+    }
+
+    .tag-link {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      cursor: pointer;
+    }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 13px;
+      border-radius: var(--radius-sm);
+      margin-top: 8px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .quiz-option:hover:not(:disabled) {
+      border-color: var(--cyan);
+      background: rgba(34, 211, 238, 0.08);
+    }
+
+    .quiz-option.correct {
+      background: var(--green-soft);
+      border-color: var(--green);
+      color: #ecfdf5;
+    }
+
+    .quiz-option.wrong {
+      background: var(--coral-soft);
+      border-color: var(--coral);
+      color: #fff1f2;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 60;
+      background: #0f294a;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+<script src="stats.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-badge">CAH</div>
+          <div>
+            <h1>Aérodynamique &amp; Hydrodynamique du Catamaran</h1>
+            <p>Laboratoire interactif de physique de la voile, polaires VMG, foils, réglages &amp; navigation</p>
+          </div>
+        </div>
+        <div class="status-pills">
+          <div class="status-pill">Progression : <strong id="header-progress">1 / 7 onglets</strong></div>
+          <div class="status-pill">Meilleur QCM : <strong id="header-quiz-score">--</strong></div>
+          <button type="button" class="btn btn-secondary" id="btn-reset-data" style="padding: 5px 10px; font-size: 0.78rem;">Réinitialiser suivi</button>
+        </div>
+      </div>
+
+      <div class="progress-track" aria-label="Progression dans les modules">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <nav class="tab-nav" id="main-tabs" role="tablist" aria-label="Modules principaux">
+        <button class="tab-btn active" data-tab="overview" role="tab"><span class="tab-dot"></span>Vue d'ensemble</button>
+        <button class="tab-btn" data-tab="physics" role="tab"><span class="tab-dot"></span>Physique &amp; Voiles</button>
+        <button class="tab-btn" data-tab="foils" role="tab"><span class="tab-dot"></span>Foils &amp; Équilibre</button>
+        <button class="tab-btn" data-tab="polars" role="tab"><span class="tab-dot"></span>Polaire &amp; VMG</button>
+        <button class="tab-btn" data-tab="trim" role="tab"><span class="tab-dot"></span>Réglage Voiles</button>
+        <button class="tab-btn" data-tab="buoys" role="tab"><span class="tab-dot"></span>Mini-Jeu Bouées</button>
+        <button class="tab-btn" data-tab="glossary-quiz" role="tab"><span class="tab-dot"></span>Glossaire &amp; QCM</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 1. VUE D'ENSEMBLE -->
+    <section class="tab-panel active" id="panel-overview" role="tabpanel">
+      <div class="section-head">
+        <h2>Vue d'ensemble : Équilibre des forces sur un catamaran</h2>
+        <p>Visualisez l'interaction entre le vent apparent, la force vélique (Fv), la traînée hydrodynamique (R), l'anti-dérive et l'alignement CE / CD.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Diagramme interactif des forces en navigation</h3>
+          <div class="canvas-box">
+            <canvas id="overview-canvas" height="330"></canvas>
+          </div>
+          <div class="legend-row">
+            <span><i class="legend-dot" style="background:#22d3ee;"></i>Vent Apparent (VA)</span>
+            <span><i class="legend-dot" style="background:#34d399;"></i>Force Vélique (Fv)</span>
+            <span><i class="legend-dot" style="background:#fb7185;"></i>Traînée &amp; Anti-dérive (R)</span>
+            <span><i class="legend-dot" style="background:#fbbf24;"></i>CE / CD (Centre d'Effort / Dérive)</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Paramètres d'équilibre</h3>
+          <p>Ajustez l'angle au vent réel, la vitesse du vent et l'avance du centre d'effort (CE) par rapport au centre de dérive (CD) pour observer l'équilibre ou le couple évolutif.</p>
+
+          <div class="controls-grid" style="grid-template-columns: 1fr;">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Angle du Vent Réel (AWA cible)</span>
+                <span class="control-val" id="ov-twa-val">48°</span>
+              </div>
+              <input type="range" id="ov-twa" min="32" max="145" value="48" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Force du Vent Réel (TWS)</span>
+                <span class="control-val" id="ov-tws-val">16 nds</span>
+              </div>
+              <input type="range" id="ov-tws" min="6" max="30" value="16" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Décalage longitudinal CE - CD</span>
+                <span class="control-val" id="ov-cecd-val">+0.05 m (neutre)</span>
+              </div>
+              <input type="range" id="ov-cecd" min="-35" max="35" value="5" />
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <span>Vent Apparent (AWA)</span>
+              <strong id="ov-awa-out">31°</strong>
+            </div>
+            <div class="kpi">
+              <span>Force Vélique (Fv)</span>
+              <strong id="ov-fv-out">100%</strong>
+            </div>
+            <div class="kpi">
+              <span>Vitesse estimée</span>
+              <strong id="ov-spd-out">11.4 nds</strong>
+            </div>
+          </div>
+
+          <div class="callout" id="ov-balance-msg">
+            Équilibre sain : CE et CD sont proches, le bateau conserve un cap stable avec un léger ardeur favorable au près.
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>En résumé / À retenir — Équilibre des forces</h3>
+        <div class="summary-grid">
+          <ul>
+            <li><strong>Avancement vs dérive :</strong> La portance aérodynamique des voiles se décompose en poussée propulsive et en force latérale (gîte + dérive).</li>
+            <li><strong>Rôle des dérives / foils :</strong> Elles génèrent la portance anti-dérive avec un minimum de traînée induite grâce à un fort allongement.</li>
+            <li><strong>Couple CE / CD :</strong> Un CE trop en avant favorise l'abatée ; un CE trop en arrière rend le catamaran ardent et freine par action de barre.</li>
+          </ul>
+          <div class="mistake-box">
+            <strong>Erreur classique à éviter</strong>
+            Chercher à compenser un excès de puissance uniquement avec le safran : braquer fortement le safran crée une traînée parasite qui freine les deux coques et diminue le VMG.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PHYSIQUE & VOILES -->
+    <section class="tab-panel" id="panel-physics" role="tabpanel">
+      <div class="section-head">
+        <h2>Physique &amp; Voiles : Effet de fente, tangage et état de la mer</h2>
+        <p>Explorez l'interaction foc/grand-voile, l'équilibre longitudinal en tangage et l'impact de la mer formée sur les performances.</p>
+      </div>
+
+      <div class="subtabs">
+        <button class="subtab-btn active" data-subtab="slot">Effet de fente &amp; GV/Foc</button>
+        <button class="subtab-btn" data-subtab="pitch">Équilibre longitudinal (Tangage)</button>
+        <button class="subtab-btn" data-subtab="waves">Houle, clapot &amp; polaire</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div id="subpanel-slot">
+            <h3>Effet de fente (Slot Effect) &amp; interaction GV / Foc</h3>
+            <p>La fente entre le guindant de la grand-voile et la chute du foc accélère l'air à l'intrados de la GV, retarde le décollement de la couche limite et augmente la portance globale.</p>
+            <div class="controls-grid">
+              <div class="control-group">
+                <div class="control-label"><span>Ouverture de la fente</span><span class="control-val" id="slot-gap-val">14%</span></div>
+                <input type="range" id="slot-gap" min="4" max="28" value="14" />
+              </div>
+              <div class="control-group">
+                <div class="control-label"><span>Vrillage (Twist) GV</span><span class="control-val" id="slot-twist-val">9°</span></div>
+                <input type="range" id="slot-twist" min="0" max="22" value="9" />
+              </div>
+              <div class="control-group">
+                <div class="control-label"><span>Creux relatif (Draft)</span><span class="control-val" id="slot-draft-val">12.5%</span></div>
+                <input type="range" id="slot-draft" min="7" max="18" step="0.5" value="12.5" />
+              </div>
+            </div>
+            <div class="callout ok" id="slot-feedback">
+              Fente optimale : l'accélération du flux alimente bien l'extrados de la grand-voile sans engorger le couloir.
+            </div>
+          </div>
+
+          <div id="subpanel-pitch" style="display:none;">
+            <h3>Équilibre longitudinal : tangage &amp; enfournement</h3>
+            <p>Sur un catamaran à faible déplacement et étraves fines, l'accélération et le clapot peuvent faire plonger l'étrave sous le vent (enfournement).</p>
+            <div class="controls-grid">
+              <div class="control-group">
+                <div class="control-label"><span>Position LCG (équipage)</span><span class="control-val" id="pitch-lcg-val">Arrière (+15 cm)</span></div>
+                <input type="range" id="pitch-lcg" min="-25" max="35" value="15" />
+              </div>
+              <div class="control-group">
+                <div class="control-label"><span>Hauteur du clapot</span><span class="control-val" id="pitch-wave-val">1.1 m</span></div>
+                <input type="range" id="pitch-wave" min="0.2" max="2.6" step="0.1" value="1.1" />
+              </div>
+            </div>
+            <div class="callout" id="pitch-feedback">
+              Assiette arrière modérée : les étraves dégagent bien dans le clapot.
+            </div>
+          </div>
+
+          <div id="subpanel-waves" style="display:none;">
+            <h3>Effet de la houle et du clapot sur la polaire</h3>
+            <p>Un clapot court et raide oppose une résistance additionnelle (added resistance in waves) qui réduit la vitesse au près et au petit largue.</p>
+            <div class="controls-grid">
+              <div class="control-group">
+                <div class="control-label"><span>État de la mer</span><span class="control-val" id="wave-state-val">Clapot modéré</span></div>
+                <input type="range" id="wave-state" min="0" max="3" step="1" value="1" />
+              </div>
+              <div class="control-group">
+                <div class="control-label"><span>Vent réel (TWS)</span><span class="control-val" id="wave-tws-val">15 nds</span></div>
+                <input type="range" id="wave-tws" min="8" max="28" value="15" />
+              </div>
+            </div>
+            <div class="callout" id="wave-feedback">
+              En clapot modéré, la perte de vitesse est surtout sensible entre 40° et 65° du vent réel.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Visualisation dynamique du phénomène</h3>
+          <div class="canvas-box">
+            <canvas id="physics-canvas" height="300"></canvas>
+          </div>
+          <div class="kpi-row">
+            <div class="kpi"><span>Efficacité aero/hydro</span><strong id="phys-eff-out">92%</strong></div>
+            <div class="kpi"><span>Risque décrochage/enfourn.</span><strong id="phys-risk-out">Faible</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>En résumé / À retenir — Physique des voiles &amp; assiette</h3>
+        <div class="summary-grid">
+          <ul>
+            <li><strong>Foc &amp; GV :</strong> Une fente trop fermée provoque un blocage aérodynamique ; trop ouverte, elle réduit la dépression à l'extrados.</li>
+            <li><strong>Vrillage (twist) :</strong> Le vent croissant avec l'altitude, le haut de la voile doit vriller pour garder un angle d'attaque homogène.</li>
+            <li><strong>Assiette longitudinale :</strong> Reculer les poids au portant ou dans le clapot soulage l'étrave sous le vent et limite l'enfournement.</li>
+          </ul>
+          <div class="mistake-box">
+            <strong>Erreur classique à éviter</strong>
+            Garder un creux maximum et un chariot sous le vent dans la brise fraîche : le catamaran gîte, enfourne dans les vagues et perd en cap comme en vitesse.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. FOILS & ÉQUILIBRE -->
+    <section class="tab-panel" id="panel-foils" role="tabpanel">
+      <div class="section-head">
+        <h2>Foils &amp; Équilibre : Décollage, cavitation et ventilation</h2>
+        <p>Simulez la portance hydrodynamique des foils, l'allègement des coques et les phénomènes critiques de cavitation ou de ventilation.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Simulateur Foil &amp; Cavitation / Ventilation</h3>
+          <div class="controls-grid">
+            <div class="control-group">
+              <div class="control-label"><span>Vitesse bateau (BSP)</span><span class="control-val" id="foil-spd-val">18.0 nds</span></div>
+              <input type="range" id="foil-spd" min="4" max="36" step="0.5" value="18" />
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Angle d'incidence foil</span><span class="control-val" id="foil-aoa-val">4.5°</span></div>
+              <input type="range" id="foil-aoa" min="0" max="11" step="0.5" value="4.5" />
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Hauteur de vague / émersion</span><span class="control-val" id="foil-wave-val">0.6 m</span></div>
+              <input type="range" id="foil-wave" min="0" max="2.4" step="0.1" value="0.6" />
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Type d'appendice</span><span class="control-val" id="foil-type-label">Foil en L</span></div>
+              <select id="foil-type">
+                <option value="L" selected>Foil en L (portance + anti-dérive)</option>
+                <option value="T">Foil en T (réglage fin de portance)</option>
+                <option value="dagger">Dérive sabre classique (anti-dérive)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi"><span>Portance Foil</span><strong id="foil-lift-out">74%</strong></div>
+            <div class="kpi"><span>Hauteur coque / eau</span><strong id="foil-ride-out">+0.28 m</strong></div>
+            <div class="kpi"><span>État hydrodynamique</span><strong id="foil-state-out">Vol contrôlé</strong></div>
+          </div>
+
+          <div class="callout ok" id="foil-alert">
+            Régime nominal : le foil génère une portance stable sans atteindre le seuil de cavitation ni percer la surface.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Coupe transversale : coques &amp; foils</h3>
+          <div class="canvas-box">
+            <canvas id="foil-canvas" height="300"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>En résumé / À retenir — Foils, cavitation &amp; ventilation</h3>
+        <div class="summary-grid">
+          <ul>
+            <li><strong>Cavitation :</strong> Apparition de bulles de vapeur d'eau sur l'extrados à très haute vitesse et fort angle d'incidence, entraînant chute de portance et érosion.</li>
+            <li><strong>Ventilation :</strong> Aspiration d'air depuis la surface lorsque le foil est trop proche de la surface ou qu'une vague perce : chute brutale et violente de portance.</li>
+            <li><strong>Équilibre :</strong> Moins de surface mouillée = traînée réduite, mais le vol exige un contrôle fin de l'assiette et de la hauteur de vol.</li>
+          </ul>
+          <div class="mistake-box">
+            <strong>Erreur classique à éviter</strong>
+            Ajouter de l'incidence au foil lorsqu'il commence à ventiler : cela augmente la dépression et aspire encore plus d'air au lieu de rétablir le flux d'eau.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. POLAIRE & VMG -->
+    <section class="tab-panel" id="panel-polars" role="tabpanel">
+      <div class="section-head">
+        <h2>Polaire de vitesse &amp; VMG : Comparateur Croisière vs Sport / Foil</h2>
+        <p>Comparez deux architectures de catamarans selon la force du vent et l'état de la mer, et repérez les angles optimaux au près (VMG upwind) et au portant (VMG downwind).</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Tracé polaire interactif</h3>
+          <div class="canvas-box">
+            <canvas id="polar-canvas" height="340"></canvas>
+          </div>
+          <div class="legend-row">
+            <span><i class="legend-dot" style="background:#22d3ee;"></i>Catamaran Sport / Foil</span>
+            <span><i class="legend-dot" style="background:#fbbf24;"></i>Catamaran Croisière</span>
+            <span><i class="legend-dot" style="background:#34d399;"></i>Meilleur VMG</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Conditions de vent &amp; mer</h3>
+          <div class="controls-grid">
+            <div class="control-group">
+              <div class="control-label"><span>Vent Réel (TWS)</span><span class="control-val" id="pol-tws-val">14 nds</span></div>
+              <input type="range" id="pol-tws" min="6" max="28" value="14" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>Angle au vent (TWA)</span><span class="control-val" id="pol-twa-val">50°</span></div>
+              <input type="range" id="pol-twa" min="35" max="165" value="50" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>État de la mer</span><span class="control-val" id="pol-sea-label">Clapot modéré</span></div>
+              <select id="pol-sea">
+                <option value="0">Calme (mer plate)</option>
+                <option value="1" selected>Clapot modéré</option>
+                <option value="2">Mer formée / houle</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi"><span>Sport / Foil (à TWA)</span><strong id="pol-sport-spd">15.2 nds</strong></div>
+            <div class="kpi"><span>Croisière (à TWA)</span><strong id="pol-cruiser-spd">8.7 nds</strong></div>
+            <div class="kpi"><span>VMG Sport (TWA)</span><strong id="pol-sport-vmg">9.8 nds</strong></div>
+            <div class="kpi"><span>VMG Croisière (TWA)</span><strong id="pol-cruiser-vmg">5.6 nds</strong></div>
+          </div>
+
+          <div class="callout" id="pol-optimal-info">
+            Angles VMG optimaux calculés dynamiquement selon le vent réel et l'état de la mer.
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>En résumé / À retenir — Polaire &amp; VMG</h3>
+        <div class="summary-grid">
+          <ul>
+            <li><strong>VMG (Velocity Made Good) :</strong> Vitesse de rapprochement vers le but au vent (<code>BSP × cos(TWA)</code>) ou sous le vent (<code>BSP × cos(180° - TWA)</code>).</li>
+            <li><strong>Cap plus serré ≠ plus rapide :</strong> Lober trop près du vent fait chuter la vitesse et dégrade le VMG ; abattre légèrement peut accélérer fortement le catamaran.</li>
+            <li><strong>Impact de la mer :</strong> Un catamaran léger ou à foils perd moins en pointe au portant mais peut être freiné au près dans un clapot court.</li>
+          </ul>
+          <div class="mistake-box">
+            <strong>Erreur classique à éviter</strong>
+            Naviguer plein vent arrière (180° TWA) sur un catamaran rapide : empanner en grand largue (140°–155° TWA) augmente souvent la vitesse et le VMG sous le vent.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. RÉGLAGE VOILES -->
+    <section class="tab-panel" id="panel-trim" role="tabpanel">
+      <div class="section-head">
+        <h2>Simulateur de réglage des voiles selon le vent apparent</h2>
+        <p>Choisissez une situation de vent et d'allure, réglez les 4 commandes clés et obtenez un diagnostic aérodynamique en temps réel.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Scénario &amp; Commandes de réglage</h3>
+          <div class="controls-grid">
+            <div class="control-group">
+              <div class="control-label"><span>Allure</span><span class="control-val" id="trim-point-label">Près bon plein</span></div>
+              <select id="trim-point">
+                <option value="upwind">Près bon plein (45° TWA)</option>
+                <option value="reach">Petit largue (85° TWA)</option>
+                <option value="run">Grand largue (135° TWA)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>Force du vent</span><span class="control-val" id="trim-wind-label">Brise (16 nds)</span></div>
+              <select id="trim-wind">
+                <option value="light">Petit temps (8 nds)</option>
+                <option value="medium" selected>Brise (16 nds)</option>
+                <option value="strong">Brise forte (24 nds)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="controls-grid">
+            <div class="control-group">
+              <div class="control-label"><span>Creux (Draft)</span><span class="control-val" id="trim-draft-val">50%</span></div>
+              <input type="range" id="trim-draft" min="0" max="100" value="50" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>Vrillage (Twist)</span><span class="control-val" id="trim-twist-val">50%</span></div>
+              <input type="range" id="trim-twist" min="0" max="100" value="50" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>Chariot (Traveller)</span><span class="control-val" id="trim-trav-val">50%</span></div>
+              <input type="range" id="trim-trav" min="0" max="100" value="50" />
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>Écoute (Sheet)</span><span class="control-val" id="trim-sheet-val">50%</span></div>
+              <input type="range" id="trim-sheet" min="0" max="100" value="50" />
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn" id="btn-auto-trim">Appliquer réglage cible conseillé</button>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi"><span>Score de réglage</span><strong id="trim-score-out">72 / 100</strong></div>
+            <div class="kpi"><span>Diagnostic</span><strong id="trim-diag-out">À affiner</strong></div>
+          </div>
+
+          <div class="callout" id="trim-feedback">
+            Ajustez le creux, le vrillage, le chariot et l'écoute pour optimiser l'écoulement.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Profil aérodynamique &amp; écoulement</h3>
+          <div class="canvas-box">
+            <canvas id="trim-canvas" height="320"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>En résumé / À retenir — Réglage des voiles</h3>
+        <div class="summary-grid">
+          <ul>
+            <li><strong>Petit temps :</strong> Creux prononcé et écoute souple pour favoriser la puissance et la mise en vitesse.</li>
+            <li><strong>Brise forte :</strong> Aplatir le creux, ouvrir le vrillage en tête et reculer/descendre le chariot pour évacuer la surpuissance.</li>
+            <li><strong>Grand largue :</strong> Choquer l'écoute, ouvrir le vrillage et adopter un profil plus rond et ouvert.</li>
+          </ul>
+          <div class="mistake-box">
+            <strong>Erreur classique à éviter</strong>
+            Border l'écoute à bloc dans la brise pour « gagner du cap » : la voile devient trop creuse et fermée à la chute, ce qui fait gîter et décrocher le flux.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. MINI-JEU BOUÉES -->
+    <section class="tab-panel" id="panel-buoys" role="tabpanel">
+      <div class="section-head">
+        <h2>Mini-Jeu Bouées : Parcours tactique avec rafales &amp; bascules</h2>
+        <p>Enchaînez les bouées au vent et sous le vent tout en gérant le scénario « Rafales &amp; Bascule ». Utilisez les flèches clavier ou les boutons tactiles.</p>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px;">
+          <div class="btn-group" style="margin-top:0;">
+            <button type="button" class="btn" id="game-start-btn">Démarrer / Relancer</button>
+            <button type="button" class="btn btn-secondary" id="game-scenario-btn">Scénario Rafales &amp; Bascule : ON</button>
+          </div>
+          <div class="status-pills">
+            <div class="status-pill">Bouées : <strong id="game-buoys">0 / 4</strong></div>
+            <div class="status-pill">Score : <strong id="game-score">0</strong></div>
+            <div class="status-pill">Temps : <strong id="game-time">0.0s</strong></div>
+            <div class="status-pill">Vent : <strong id="game-wind-info">15 nds · 0°</strong></div>
+          </div>
+        </div>
+
+        <div class="canvas-box">
+          <canvas id="game-canvas" height="360"></canvas>
+        </div>
+
+        <div class="btn-group" style="justify-content:center;">
+          <button type="button" class="btn btn-secondary" id="ctrl-luff">↺ Lofer (vers le vent)</button>
+          <button type="button" class="btn btn-secondary" id="ctrl-tack">⇄ Virer / Empanner</button>
+          <button type="button" class="btn btn-secondary" id="ctrl-bear">↻ Abattre (sous le vent)</button>
+        </div>
+
+        <div class="callout" id="game-status-msg" style="margin-top:12px;">
+          Cliquez sur « Démarrer / Relancer » puis passez les 4 bouées dans l'ordre (évitez les bords de zone et anticipez les rafales).
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>En résumé / À retenir — Tactique de parcours</h3>
+        <div class="summary-grid">
+          <ul>
+            <li><strong>Bascule de vent :</strong> Une bascule refusante vous force à lofer ou virer ; une bascule adonnante vous rapproche de la marque.</li>
+            <li><strong>Rafales :</strong> Elles apportent une accélération mais augmentent la pression sur le gréement et l'assiette.</li>
+            <li><strong>Anticipation :</strong> Initiez votre virement ou empannage avant d'être collé à la bouée.</li>
+          </ul>
+          <div class="mistake-box">
+            <strong>Erreur classique à éviter</strong>
+            Empanner plein vent arrière sous rafale sans contrôler l'angle : le risque d'empannage brutal et de perte de trajectoire est maximal.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. GLOSSAIRE & QCM -->
+    <section class="tab-panel" id="panel-glossary-quiz" role="tabpanel">
+      <div class="section-head">
+        <h2>Glossaire nautique &amp; QCM interactif</h2>
+        <p>Recherchez un terme technique, consultez sa fiche liée aux onglets du site et testez vos connaissances avec sauvegarde automatique du score.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Glossaire aérodynamique &amp; hydrodynamique</h3>
+          <input type="text" id="glossary-search" placeholder="Rechercher un terme (ex: VMG, cavitation, vrillage, CE)..." />
+          <div class="glossary-list" id="glossary-list"></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <h3>QCM de validation des acquis</h3>
+            <span class="tag-link" id="quiz-progress-label">Question 1 / 8</span>
+          </div>
+
+          <div id="quiz-container" style="margin-top:10px;"></div>
+
+          <div class="btn-group" style="margin-top:14px;">
+            <button type="button" class="btn btn-secondary" id="quiz-prev-btn">Précédente</button>
+            <button type="button" class="btn" id="quiz-next-btn">Suivante</button>
+            <button type="button" class="btn btn-secondary" id="quiz-retry-errors-btn">Rejouer les erreurs</button>
+            <button type="button" class="btn btn-secondary" id="quiz-restart-btn">Tout recommencer</button>
+          </div>
+
+          <div class="callout" id="quiz-summary-box" style="margin-top:14px;">
+            Répondez aux questions pour enregistrer votre score dans le navigateur.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* =====================================================================
+         1. ÉTAT GLOBAL, PERSISTANCE LOCALSTORAGE & NAVIGATION
+         ===================================================================== */
+      const STORAGE_KEY = "cah_catamaran_state_v1";
+      const TAB_IDS = [
+        "overview",
+        "physics",
+        "foils",
+        "polars",
+        "trim",
+        "buoys",
+        "glossary-quiz"
+      ];
+
+      const defaultState = {
+        activeTab: "overview",
+        visitedTabs: ["overview"],
+        bestQuizScore: null,
+        quizTotal: 8,
+        quizAnswers: {}, // index -> { chosen: number, correct: boolean }
+        errorQueue: []
+      };
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return structuredClone(defaultState);
+          const parsed = JSON.parse(raw);
+          return {
+            ...structuredClone(defaultState),
+            ...parsed,
+            visitedTabs: Array.isArray(parsed.visitedTabs) && parsed.visitedTabs.length
+              ? Array.from(new Set(parsed.visitedTabs))
+              : ["overview"],
+            quizAnswers: parsed.quizAnswers && typeof parsed.quizAnswers === "object"
+              ? parsed.quizAnswers
+              : {},
+            errorQueue: Array.isArray(parsed.errorQueue) ? parsed.errorQueue : []
+          };
+        } catch (err) {
+          console.warn("Erreur lecture localStorage:", err);
+          return structuredClone(defaultState);
+        }
+      }
+
+      const appState = loadState();
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        } catch (err) {
+          console.warn("Erreur sauvegarde localStorage:", err);
+        }
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => toast.classList.remove("show"), 2400);
+      }
+
+      function updateProgressUI() {
+        const visitedCount = appState.visitedTabs.length;
+        const pct = Math.round((visitedCount / TAB_IDS.length) * 100);
+        document.getElementById("header-progress").textContent = `${visitedCount} / ${TAB_IDS.length} onglets`;
+        document.getElementById("progress-fill").style.width = `${pct}%`;
+
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          const tab = btn.dataset.tab;
+          btn.classList.toggle("active", tab === appState.activeTab);
+          btn.classList.toggle("visited", appState.visitedTabs.includes(tab));
+        });
+
+        const scoreEl = document.getElementById("header-quiz-score");
+        if (appState.bestQuizScore !== null) {
+          scoreEl.textContent = `${appState.bestQuizScore} / ${appState.quizTotal}`;
+        } else {
+          scoreEl.textContent = "--";
+        }
+      }
+
+      function switchTab(tabId) {
+        if (!TAB_IDS.includes(tabId)) return;
+        appState.activeTab = tabId;
+        if (!appState.visitedTabs.includes(tabId)) {
+          appState.visitedTabs.push(tabId);
+        }
+        saveState();
+        updateProgressUI();
+
+        document.querySelectorAll(".tab-panel").forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `panel-${tabId}`);
+        });
+
+        // Redimensionne et redessine les canvas de l'onglet actif
+        requestAnimationFrame(() => {
+          resizeAllCanvases();
+          renderActiveTabCanvas();
+        });
+      }
+
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      document.getElementById("btn-reset-data").addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        Object.assign(appState, structuredClone(defaultState));
+        appState.quizAnswers = {};
+        renderQuiz();
+        updateProgressUI();
+        switchTab("overview");
+        showToast("Progression et scores réinitialisés.");
+      });
+
+      /* =====================================================================
+         2. GESTION RESPONSIVE DES CANVAS
+         ===================================================================== */
+      const CANVAS_IDS = [
+        "overview-canvas",
+        "physics-canvas",
+        "foil-canvas",
+        "polar-canvas",
+        "trim-canvas",
+        "game-canvas"
+      ];
+
+      const HAUTEURS_INITIALES = {};
+      CANVAS_IDS.forEach((id) => {
+        const c = document.getElementById(id);
+        HAUTEURS_INITIALES[id] = parseInt(c.getAttribute("height"), 10) || 360;
+      });
+
+      function fitCanvasToContainer(canvas) {
+        const box = canvas.parentElement;
+        if (!box) return;
+        const targetWidth = Math.min(Math.max(280, box.clientWidth - 20), 700);
+        const targetHeight = HAUTEURS_INITIALES[canvas.id] || 360;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = Math.floor(targetWidth * dpr);
+        canvas.height = Math.floor(targetHeight * dpr);
+
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { width: targetWidth, height: targetHeight, ctx };
+      }
+
+      function resizeAllCanvases() {
+        CANVAS_IDS.forEach((id) => {
+          const canvas = document.getElementById(id);
+          if (canvas) fitCanvasToContainer(canvas);
+        });
+      }
+
+      function drawArrow(ctx, x1, y1, x2, y2, color, width = 2.5, label = "") {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = width;
+        ctx.lineCap = "round";
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const headLen = 9;
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+
+        if (label) {
+          ctx.font = "600 12px sans-serif";
+          ctx.fillText(label, x2 + 8, y2 - 6);
+        }
+        ctx.restore();
+      }
+
+      /* =====================================================================
+         3. ONGLET 1 : VUE D'ENSEMBLE (ÉQUILIBRE DES FORCES)
+         ===================================================================== */
+      function renderOverview() {
+        const canvas = document.getElementById("overview-canvas");
+        if (!canvas) return;
+        const { width, height, ctx } = fitCanvasToContainer(canvas);
+
+        const twaDeg = Number(document.getElementById("ov-twa").value);
+        const tws = Number(document.getElementById("ov-tws").value);
+        const cecdCm = Number(document.getElementById("ov-cecd").value); // en cm
+
+        document.getElementById("ov-twa-val").textContent = `${twaDeg}°`;
+        document.getElementById("ov-tws-val").textContent = `${tws} nds`;
+        const cecdM = (cecdCm / 100).toFixed(2);
+        let balanceLabel = "neutre";
+        if (cecdCm > 8) balanceLabel = "CE en avant (abatée)";
+        else if (cecdCm < -8) balanceLabel = "CE en arrière (ardent)";
+        document.getElementById("ov-cecd-val").textContent = `${cecdCm >= 0 ? "+" : ""}${cecdM} m (${balanceLabel})`;
+
+        // Estimation simple de la vitesse et de l'angle de vent apparent
+        const twaRad = (twaDeg * Math.PI) / 180;
+        const baseSpd = tws * (0.52 + 0.36 * Math.sin(Math.min(Math.PI * 0.85, twaRad)));
+        const spd = Math.min(28, Math.max(2.5, baseSpd));
+        const awaRad = Math.atan2(tws * Math.sin(twaRad), tws * Math.cos(twaRad) + spd * 0.72);
+        const awaDeg = Math.max(18, Math.min(165, Math.round((awaRad * 180) / Math.PI)));
+        const fvPct = Math.min(100, Math.round((tws / 28) * 100 * (0.75 + 0.25 * Math.sin(awaRad))));
+
+        document.getElementById("ov-awa-out").textContent = `${awaDeg}°`;
+        document.getElementById("ov-fv-out").textContent = `${fvPct}%`;
+        document.getElementById("ov-spd-out").textContent = `${spd.toFixed(1)} nds`;
+
+        const msgEl = document.getElementById("ov-balance-msg");
+        if (cecdCm > 12) {
+          msgEl.className = "callout warn";
+          msgEl.textContent = "Tendance à l'abatée : le Centre d'Effort (CE) est nettement en avant du Centre de Dérive (CD).";
+        } else if (cecdCm < -12) {
+          msgEl.className = "callout danger";
+          msgEl.textContent = "Catamaran ardent : le CE est en arrière du CD. Le bateau a tendance à lofer et nécessite une action continue des safrans.";
+        } else {
+          msgEl.className = "callout ok";
+          msgEl.textContent = "Équilibre sain : CE et CD sont proches, le bateau conserve un cap stable et performant.";
+        }
+
+        // Dessin du catamaran vu de dessus + vecteurs de forces
+        ctx.clearRect(0, 0, width, height);
+
+        // Grille subtile
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.08)";
+        ctx.lineWidth = 1;
+        for (let gx = 24; gx < width; gx += 36) {
+          ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, height); ctx.stroke();
+        }
+        for (let gy = 24; gy < height; gy += 36) {
+          ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
+        }
+
+        const cx = width * 0.5;
+        const cy = height * 0.54;
+        const hullSpacing = 34;
+        const hullLen = 135;
+
+        // Axe du cap (vers le haut)
+        ctx.save();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.35)";
+        ctx.beginPath();
+        ctx.moveTo(cx, 24);
+        ctx.lineTo(cx, height - 24);
+        ctx.stroke();
+        ctx.restore();
+
+        // Deux coques du catamaran
+        ctx.fillStyle = "#1e3a5f";
+        ctx.strokeStyle = "#7dd3fc";
+        ctx.lineWidth = 2;
+
+        // Coque bâbord (gauche)
+        ctx.beginPath();
+        ctx.roundRect(cx - hullSpacing - 8, cy - hullLen * 0.5, 16, hullLen, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Coque tribord (droite)
+        ctx.beginPath();
+        ctx.roundRect(cx + hullSpacing - 8, cy - hullLen * 0.5, 16, hullLen, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Bras de liaison (crossbeams)
+        ctx.fillStyle = "#0ea5e9";
+        ctx.fillRect(cx - hullSpacing, cy - 28, hullSpacing * 2, 7);
+        ctx.fillRect(cx - hullSpacing, cy + 22, hullSpacing * 2, 7);
+
+        // Centre de Dérive (CD) et Centre d'Effort (CE)
+        const cdY = cy + 6;
+        const ceY = cy - 10 - (cecdCm * 0.65);
+
+        ctx.fillStyle = "#fbbf24";
+        ctx.beginPath();
+        ctx.arc(cx, cdY, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = "600 11px sans-serif";
+        ctx.fillText("CD", cx + 10, cdY + 4);
+
+        ctx.fillStyle = "#f59e0b";
+        ctx.beginPath();
+        ctx.arc(cx, ceY, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillText("CE", cx + 10, ceY - 4);
+
+        // Flèche Vent Apparent (venant d'en haut à gauche)
+        const awLen = 55 + tws * 2.1;
+        const awAngle = awaRad;
+        const awStartX = cx - Math.sin(awAngle) * awLen;
+        const awStartY = ceY - Math.cos(awAngle) * awLen;
+        drawArrow(ctx, awStartX, awStartY, cx - Math.sin(awAngle) * 18, ceY - Math.cos(awAngle) * 18, "#22d3ee", 2.5, "VA");
+
+        // Flèche Force Vélique (Fv) orientée vers l'avant et légèrement sous le vent
+        const fvLen = 45 + fvPct * 0.68;
+        const fvAngle = -0.35 + (awaDeg > 90 ? 0.25 : 0);
+        drawArrow(ctx, cx, ceY, cx + Math.sin(fvAngle) * fvLen, ceY - Math.cos(fvAngle) * fvLen, "#34d399", 3, "Fv");
+
+        // Flèche Résultante hydrodynamique / anti-dérive (R)
+        const rLen = 42 + fvPct * 0.62;
+        drawArrow(ctx, cx, cdY, cx - Math.sin(fvAngle + 0.25) * rLen, cdY + Math.cos(fvAngle + 0.25) * rLen, "#fb7185", 2.8, "R (Anti-dérive)");
+      }
+
+      ["ov-twa", "ov-tws", "ov-cecd"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", renderOverview);
+      });
+
+      /* =====================================================================
+         4. ONGLET 2 : PHYSIQUE & VOILES (FENTE, TANGAGE, MER)
+         ===================================================================== */
+      let currentPhysicsSubtab = "slot";
+
+      document.querySelectorAll(".subtab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentPhysicsSubtab = btn.dataset.subtab;
+          document.querySelectorAll(".subtab-btn").forEach((b) => {
+            b.classList.toggle("active", b.dataset.subtab === currentPhysicsSubtab);
+          });
+          document.getElementById("subpanel-slot").style.display = currentPhysicsSubtab === "slot" ? "block" : "none";
+          document.getElementById("subpanel-pitch").style.display = currentPhysicsSubtab === "pitch" ? "block" : "none";
+          document.getElementById("subpanel-waves").style.display = currentPhysicsSubtab === "waves" ? "block" : "none";
+          renderPhysics();
+        });
+      });
+
+      function renderPhysics() {
+        const canvas = document.getElementById("physics-canvas");
+        if (!canvas) return;
+        const { width, height, ctx } = fitCanvasToContainer(canvas);
+        ctx.clearRect(0, 0, width, height);
+
+        const effEl = document.getElementById("phys-eff-out");
+        const riskEl = document.getElementById("phys-risk-out");
+
+        if (currentPhysicsSubtab === "slot") {
+          const gap = Number(document.getElementById("slot-gap").value);
+          const twist = Number(document.getElementById("slot-twist").value);
+          const draft = Number(document.getElementById("slot-draft").value);
+
+          document.getElementById("slot-gap-val").textContent = `${gap}%`;
+          document.getElementById("slot-twist-val").textContent = `${twist}°`;
+          document.getElementById("slot-draft-val").textContent = `${draft.toFixed(1)}%`;
+
+          const gapPenalty = Math.abs(gap - 14) * 2.1;
+          const twistPenalty = Math.abs(twist - 9) * 1.4;
+          const draftPenalty = Math.abs(draft - 12.5) * 3.2;
+          const eff = Math.max(45, Math.min(99, Math.round(98 - gapPenalty - twistPenalty - draftPenalty)));
+
+          effEl.textContent = `${eff}%`;
+          riskEl.textContent = eff >= 82 ? "Faible" : eff >= 65 ? "Modéré" : "Élevé";
+
+          const fb = document.getElementById("slot-feedback");
+          if (gap < 8) {
+            fb.className = "callout warn";
+            fb.textContent = "Fente trop pincée : le couloir entre foc et GV risque d'étouffer l'écoulement.";
+          } else if (gap > 21) {
+            fb.className = "callout warn";
+            fb.textContent = "Fente trop ouverte : l'effet accélérateur du foc sur l'intrados de la GV s'affaiblit.";
+          } else if (draft > 15.5) {
+            fb.className = "callout danger";
+            fb.textContent = "Voile trop creuse : risque de décollement de la couche limite à l'arrière du profil.";
+          } else {
+            fb.className = "callout ok";
+            fb.textContent = "Interaction foc / GV équilibrée : le flux accéléré dynamise l'extrados de la grand-voile.";
+          }
+
+          // Dessin schématique des deux profils (Foc à gauche, GV à droite)
+          const baseY = height * 0.54;
+          const slotOffset = 46 + gap * 2.4;
+          const camberPx = draft * 3.2;
+
+          // Lignes de courant d'air
+          for (let i = -3; i <= 3; i++) {
+            const y0 = baseY + i * 26;
+            ctx.strokeStyle = i === 0 ? "rgba(34, 211, 238, 0.65)" : "rgba(148, 163, 184, 0.22)";
+            ctx.lineWidth = i === 0 ? 2 : 1.2;
+            ctx.beginPath();
+            for (let x = 20; x <= width - 20; x += 14) {
+              const distFromCenter = Math.abs(x - width * 0.5);
+              const accelBend = Math.exp(-Math.pow((x - (width * 0.5 - 15)) / 75, 2)) * (i === 0 ? -16 : -6);
+              const yy = y0 + accelBend * (distFromCenter < 140 ? 1 : 0.4);
+              if (x === 20) ctx.moveTo(x, yy);
+              else ctx.lineTo(x, yy);
+            }
+            ctx.stroke();
+          }
+
+          // Profil du Foc
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(width * 0.34 - 35, baseY + 55);
+          ctx.quadraticCurveTo(width * 0.34 - 35 - camberPx * 0.7, baseY, width * 0.34, baseY - 65);
+          ctx.stroke();
+
+          // Profil de la Grand-Voile (décalé par la fente et le twist)
+          const gvX = width * 0.34 + slotOffset;
+          const twistShift = (twist - 9) * 1.4;
+          ctx.strokeStyle = "#34d399";
+          ctx.lineWidth = 4.5;
+          ctx.beginPath();
+          ctx.moveTo(gvX, baseY + 65);
+          ctx.quadraticCurveTo(gvX - camberPx, baseY, gvX + twistShift, baseY - 75);
+          ctx.stroke();
+
+          ctx.fillStyle = "#e2e8f0";
+          ctx.font = "600 12px sans-serif";
+          ctx.fillText("Foc", width * 0.34 - 58, baseY + 76);
+          ctx.fillText("Grand-Voile (GV)", gvX - 25, baseY + 86);
+        } else if (currentPhysicsSubtab === "pitch") {
+          const lcgCm = Number(document.getElementById("pitch-lcg").value);
+          const waveH = Number(document.getElementById("pitch-wave").value);
+
+          document.getElementById("pitch-lcg-val").textContent =
+            lcgCm > 4 ? `Arrière (+${lcgCm} cm)` : lcgCm < -4 ? `Avant (${lcgCm} cm)` : "Centré (0 cm)";
+          document.getElementById("pitch-wave-val").textContent = `${waveH.toFixed(1)} m`;
+
+          // Plus LCG est en arrière (+), moins l'étrave enfourne dans les vagues
+          const pitchRiskScore = Math.max(0, Math.min(100, Math.round(waveH * 36 - lcgCm * 1.25)));
+          const eff = Math.max(40, 100 - Math.round(pitchRiskScore * 0.55));
+          effEl.textContent = `${eff}%`;
+          riskEl.textContent = pitchRiskScore > 65 ? "Enfournement" : pitchRiskScore > 38 ? "Modéré" : "Faible";
+
+          const fb = document.getElementById("pitch-feedback");
+          if (pitchRiskScore > 65) {
+            fb.className = "callout danger";
+            fb.textContent = "Risque élevé d'enfournement : reculez les poids vers l'arrière et réduisez la toile si nécessaire.";
+          } else if (pitchRiskScore > 38) {
+            fb.className = "callout warn";
+            fb.textContent = "Assiette surveillée : maintenez une bonne vitesse et évitez de charger l'avant.";
+          } else {
+            fb.className = "callout ok";
+            fb.textContent = "Bon équilibre longitudinal : les étraves franchissent proprement la houle.";
+          }
+
+          // Dessin profil latéral vague + catamaran en tangage
+          const waterBaseY = height * 0.62;
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          for (let x = 0; x <= width; x += 8) {
+            const wy = waterBaseY + Math.sin(x * 0.032) * (waveH * 14);
+            if (x === 0) ctx.moveTo(x, wy);
+            else ctx.lineTo(x, wy);
+          }
+          ctx.stroke();
+
+          // Catamaran incliné selon le risque de tangage
+          const pitchAngle = ((pitchRiskScore - 40) / 100) * 0.24; // radian, >0 = nez vers le bas (droite)
+          const cx = width * 0.5;
+          const cy = waterBaseY - 12;
+
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(pitchAngle);
+
+          ctx.fillStyle = "#e2e8f0";
+          ctx.beginPath();
+          ctx.roundRect(-85, -10, 170, 16, 8);
+          ctx.fill();
+
+          // Mât
+          ctx.strokeStyle = "#fbbf24";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(0, -10);
+          ctx.lineTo(-8, -110);
+          ctx.stroke();
+
+          ctx.restore();
+        } else {
+          const seaIdx = Number(document.getElementById("wave-state").value);
+          const tws = Number(document.getElementById("wave-tws").value);
+          const seaNames = ["Calme (mer plate)", "Clapot modéré", "Mer formée", "Mer très creuse"];
+          const seaLossPct = [0, 12, 25, 38][seaIdx];
+
+          document.getElementById("wave-state-val").textContent = seaNames[seaIdx];
+          document.getElementById("wave-tws-val").textContent = `${tws} nds`;
+
+          const eff = Math.max(40, 100 - seaLossPct);
+          effEl.textContent = `${eff}%`;
+          riskEl.textContent = seaIdx >= 2 ? "Freinage marqué" : "Faible";
+
+          const fb = document.getElementById("wave-feedback");
+          fb.className = seaIdx >= 2 ? "callout warn" : "callout";
+          fb.textContent = `Perte hydrodynamique estimée due à l'état de la mer : -${seaLossPct}% sur la vitesse théorique à ${tws} nds de vent.`;
+
+          // Courbe d'impact selon l'angle au vent (35° à 160°)
+          ctx.strokeStyle = "#94a3b8";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(48, 30, width - 74, height - 72);
+
+          ctx.strokeStyle = "#22d3ee";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          for (let deg = 35; deg <= 160; deg += 5) {
+            const x = 48 + ((deg - 35) / 125) * (width - 74);
+            const rawSpd = tws * (0.45 + 0.55 * Math.sin(((deg - 25) / 145) * Math.PI));
+            const seaFactor = deg < 95 ? (1 - (seaLossPct / 100) * 1.15) : (1 - (seaLossPct / 100) * 0.45);
+            const spd = Math.max(2, rawSpd * Math.max(0.35, seaFactor));
+            const y = height - 42 - Math.min(1, spd / 28) * (height - 82);
+            if (deg === 35) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+
+          ctx.fillStyle = "#cbd5e1";
+          ctx.font = "600 11px sans-serif";
+          ctx.fillText("35° (Près)", 50, height - 24);
+          ctx.fillText("95° (Travers)", width * 0.48, height - 24);
+          ctx.fillText("160° (Larg.)", width - 76, height - 24);
+        }
+      }
+
+      ["slot-gap", "slot-twist", "slot-draft", "pitch-lcg", "pitch-wave", "wave-state", "wave-tws"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", renderPhysics);
+      });
+
+      /* =====================================================================
+         5. ONGLET 3 : FOILS & ÉQUILIBRE (DÉCOLLAGE, CAVITATION, VENTILATION)
+         ===================================================================== */
+      function renderFoils() {
+        const canvas = document.getElementById("foil-canvas");
+        if (!canvas) return;
+        const { width, height, ctx } = fitCanvasToContainer(canvas);
+        ctx.clearRect(0, 0, width, height);
+
+        const spd = Number(document.getElementById("foil-spd").value);
+        const aoa = Number(document.getElementById("foil-aoa").value);
+        const wave = Number(document.getElementById("foil-wave").value);
+        const foilType = document.getElementById("foil-type").value;
+
+        const typeLabels = {
+          L: "Foil en L",
+          T: "Foil en T",
+          dagger: "Dérive sabre"
+        };
+        document.getElementById("foil-spd-val").textContent = `${spd.toFixed(1)} nds`;
+        document.getElementById("foil-aoa-val").textContent = `${aoa.toFixed(1)}°`;
+        document.getElementById("foil-wave-val").textContent = `${wave.toFixed(1)} m`;
+        document.getElementById("foil-type-label").textContent = typeLabels[foilType];
+
+        const typeLiftMult = foilType === "L" ? 1.0 : foilType === "T" ? 0.92 : 0.25;
+        let liftPct = Math.min(115, Math.round(((spd * spd * aoa) / 280) * 100 * typeLiftMult));
+
+        // Détection cavitation (haute vitesse + incidence élevée)
+        const cavitationIndex = (spd * aoa) / 100;
+        const cavitating = cavitationIndex > 1.75 && foilType !== "dagger";
+
+        // Détection ventilation (vagues / vol très haut + incidence élevée)
+        const flightHeightPx = Math.max(-12, Math.min(48, (liftPct - 55) * 0.72 - wave * 12));
+        const ventilating = foilType !== "dagger" && flightHeightPx > 24 && (aoa > 5.5 || wave > 1.1);
+
+        if (ventilating) {
+          liftPct = Math.max(20, Math.round(liftPct * 0.58));
+        } else if (cavitating) {
+          liftPct = Math.max(30, Math.round(liftPct * 0.78));
+        }
+
+        const rideMeters = (flightHeightPx / 85).toFixed(2);
+        document.getElementById("foil-lift-out").textContent = `${liftPct}%`;
+        document.getElementById("foil-ride-out").textContent = `${Number(rideMeters) >= 0 ? "+" : ""}${rideMeters} m`;
+
+        let stateText = "Coques portées";
+        let alertClass = "callout";
+        let alertMsg = "Les coques contribuent encore majoritairement à la flottabilité.";
+
+        const alertEl = document.getElementById("foil-alert");
+        if (ventilating) {
+          stateText = "VENTILATION !";
+          alertClass = "callout danger";
+          alertMsg = "Ventilation détectée : de l'air s'engouffre le long du foil et fait chuter brusquement la portance. Baissez l'incidence ou le régime de vol.";
+        } else if (cavitating) {
+          stateText = "CAVITATION";
+          alertClass = "callout warn";
+          alertMsg = "Cavitation sur l'extrados : la vitesse et l'incidence créent des poches de vapeur qui limitent le gain de portance.";
+        } else if (foilType !== "dagger" && liftPct >= 85) {
+          stateText = "Vol stable";
+          alertClass = "callout ok";
+          alertMsg = "Vol optimal : les coques sont dégagées de l'eau et l'écoulement autour du foil reste laminaire.";
+        }
+
+        document.getElementById("foil-state-out").textContent = stateText;
+        alertEl.className = alertClass;
+        alertEl.textContent = alertMsg;
+
+        // Dessin coupe transversale (vue de face/arrière)
+        const waterY = height * 0.56;
+        ctx.fillStyle = "rgba(14, 165, 233, 0.16)";
+        ctx.fillRect(0, waterY, width, height - waterY);
+
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let x = 0; x <= width; x += 10) {
+          const wy = waterY + Math.sin(x * 0.035) * (wave * 10);
+          if (x === 0) ctx.moveTo(x, wy);
+          else ctx.lineTo(x, wy);
+        }
+        ctx.stroke();
+
+        const cx = width * 0.5;
+        const hullY = waterY - 12 - flightHeightPx;
+        const span = 78;
+
+        // Pont / traverse centrale
+        ctx.fillStyle = "#0284c7";
+        ctx.fillRect(cx - span, hullY + 4, span * 2, 8);
+
+        // Deux coques
+        [-span, span].forEach((offset) => {
+          ctx.fillStyle = "#e2e8f0";
+          ctx.beginPath();
+          ctx.roundRect(cx + offset - 11, hullY - 10, 22, 34, 9);
+          ctx.fill();
+
+          // Appendice descendant
+          ctx.strokeStyle = ventilating ? "#fb7185" : cavitating ? "#fbbf24" : "#22d3ee";
+          ctx.lineWidth = 4;
+          const tipY = waterY + 68;
+          ctx.beginPath();
+          ctx.moveTo(cx + offset, hullY + 18);
+          ctx.lineTo(cx + offset, tipY);
+
+          if (foilType === "L") {
+            const wingDir = offset < 0 ? -1 : 1;
+            ctx.lineTo(cx + offset + wingDir * 28, tipY + 4);
+          } else if (foilType === "T") {
+            ctx.moveTo(cx + offset - 18, tipY);
+            ctx.lineTo(cx + offset + 18, tipY);
+          }
+          ctx.stroke();
+        });
+      }
+
+      ["foil-spd", "foil-aoa", "foil-wave", "foil-type"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", renderFoils);
+      });
+
+      /* =====================================================================
+         6. ONGLET 4 : POLAIRE & VMG (CROISIÈRE VS SPORT / FOIL)
+         ===================================================================== */
+      function computeBoatSpeed(boatType, tws, twaDeg, seaIdx) {
+        // Modèle analytique réaliste de polaire en nœuds
+        if (twaDeg < 34 || twaDeg > 175) return 0;
+        const rad = (twaDeg * Math.PI) / 180;
+        const seaPenaltyUpwind = [1.0, 0.88, 0.72][seaIdx] ?? 1.0;
+        const seaPenaltyDownwind = [1.0, 0.96, 0.88][seaIdx] ?? 1.0;
+        const seaFactor = twaDeg < 95 ? seaPenaltyUpwind : seaPenaltyDownwind;
+
+        if (boatType === "sport") {
+          // Catamaran de sport / foil : décolle et accélère fortement au reaching et largue
+          const angleCurve = Math.pow(Math.sin(((twaDeg - 32) / 145) * Math.PI * 0.92), 0.72);
+          const windGain = Math.min(28, tws * 1.18 * (0.55 + 0.55 * (tws / 20)));
+          const raw = angleCurve * windGain * seaFactor;
+          return Number(Math.max(0, raw).toFixed(1));
+        } else {
+          // Catamaran de croisière : plus lourd, régulier, moins extrême
+          const angleCurve = Math.pow(Math.sin(((twaDeg - 35) / 145) * Math.PI * 0.88), 0.85);
+          const windGain = Math.min(16.5, tws * 0.68);
+          const raw = angleCurve * windGain * seaFactor;
+          return Number(Math.max(0, raw).toFixed(1));
+        }
+      }
+
+      function findBestVMG(boatType, tws, seaIdx) {
+        let bestUp = { angle: 45, vmg: 0 };
+        for (let a = 36; a <= 85; a += 1) {
+          const spd = computeBoatSpeed(boatType, tws, a, seaIdx);
+          const vmg = spd * Math.cos((a * Math.PI) / 180);
+          if (vmg > bestUp.vmg) bestUp = { angle: a, vmg };
+        }
+
+        let bestDown = { angle: 145, vmg: 0 };
+        for (let a = 110; a <= 172; a += 1) {
+          const spd = computeBoatSpeed(boatType, tws, a, seaIdx);
+          const vmg = spd * Math.cos(((180 - a) * Math.PI) / 180);
+          if (vmg > bestDown.vmg) bestDown = { angle: a, vmg };
+        }
+        return { bestUp, bestDown };
+      }
+
+      function renderPolars() {
+        const canvas = document.getElementById("polar-canvas");
+        if (!canvas) return;
+        const { width, height, ctx } = fitCanvasToContainer(canvas);
+        ctx.clearRect(0, 0, width, height);
+
+        const tws = Number(document.getElementById("pol-tws").value);
+        const twa = Number(document.getElementById("pol-twa").value);
+        const seaIdx = Number(document.getElementById("pol-sea").value);
+
+        document.getElementById("pol-tws-val").textContent = `${tws} nds`;
+        document.getElementById("pol-twa-val").textContent = `${twa}°`;
+
+        const sportSpd = computeBoatSpeed("sport", tws, twa, seaIdx);
+        const cruiserSpd = computeBoatSpeed("cruiser", tws, twa, seaIdx);
+
+        const rad = (twa * Math.PI) / 180;
+        const sportVmg = Math.abs(sportSpd * Math.cos(twa <= 90 ? rad : Math.PI - rad)).toFixed(1);
+        const cruiserVmg = Math.abs(cruiserSpd * Math.cos(twa <= 90 ? rad : Math.PI - rad)).toFixed(1);
+
+        document.getElementById("pol-sport-spd").textContent = `${sportSpd.toFixed(1)} nds`;
+        document.getElementById("pol-cruiser-spd").textContent = `${cruiserSpd.toFixed(1)} nds`;
+        document.getElementById("pol-sport-vmg").textContent = `${sportVmg} nds`;
+        document.getElementById("pol-cruiser-vmg").textContent = `${cruiserVmg} nds`;
+
+        const sportOpt = findBestVMG("sport", tws, seaIdx);
+        const cruiserOpt = findBestVMG("cruiser", tws, seaIdx);
+
+        document.getElementById("pol-optimal-info").textContent =
+          `VMG optimal Sport/Foil : près à ${sportOpt.bestUp.angle}° (${sportOpt.bestUp.vmg.toFixed(1)} nds) / portant à ${sportOpt.bestDown.angle}° (${sportOpt.bestDown.vmg.toFixed(1)} nds) · Croisière : près à ${cruiserOpt.bestUp.angle}° (${cruiserOpt.bestUp.vmg.toFixed(1)} nds).`;
+
+        // Tracé polaire : vent venant du haut (0° en haut), symétrie gauche/droite
+        const cx = width * 0.5;
+        const cy = height * 0.52;
+        const maxR = Math.min(width * 0.42, height * 0.42);
+        const maxKnots = 28;
+
+        // Cercles concentriques de vitesse (7, 14, 21, 28 nds)
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.16)";
+        ctx.lineWidth = 1;
+        [7, 14, 21, 28].forEach((k) => {
+          const r = (k / maxKnots) * maxR;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = "#64748b";
+          ctx.font = "10px sans-serif";
+          ctx.fillText(`${k} nds`, cx + 4, cy - r + 11);
+        });
+
+        // Axes radiaux
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - maxR - 8);
+        ctx.lineTo(cx, cy + maxR + 8);
+        ctx.moveTo(cx - maxR - 8, cy);
+        ctx.lineTo(cx + maxR + 8, cy);
+        ctx.stroke();
+
+        function drawPolarCurve(boatType, color, lineWidth) {
+          ctx.save();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = lineWidth;
+
+          // Côté tribord (+TWA à droite) et bâbord (-TWA à gauche)
+          [-1, 1].forEach((side) => {
+            ctx.beginPath();
+            let started = false;
+            for (let deg = 35; deg <= 175; deg += 2) {
+              const spd = computeBoatSpeed(boatType, tws, deg, seaIdx);
+              const r = (spd / maxKnots) * maxR;
+              // 0° est vers le haut (-Y), deg augmente vers le bas (+Y)
+              const theta = (deg * Math.PI) / 180;
+              const px = cx + side * r * Math.sin(theta);
+              const py = cy - r * Math.cos(theta);
+              if (!started) {
+                ctx.moveTo(px, py);
+                started = true;
+              } else {
+                ctx.lineTo(px, py);
+              }
+            }
+            ctx.stroke();
+          });
+          ctx.restore();
+        }
+
+        drawPolarCurve("cruiser", "#fbbf24", 2.2);
+        drawPolarCurve("sport", "#22d3ee", 2.8);
+
+        // Marqueur angle sélectionné (TWA)
+        const selR = (sportSpd / maxKnots) * maxR;
+        const selTheta = (twa * Math.PI) / 180;
+        const selX = cx + selR * Math.sin(selTheta);
+        const selY = cy - selR * Math.cos(selTheta);
+
+        ctx.strokeStyle = "rgba(255,255,255,0.35)";
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + (maxR + 12) * Math.sin(selTheta), cy - (maxR + 12) * Math.cos(selTheta));
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = "#34d399";
+        ctx.beginPath();
+        ctx.arc(selX, selY, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ["pol-tws", "pol-twa", "pol-sea"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", renderPolars);
+      });
+
+      /* =====================================================================
+         7. ONGLET 5 : RÉGLAGE VOILES (ENTRAÎNEUR INTERACTIF)
+         ===================================================================== */
+      function getTargetTrim(pointOfSail, windLevel) {
+        // Cibles normalisées sur 0..100
+        if (pointOfSail === "upwind") {
+          if (windLevel === "light") return { draft: 72, twist: 35, trav: 65, sheet: 75 };
+          if (windLevel === "medium") return { draft: 50, twist: 52, trav: 50, sheet: 62 };
+          return { draft: 26, twist: 78, trav: 25, sheet: 48 };
+        }
+        if (pointOfSail === "reach") {
+          if (windLevel === "light") return { draft: 76, twist: 48, trav: 55, sheet: 45 };
+          if (windLevel === "medium") return { draft: 55, twist: 62, trav: 35, sheet: 35 };
+          return { draft: 34, twist: 82, trav: 20, sheet: 25 };
+        }
+        // Grand largue
+        return { draft: 65, twist: 75, trav: 25, sheet: 18 };
+      }
+
+      function renderTrim() {
+        const canvas = document.getElementById("trim-canvas");
+        if (!canvas) return;
+        const { width, height, ctx } = fitCanvasToContainer(canvas);
+        ctx.clearRect(0, 0, width, height);
+
+        const pointOfSail = document.getElementById("trim-point").value;
+        const windLevel = document.getElementById("trim-wind").value;
+
+        const pointLabels = {
+          upwind: "Près bon plein (45° TWA)",
+          reach: "Petit largue (85° TWA)",
+          run: "Grand largue (135° TWA)"
+        };
+        const windLabels = {
+          light: "Petit temps (8 nds)",
+          medium: "Brise (16 nds)",
+          strong: "Brise forte (24 nds)"
+        };
+        document.getElementById("trim-point-label").textContent = pointLabels[pointOfSail];
+        document.getElementById("trim-wind-label").textContent = windLabels[windLevel];
+
+        const draft = Number(document.getElementById("trim-draft").value);
+        const twist = Number(document.getElementById("trim-twist").value);
+        const trav = Number(document.getElementById("trim-trav").value);
+        const sheet = Number(document.getElementById("trim-sheet").value);
+
+        document.getElementById("trim-draft-val").textContent = `${draft}%`;
+        document.getElementById("trim-twist-val").textContent = `${twist}%`;
+        document.getElementById("trim-trav-val").textContent = `${trav}%`;
+        document.getElementById("trim-sheet-val").textContent = `${sheet}%`;
+
+        const target = getTargetTrim(pointOfSail, windLevel);
+        const errDraft = Math.abs(draft - target.draft);
+        const errTwist = Math.abs(twist - target.twist);
+        const errTrav = Math.abs(trav - target.trav);
+        const errSheet = Math.abs(sheet - target.sheet);
+
+        const avgErr = (errDraft + errTwist + errTrav + errSheet) / 4;
+        const score = Math.max(0, Math.min(100, Math.round(100 - avgErr * 1.35)));
+
+        document.getElementById("trim-score-out").textContent = `${score} / 100`;
+
+        let diag = "À affiner";
+        let fbClass = "callout";
+        let fbText = "";
+
+        if (score >= 86) {
+          diag = "Réglage optimal";
+          fbClass = "callout ok";
+          fbText = "Excellent équilibre : l'écoulement est propre, la puissance est maîtrisée et le rendement est maximal.";
+        } else if (windLevel === "strong" && draft > 58 && sheet > 55) {
+          diag = "Surpuissance / Gîte";
+          fbClass = "callout danger";
+          fbText = "Voile trop creuse et bordée dans la brise forte : aplatissez le creux, ouvrez le vrillage et descendez/reculer le chariot.";
+        } else if (draft > target.draft + 18) {
+          diag = "Trop creux";
+          fbClass = "callout warn";
+          fbText = "Le creux est excessif pour ces conditions : tendez davantage pour aplatir le profil.";
+        } else if (draft < target.draft - 18) {
+          diag = "Trop plat";
+          fbClass = "callout warn";
+          fbText = "Le profil est trop plat : relâchez un peu de tension pour redonner du creux et de la puissance.";
+        } else if (twist < target.twist - 22) {
+          diag = "Vrillage insuffisant";
+          fbClass = "callout warn";
+          fbText = "Le haut de la voile est trop fermé : ouvrez le vrillage pour éviter le décrochage en tête.";
+        } else {
+          diag = "Écoulement partiel";
+          fbClass = "callout";
+          fbText = `Score ${score}/100 : affinez l'écoute (${sheet}% vs cible ~${target.sheet}%) ou le chariot (${trav}% vs cible ~${target.trav}%).`;
+        }
+
+        document.getElementById("trim-diag-out").textContent = diag;
+        const fbEl = document.getElementById("trim-feedback");
+        fbEl.className = fbClass;
+        fbEl.textContent = fbText;
+
+        // Dessin profil de voile + flux d'air
+        const cx = width * 0.42;
+        const topY = 56;
+        const botY = height - 56;
+        const camberOffset = (draft / 100) * 58;
+        const sheetAngle = ((100 - sheet) / 100) * 0.52; // ouverture vers l'arrière
+
+        // Filets d'air
+        ctx.strokeStyle = "rgba(34, 211, 238, 0.25)";
+        ctx.lineWidth = 1.4;
+        for (let y = 70; y < height - 50; y += 34) {
+          ctx.beginPath();
+          ctx.moveTo(24, y);
+          ctx.lineTo(width - 24, y + ((twist - 50) / 100) * 14);
+          ctx.stroke();
+        }
+
+        // Voile courbée
+        ctx.save();
+        ctx.translate(cx, (topY + botY) * 0.5);
+        ctx.rotate(sheetAngle);
+
+        ctx.strokeStyle = score >= 86 ? "#34d399" : "#fbbf24";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(0, -110);
+        ctx.quadraticCurveTo(camberOffset, 0, -((twist - 50) * 0.25), 110);
+        ctx.stroke();
+        ctx.restore();
+
+        // Chariot (ligne horizontale en bas)
+        const travX = cx - 60 + (trav / 100) * 120;
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(cx - 70, botY + 24);
+        ctx.lineTo(cx + 70, botY + 24);
+        ctx.stroke();
+
+        ctx.fillStyle = "#22d3ee";
+        ctx.beginPath();
+        ctx.arc(travX, botY + 24, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ["trim-point", "trim-wind", "trim-draft", "trim-twist", "trim-trav", "trim-sheet"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", renderTrim);
+      });
+
+      document.getElementById("btn-auto-trim").addEventListener("click", () => {
+        const pointOfSail = document.getElementById("trim-point").value;
+        const windLevel = document.getElementById("trim-wind").value;
+        const t = getTargetTrim(pointOfSail, windLevel);
+        document.getElementById("trim-draft").value = t.draft;
+        document.getElementById("trim-twist").value = t.twist;
+        document.getElementById("trim-trav").value = t.trav;
+        document.getElementById("trim-sheet").value = t.sheet;
+        renderTrim();
+        showToast("Réglage cible appliqué.");
+      });
+
+      /* =====================================================================
+         8. ONGLET 6 : MINI-JEU BOUÉES (PARCOURS + RAFALES & BASCULE)
+         ===================================================================== */
+      const gameState = {
+        running: false,
+        scenarioOn: true,
+        elapsed: 0,
+        score: 0,
+        buoyIndex: 0,
+        windAngleDeg: 0, // 0 = vent venant du haut
+        windSpeed: 15,
+        boat: { x: 140, y: 340, heading: -0.4, speed: 6.5 },
+        buoys: [],
+        lastTimestamp: 0,
+        keys: {}
+      };
+
+      function createBuoys(width, height) {
+        return [
+          { x: width * 0.72, y: height * 0.24, label: "1" },
+          { x: width * 0.28, y: height * 0.28, label: "2" },
+          { x: width * 0.76, y: height * 0.74, label: "3" },
+          { x: width * 0.26, y: height * 0.72, label: "4" }
+        ];
+      }
+
+      function resetGame() {
+        const canvas = document.getElementById("game-canvas");
+        const w = canvas ? canvas.clientWidth || 720 : 720;
+        const h = parseInt(canvas?.getAttribute("height"), 10) || 430;
+        gameState.buoys = createBuoys(w, h);
+        gameState.boat = { x: w * 0.5, y: h * 0.85, heading: -0.5, speed: 6.2 };
+        gameState.buoyIndex = 0;
+        gameState.score = 0;
+        gameState.elapsed = 0;
+        gameState.windAngleDeg = 0;
+        gameState.windSpeed = 15;
+        gameState.running = true;
+        gameState.lastTimestamp = performance.now();
+        document.getElementById("game-status-msg").className = "callout";
+        document.getElementById("game-status-msg").textContent = "Course lancée ! Dirigez le catamaran vers la bouée n°1.";
+      }
+
+      document.getElementById("game-start-btn").addEventListener("click", () => {
+        resetGame();
+        showToast("Mini-jeu démarré !");
+      });
+
+      document.getElementById("game-scenario-btn").addEventListener("click", (e) => {
+        gameState.scenarioOn = !gameState.scenarioOn;
+        e.target.textContent = `Scénario Rafales & Bascule : ${gameState.scenarioOn ? "ON" : "OFF"}`;
+      });
+
+      function steerBoat(deltaHeading) {
+        gameState.boat.heading += deltaHeading;
+      }
+
+      document.getElementById("ctrl-luff").addEventListener("click", () => steerBoat(-0.22));
+      document.getElementById("ctrl-bear").addEventListener("click", () => steerBoat(0.22));
+      document.getElementById("ctrl-tack").addEventListener("click", () => {
+        gameState.boat.heading += Math.PI * 0.65;
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (appState.activeTab !== "buoys") return;
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+          e.preventDefault();
+          gameState.keys[e.key] = true;
+        }
+      });
+
+      window.addEventListener("keyup", (e) => {
+        gameState.keys[e.key] = false;
+      });
+
+      function stepGame(now) {
+        const canvas = document.getElementById("game-canvas");
+        if (!canvas) return;
+        const w = canvas.clientWidth || 720;
+        const h = parseInt(canvas.getAttribute("height"), 10) || 430;
+        if (!gameState.buoys.length) {
+          gameState.buoys = createBuoys(w, h);
+          gameState.boat.x = w * 0.5;
+          gameState.boat.y = h * 0.85;
+        }
+
+        const dt = Math.min(0.08, gameState.lastTimestamp ? (now - gameState.lastTimestamp) / 1000 : 0.016);
+        gameState.lastTimestamp = now;
+
+        if (gameState.running) {
+          gameState.elapsed += dt;
+
+          if (gameState.scenarioOn) {
+            // Bascule de vent sinusoïdale + rafales périodiques
+            gameState.windAngleDeg = Math.round(Math.sin(gameState.elapsed * 0.55) * 18);
+            const gust = Math.max(0, Math.sin(gameState.elapsed * 1.4)) * 9;
+            gameState.windSpeed = Math.round(14 + gust);
+          } else {
+            gameState.windAngleDeg = 0;
+            gameState.windSpeed = 15;
+          }
+
+          const turnSpeed = 2.1 * dt;
+          if (gameState.keys["ArrowLeft"]) gameState.boat.heading -= turnSpeed;
+          if (gameState.keys["ArrowRight"]) gameState.boat.heading += turnSpeed;
+          if (gameState.keys["ArrowUp"]) gameState.boat.speed = Math.min(13, gameState.boat.speed + 4 * dt);
+          if (gameState.keys["ArrowDown"]) gameState.boat.speed = Math.max(3.5, gameState.boat.speed - 4 * dt);
+
+          // Vitesse influencée par la force du vent
+          const targetSpd = 4.5 + (gameState.windSpeed / 24) * 6.5;
+          gameState.boat.speed += (targetSpd - gameState.boat.speed) * 0.04;
+
+          const pxPerSec = gameState.boat.speed * 11;
+          gameState.boat.x += Math.sin(gameState.boat.heading) * pxPerSec * dt;
+          gameState.boat.y -= Math.cos(gameState.boat.heading) * pxPerSec * dt;
+
+          // Rebond doux sur les bords de la zone
+          if (gameState.boat.x < 24 || gameState.boat.x > w - 24) {
+            gameState.boat.x = Math.max(24, Math.min(w - 24, gameState.boat.x));
+            gameState.boat.heading = -gameState.boat.heading;
+            gameState.score = Math.max(0, gameState.score - 15);
+          }
+          if (gameState.boat.y < 24 || gameState.boat.y > h - 24) {
+            gameState.boat.y = Math.max(24, Math.min(h - 24, gameState.boat.y));
+            gameState.boat.heading = Math.PI - gameState.boat.heading;
+            gameState.score = Math.max(0, gameState.score - 15);
+          }
+
+          // Validation de la bouée courante
+          const activeBuoy = gameState.buoys[gameState.buoyIndex];
+          if (activeBuoy) {
+            const dist = Math.hypot(gameState.boat.x - activeBuoy.x, gameState.boat.y - activeBuoy.y);
+            if (dist < 28) {
+              gameState.buoyIndex += 1;
+              gameState.score += 100;
+              if (gameState.buoyIndex >= gameState.buoys.length) {
+                gameState.running = false;
+                const bonus = Math.max(0, Math.round(300 - gameState.elapsed * 4));
+                gameState.score += bonus;
+                const msg = document.getElementById("game-status-msg");
+                msg.className = "callout ok";
+                msg.textContent = `Parcours terminé en ${gameState.elapsed.toFixed(1)}s ! Score final : ${gameState.score} pts (bonus rapidité +${bonus}).`;
+              } else {
+                const msg = document.getElementById("game-status-msg");
+                msg.className = "callout ok";
+                msg.textContent = `Bouée n°${gameState.buoyIndex} validée ! Cap sur la bouée n°${gameState.buoyIndex + 1}.`;
+              }
+            }
+          }
+        }
+
+        // Rendu du jeu
+        const { width, height, ctx } = fitCanvasToContainer(canvas);
+        ctx.clearRect(0, 0, width, height);
+
+        // Indicateur de vent en haut à gauche
+        const windRad = (gameState.windAngleDeg * Math.PI) / 180;
+        drawArrow(ctx, 48, 22, 48 + Math.sin(windRad) * 26, 22 + Math.cos(windRad) * 26, "#22d3ee", 2.5, "Vent");
+
+        // Bouées
+        gameState.buoys.forEach((b, idx) => {
+          const isCurrent = idx === gameState.buoyIndex && gameState.running;
+          const isDone = idx < gameState.buoyIndex;
+
+          if (isCurrent) {
+            ctx.strokeStyle = "rgba(251, 191, 36, 0.45)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, 26, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          ctx.fillStyle = isDone ? "#34d399" : isCurrent ? "#fbbf24" : "#64748b";
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, 11, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#04101f";
+          ctx.font = "700 11px sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(b.label, b.x, b.y);
+          ctx.textAlign = "left";
+          ctx.textBaseline = "alphabetic";
+        });
+
+        // Catamaran du joueur
+        ctx.save();
+        ctx.translate(gameState.boat.x, gameState.boat.y);
+        ctx.rotate(gameState.boat.heading);
+        ctx.fillStyle = "#22d3ee";
+        ctx.fillRect(-11, -14, 5, 28);
+        ctx.fillRect(6, -14, 5, 28);
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(-11, -4, 22, 4);
+        ctx.restore();
+
+        document.getElementById("game-buoys").textContent = `${gameState.buoyIndex} / ${gameState.buoys.length}`;
+        document.getElementById("game-score").textContent = `${gameState.score}`;
+        document.getElementById("game-time").textContent = `${gameState.elapsed.toFixed(1)}s`;
+        document.getElementById("game-wind-info").textContent =
+          `${gameState.windSpeed} nds · ${gameState.windAngleDeg >= 0 ? "+" : ""}${gameState.windAngleDeg}°`;
+      }
+
+      /* =====================================================================
+         9. ONGLET 7 : GLOSSAIRE & QCM INTERACTIF
+         ===================================================================== */
+      const GLOSSARY_TERMS = [
+        {
+          term: "VMG (Velocity Made Good)",
+          tab: "polars",
+          tabLabel: "Polaire & VMG",
+          def: "Composante de la vitesse du bateau projetée directement sur l'axe du vent (au près ou au portant). C'est l'indicateur clé pour atteindre une marque le plus vite possible."
+        },
+        {
+          term: "Vent Apparent (VA / AWA)",
+          tab: "overview",
+          tabLabel: "Vue d'ensemble",
+          def: "Vent ressenti à bord résultant de la combinaison vectorielle du vent réel et du vent vitesse créé par le déplacement du catamaran."
+        },
+        {
+          term: "Centre d'Effort (CE) & Centre de Dérive (CD)",
+          tab: "overview",
+          tabLabel: "Vue d'ensemble",
+          def: "Points d'application moyens des forces aérodynamiques sur le plan de voilure (CE) et hydrodynamiques sur les plans anti-dérive/coques (CD)."
+        },
+        {
+          term: "Effet de fente (Slot Effect)",
+          tab: "physics",
+          tabLabel: "Physique & Voiles",
+          def: "Accélération du flux d'air dans le couloir formé entre le foc et la grand-voile, dynamisant l'écoulement sur l'extrados de la grand-voile."
+        },
+        {
+          term: "Vrillage (Twist)",
+          tab: "trim",
+          tabLabel: "Réglage Voiles",
+          def: "Variation progressive de l'angle d'incidence d'une voile du bas vers la tête afin de s'adapter à l'augmentation de la vitesse et de l'angle du vent avec la hauteur."
+        },
+        {
+          term: "Cavitation & Ventilation",
+          tab: "foils",
+          tabLabel: "Foils & Équilibre",
+          def: "La cavitation est la formation de bulles de vapeur d'eau en dépression ; la ventilation est l'aspiration d'air depuis la surface qui fait chuter brutalement la portance."
+        },
+        {
+          term: "Enfournement (Pitch-pole / Bow-diving)",
+          tab: "physics",
+          tabLabel: "Physique & Voiles",
+          def: "Plongée excessive de l'étrave sous le vent lorsque le couple cabreur/tangage et la poussée des vagues dépassent la réserve de flottabilité avant."
+        }
+      ];
+
+      function renderGlossary() {
+        const query = (document.getElementById("glossary-search").value || "").trim().toLowerCase();
+        const listEl = document.getElementById("glossary-list");
+        const filtered = GLOSSARY_TERMS.filter(
+          (item) =>
+            item.term.toLowerCase().includes(query) ||
+            item.def.toLowerCase().includes(query) ||
+            item.tabLabel.toLowerCase().includes(query)
+        );
+
+        if (!filtered.length) {
+          listEl.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">Aucun terme trouvé pour « ${query} ».</p>`;
+          return;
+        }
+
+        listEl.innerHTML = filtered
+          .map(
+            (item) => `
+          <div class="glossary-item">
+            <div class="glossary-item-top">
+              <strong>${item.term}</strong>
+              <button type="button" class="tag-link" data-goto-tab="${item.tab}">Voir : ${item.tabLabel}</button>
+            </div>
+            <p>${item.def}</p>
+          </div>`
+          )
+          .join("");
+
+        listEl.querySelectorAll("[data-goto-tab]").forEach((btn) => {
+          btn.addEventListener("click", () => switchTab(btn.dataset.gotoTab));
+        });
+      }
+
+      document.getElementById("glossary-search").addEventListener("input", renderGlossary);
+
+      const QUIZ_QUESTIONS = [
+        {
+          q: "Que représente le VMG au près ?",
+          options: [
+            "La vitesse maximale absolue du catamaran au grand largue",
+            "La vitesse de progression directement face au vent (BSP × cos(TWA))",
+            "La vitesse du vent apparent mesurée en tête de mât"
+          ],
+          correct: 1,
+          explain: "Le VMG au près mesure l'avancée utile vers le vent : lober trop près réduit parfois la vitesse au point de faire baisser le VMG."
+        },
+        {
+          q: "Quel est l'effet principal d'une fente bien réglée entre le foc et la grand-voile ?",
+          options: [
+            "Accélérer le flux d'air à l'intrados de la GV et retarder le décollement",
+            "Supprimer totalement le besoin d'ajuster l'écoute de grand-voile",
+            "Augmenter la flottabilité des coques dans le clapot"
+          ],
+          correct: 0,
+          explain: "L'effet de fente dynamise la couche limite de la grand-voile et accroît la portance globale."
+        },
+        {
+          q: "Qu'est-ce que la ventilation d'un foil ?",
+          options: [
+            "La circulation d'eau froide dans le puits de dérive",
+            "L'aspiration d'air depuis la surface faisant chuter brutalement la portance",
+            "Le réglage automatique du vrillage de la grand-voile"
+          ],
+          correct: 1,
+          explain: "Contrairement à la cavitation (vapeur d'eau), la ventilation fait entrer de l'air depuis la surface et provoque une chute soudaine de portance."
+        },
+        {
+          q: "Que se passe-t-il si le Centre d'Effort (CE) est nettement en arrière du Centre de Dérive (CD) ?",
+          options: [
+            "Le catamaran devient ardent (tendance à lofer)",
+            "Le catamaran devient mou (tendance à abattre)",
+            "La traînée hydrodynamique devient nulle"
+          ],
+          correct: 0,
+          explain: "Un CE en arrière du CD crée un couple qui ramène l'étrave vers le vent (comportement ardent)."
+        },
+        {
+          q: "Dans la brise forte au près, quel réglage aide à limiter la gîte et la surpuissance ?",
+          options: [
+            "Border l'écoute à bloc et augmenter le creux",
+            "Aplatir le creux, ouvrir le vrillage et reculer/descendre le chariot",
+            "Avancer l'équipage tout à l'étrave sous le vent"
+          ],
+          correct: 1,
+          explain: "Aplatir le profil et ouvrir le vrillage décharge la tête de voile et réduit l'effort latéral."
+        },
+        {
+          q: "Quel est l'effet d'un clapot court et raide sur une polaire théorique ?",
+          options: [
+            "Il augmente toujours la vitesse au près",
+            "Il ajoute de la résistance et réduit la vitesse, surtout aux allures serrées",
+            "Il n'a aucun effet sur un catamaran"
+          ],
+          correct: 1,
+          explain: "Le clapot génère une résistance additionnelle (added resistance) qui pénalise particulièrement le près et le petit largue."
+        },
+        {
+          q: "Comment limiter le risque d'enfournement dans une mer formée ?",
+          options: [
+            "Reculer les poids / l'équipage et adapter la toile à la brise",
+            "Bloquer la barre au centre sans jamais abattre",
+            "Augmenter artificiellement le creux de grand-voile"
+          ],
+          correct: 0,
+          explain: "Reculer le centre de gravité longitudinal (LCG) soulage l'étrave et améliore le passage des vagues."
+        },
+        {
+          q: "Au grand largue sur un catamaran rapide, pourquoi empanner en grand largue (135°–150° TWA) est-il souvent efficace ?",
+          options: [
+            "Parce que le vent apparent reste dynamique et maintient une forte poussée",
+            "Parce qu'il n'y a plus de vent apparent à 140°",
+            "Parce que le safran n'a plus besoin d'être immergé"
+          ],
+          correct: 0,
+          explain: "En conservant un angle au vent modéré (largue), le catamaran maintient un vent apparent efficace et une vitesse élevée."
+        }
+      ];
+
+      appState.quizTotal = QUIZ_QUESTIONS.length;
+      let currentQuizIdx = 0;
+
+      function computeCurrentScore() {
+        return Object.values(appState.quizAnswers).filter((a) => a && a.correct).length;
+      }
+
+      function renderQuiz() {
+        const container = document.getElementById("quiz-container");
+        const qObj = QUIZ_QUESTIONS[currentQuizIdx];
+        const savedAns = appState.quizAnswers[currentQuizIdx];
+
+        document.getElementById("quiz-progress-label").textContent =
+          `Question ${currentQuizIdx + 1} / ${QUIZ_QUESTIONS.length}`;
+
+        let html = `<p style="font-weight:700; color:#f8fafc; font-size:0.98rem;">${qObj.q}</p>`;
+
+        qObj.options.forEach((optText, optIdx) => {
+          let cls = "quiz-option";
+          if (savedAns) {
+            if (optIdx === qObj.correct) cls += " correct";
+            else if (optIdx === savedAns.chosen && !savedAns.correct) cls += " wrong";
+          }
+          html += `<button type="button" class="${cls}" data-opt="${optIdx}" ${savedAns ? "disabled" : ""}>${optText}</button>`;
+        });
+
+        if (savedAns) {
+          html += `<div class="callout ${savedAns.correct ? "ok" : "warn"}" style="margin-top:12px;">${qObj.explain}</div>`;
+        }
+
+        container.innerHTML = html;
+
+        container.querySelectorAll(".quiz-option").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const chosen = Number(btn.dataset.opt);
+            const isCorrect = chosen === qObj.correct;
+            appState.quizAnswers[currentQuizIdx] = { chosen, correct: isCorrect };
+
+            const currentScore = computeCurrentScore();
+            if (appState.bestQuizScore === null || currentScore > appState.bestQuizScore) {
+              appState.bestQuizScore = currentScore;
+            }
+            saveState();
+            updateProgressUI();
+            renderQuiz();
+            updateQuizSummary();
+          });
+        });
+
+        updateQuizSummary();
+      }
+
+      function updateQuizSummary() {
+        const answeredCount = Object.keys(appState.quizAnswers).length;
+        const score = computeCurrentScore();
+        const wrongIndices = QUIZ_QUESTIONS
+          .map((_, idx) => idx)
+          .filter((idx) => appState.quizAnswers[idx] && !appState.quizAnswers[idx].correct);
+
+        appState.errorQueue = wrongIndices;
+        saveState();
+
+        const box = document.getElementById("quiz-summary-box");
+        box.textContent =
+          `Répondu : ${answeredCount} / ${QUIZ_QUESTIONS.length} · Score actuel : ${score} / ${QUIZ_QUESTIONS.length} · Erreurs à revoir : ${wrongIndices.length}.`;
+      }
+
+      document.getElementById("quiz-prev-btn").addEventListener("click", () => {
+        currentQuizIdx = (currentQuizIdx - 1 + QUIZ_QUESTIONS.length) % QUIZ_QUESTIONS.length;
+        renderQuiz();
+      });
+
+      document.getElementById("quiz-next-btn").addEventListener("click", () => {
+        currentQuizIdx = (currentQuizIdx + 1) % QUIZ_QUESTIONS.length;
+        renderQuiz();
+      });
+
+      document.getElementById("quiz-retry-errors-btn").addEventListener("click", () => {
+        if (!appState.errorQueue.length) {
+          showToast("Aucune erreur enregistrée à rejouer !");
+          return;
+        }
+        const targetIdx = appState.errorQueue[0];
+        delete appState.quizAnswers[targetIdx];
+        currentQuizIdx = targetIdx;
+        saveState();
+        renderQuiz();
+        showToast(`Question ${targetIdx + 1} débloquée pour un nouvel essai.`);
+      });
+
+      document.getElementById("quiz-restart-btn").addEventListener("click", () => {
+        appState.quizAnswers = {};
+        appState.errorQueue = [];
+        currentQuizIdx = 0;
+        saveState();
+        renderQuiz();
+        showToast("QCM réinitialisé.");
+      });
+
+      /* =====================================================================
+         10. BOUCLE PRINCIPALE & INITIALISATION
+         ===================================================================== */
+      function renderActiveTabCanvas() {
+        switch (appState.activeTab) {
+          case "overview":
+            renderOverview();
+            break;
+          case "physics":
+            renderPhysics();
+            break;
+          case "foils":
+            renderFoils();
+            break;
+          case "polars":
+            renderPolars();
+            break;
+          case "trim":
+            renderTrim();
+            break;
+          case "buoys":
+            stepGame(performance.now());
+            break;
+          default:
+            break;
+        }
+      }
+
+      function animationLoop(timestamp) {
+        if (appState.activeTab === "buoys") {
+          stepGame(timestamp);
+        }
+        requestAnimationFrame(animationLoop);
+      }
+
+      window.addEventListener("resize", () => {
+        resizeAllCanvases();
+        renderActiveTabCanvas();
+      });
+
+      window.addEventListener("DOMContentLoaded", () => {
+        updateProgressUI();
+        renderGlossary();
+        renderQuiz();
+        resizeAllCanvases();
+        switchTab(appState.activeTab || "overview");
+        requestAnimationFrame(animationLoop);
+      });
+    })();
+  </script>
+  <div style="text-align:center;padding:26px 12px 34px;color:var(--text-muted);font-size:.85rem">
+    Gabin Bourderioux · 
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stabilité et équilibre du catamaran — Couple, polaires, chiffres</title>
+<meta name="description" content="Stabilité du catamaran : couple de redressement P×b, chavirement, couplage aéro-hydro, polaire de vitesse et chiffres clés.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="google-site-verification" content="Ct1DRvIOGqg4O02aYYXes7X7HHvl3IwpeUj4318CFxY">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1C2430">
+  <link rel="apple-touch-icon" href="icone-192.png">
+<meta property="og:title" content="Stabilité et équilibre du catamaran — Couple, polaires, chiffres">
+<meta property="og:description" content="Stabilité du catamaran : couple de redressement P×b, chavirement, couplage aéro-hydro, polaire de vitesse et chiffres clés.">
+<meta property="og:image" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/partage.png">
+<meta property="og:url" content="https://gabinbourderioux-debug.github.io/catamaran-aero-hydro/stabilite.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="darkmode.js"></script>
+<script src="stats.js" defer></script>
+</head>
+<body>
+
+<header class="hero hero--page">
+  <h1>Stabilité, équilibre aéro-hydro et chiffres clés</h1>
+  <p>La largeur comme bras de levier, l'équilibre permanent entre l'air et l'eau, et les grandeurs qui résument tout.</p>
+</header>
+
+<nav class="sommaire" aria-label="Navigation">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="deroulant"><a href="aero.html" aria-haspopup="true">Aéro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="aero.html#aero">La voile</a></li>
+        <li><a href="aero.html#vent-apparent">Vent apparent</a></li>
+        <li><a href="aero.html#vent-terrain">Vent changeant</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="hydro.html" aria-haspopup="true">Hydro <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="hydro.html#hydro">Les coques</a></li>
+        <li><a href="foils.html">Les foils</a></li>
+        <li><a href="stabilite.html">La stabilité</a></li>
+      </ul>
+    </li>
+    <li class="deroulant"><a href="meteo.html" aria-haspopup="true">Météo <span aria-hidden="true">▾</span></a>
+      <ul>
+        <li><a href="meteo.html#vent">La météo en direct</a></li>
+        <li><a href="topo-meteo.html">Topo météo</a></li>
+      </ul>
+    </li>
+    <li><a href="manoeuvres.html">Manœuvres</a></li>
+    <li><a href="qcm.html">QCM</a></li>
+  </ul>
+</nav>
+
+<main class="conteneur">
+<div class="sommaire-page"><b>Sommaire :</b> <a href="#stabilite">1. Stabilité : la largeur comme bras de levier</a> · <a href="#couplage">2. L'équilibre aéro-hydro : le bateau comme système couplé</a> · <a href="#chiffres">3. Chiffres clés &amp; synthèse</a></div>
+<section class="carteforce" id="stabilite">
+  <h2><span class="num">1</span> Stabilité : la largeur comme bras de levier</h2>
+  <p>Sur un monocoque, la stabilité vient du <b> lest</b> : une quille lourde tire vers le bas sous
+  la coque. Sur un catamaran, pas de lest profond : la stabilité vient de la <b>géométrie</b>. Deux
+  coques distantes de la largeur <i>b</i> forment un gigantesque bras de levier : quand le bateau
+  gîte, un flotteur s'enfonce (poussée d'Archimède accrue) et l'autre se soulève (poids restant
+  appliqué côté au vent). Le couple de redressement est :</p>
+  <div class="formule">M ≈ P × b
+    <small>P = déplacement (poids du bateau) • b = largeur. À poids égal, un catamaran a un couple de redressement 2 à 4 fois supérieur à celui d'un monocoque.</small>
+  </div>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 480" role="img" aria-label="Vue de face : couple de redressement du catamaran qui gîte">
+      <defs><marker id="fle7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <rect width="840" height="480" fill="#F4F4F1"/>
+      <!-- eau -->
+      <line x1="0" y1="330" x2="840" y2="330" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="0" y="330" width="840" height="150" fill="#a5f3fc" opacity=".5"/>
+
+      <!-- bateau gisant legerement -->
+      <!-- coque au vent (soulevee) -->
+      <rect x="200" y="296" width="120" height="34" rx="17" fill="#cbd5e1" stroke="#1C2430" stroke-width="3"/>
+      <!-- coque sous le vent (enfoncee) -->
+      <rect x="520" y="318" width="120" height="34" rx="17" fill="#cbd5e1" stroke="#1C2430" stroke-width="3"/>
+      <!-- trampoline -->
+      <line x1="320" y1="310" x2="520" y2="330" stroke="#1C2430" stroke-width="5"/>
+      <!-- mat -->
+      <line x1="420" y1="322" x2="470" y2="70" stroke="#1C2430" stroke-width="8"/>
+      <!-- voile -->
+      <path d="M472,86 C 560,180 560,260 468,308" fill="none" stroke="#e11d48" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- force velique -->
+      <line x1="540" y1="180" x2="720" y2="140" stroke="#e11d48" stroke-width="5" marker-end="url(#fle7)"/>
+      <text x="726" y="130" font-size="15" fill="#e11d48" font-weight="bold">Fᵥ (fait gîter)</text>
+
+      <!-- poids / poussees -->
+      <line x1="260" y1="270" x2="260" y2="182" stroke="#1C2430" stroke-width="4.5" marker-end="url(#fle7)"/>
+      <text x="262" y="168" font-size="14" fill="#1C2430" font-weight="bold">Poids P (au vent)</text>
+      <line x1="580" y1="380" x2="580" y2="462" stroke="#059669" stroke-width="4.5" marker-end="url(#fle7)"/>
+      <text x="582" y="478" font-size="14" fill="#059669" font-weight="bold">Poussée d'Archimède (sous le vent)</text>
+
+      <!-- bras de levier -->
+      <line x1="260" y1="215" x2="580" y2="215" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="8 6" marker-start="url(#fle7)" marker-end="url(#fle7)"/>
+      <text x="420" y="204" font-size="15" fill="#7c3aed" font-weight="bold" text-anchor="middle">bras de levier b ≈ largeur</text>
+
+      <text x="420" y="460" font-size="0" fill="#000"> </text>
+    </svg>
+    <figcaption>Fig. 7 — Vue de face en gîte : poids d'un côté, poussée d'Archimède de l'autre, séparés
+    par la largeur — le couple qui redresse le bateau. La force vélique (rouge) tente de l'emporter.</figcaption>
+  </div>
+
+  <div class="encadre vert">
+    <b>La contrepartie :</b> pas de lest profond, donc quand le couple de redressement est dépassé
+    (rafale violente + voiles trop bâchées), un catamaran peut chavirer <b>d'un coup</b> — il n'y a
+    pas de gîte progressive qui prévienne, comme sur un monocoque. D'où l'importance du
+    <b>riflement des lattes (border au maximum)</b>, des limites d'orientation au près et du « depower »
+    (réduction de camber) par mauvais temps.
+  </div>
+</section>
+
+<section class="carteforce" id="couplage">
+  <h2><span class="num">2</span> L'équilibre aéro-hydro : le bateau comme système couplé</h2>
+  <p>La vérité d'un catamaran est un <b>couplage permanent</b> entre l'air et l'eau. Chaque réglage
+  aéro modifie l'équilibre hydro, et réciproquement :</p>
+  <table>
+    <tr><th>Action aéro</th><th>Réaction hydro</th></tr>
+    <tr><td>Border plus (plus de camber, plus de puissance)</td><td>La vitesse augmente → la traînée de coque aussi → l'équilibre se cherche plus loin</td></tr>
+    <tr><td>Choquer (réduire l'angle d'attaque)</td><td>La force vélique baisse instantanément, souvent avant que la vitesse ne retombe</td></tr>
+    <tr><td>Vriller le haut des voiles</td><td>Moins de couple de gîte pour la même portance → coque au vent qui peut être remontée</td></tr>
+    <tr><td>Caler le foil (incidence ↓)</td><td>Portance hydro ↓ → vitesse de décollage ↑ mais risque de retour en mode déplacement</td></tr>
+    <tr><td>Assiette arrière (équipage reculé)</td><td>Cavalage limité (coques sèches) → moins de surface mouillée mais risque de dérapage du safran</td></tr>
+  </table>
+
+  <p>Là où les meilleurs équipages de course font la différence, c'est dans leur capacité à naviguer
+  <b>en permanence sur le fil</b> : garder le flotteur au vent juste au-dessus de l'eau, la voile
+  juste en dessous du décrochage, le foil juste à l'altitude de vol. Tout le « game » consiste à
+  maximiser la finesse globale du système {voiles + appendices + carènes}, l'ensemble étant
+  toujours limité par la plus grande des deux traînées (aéro ou hydro).</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 840 400" role="img" aria-label="Polaire de vitesse typique d'un catamaran de sport">
+      <rect width="840" height="400" fill="#fff"/>
+      <defs><marker id="fle8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+      <!-- cercles -->
+      <circle cx="340" cy="200" r="50" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+      <circle cx="340" cy="200" r="100" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+      <circle cx="340" cy="200" r="150" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+      <circle cx="340" cy="200" r="190" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <text x="346" y="166" font-size="11" fill="#94a3b8">ratio 0.33</text>
+      <text x="346" y="116" font-size="11" fill="#94a3b8">ratio 0.67</text>
+      <text x="346" y="66" font-size="11" fill="#94a3b8">ratio 1.0</text>
+
+      <!-- lignes angulaires -->
+      <g stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4 5">
+        <line x1="340" y1="200" x2="435" y2="35"/>
+        <line x1="340" y1="200" x2="473" y2="93"/>
+        <line x1="340" y1="200" x2="503" y2="125"/>
+        <line x1="340" y1="200" x2="530" y2="200"/>
+        <line x1="340" y1="200" x2="503" y2="275"/>
+        <line x1="340" y1="200" x2="473" y2="307"/>
+        <line x1="340" y1="200" x2="435" y2="365"/>
+        <line x1="340" y1="200" x2="340" y2="390"/>
+      </g>
+      <!-- labels angles -->
+      <text x="447" y="30" font-size="12" fill="#64748b">30°</text>
+      <text x="484" y="86" font-size="12" fill="#64748b">45°</text>
+      <text x="513" y="118" font-size="12" fill="#64748b">60°</text>
+      <text x="540" y="204" font-size="12" fill="#64748b">90°</text>
+      <text x="513" y="284" font-size="12" fill="#64748b">120°</text>
+      <text x="484" y="316" font-size="12" fill="#64748b">135°</text>
+      <text x="445" y="376" font-size="12" fill="#64748b">150°</text>
+
+      <!-- polaire -->
+      <path d="M 385,153 L 406,148 L 430,155 L 477,170 L 497,178 L 493,200 L 461,231 L 400,251 L 360,252 L 318,215" fill="none" stroke="#e11d48" stroke-width="4" stroke-linejoin="round"/>
+
+      <!-- zone degueul -->
+      <path d="M 340,200 L 356,166 A 40,40 0 0 1 331,160 Z" fill="#fecaca" opacity=".8"/>
+      <text x="352" y="52" font-size="12" fill="#b91c1c" font-weight="bold">zone interdite</text>
+      <text x="352" y="66" font-size="11" fill="#b91c1c">(près trop serré)</text>
+      <!-- fleche vent -->
+      <line x1="255" y1="120" x2="315" y2="172" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fle8)"/>
+      <text x="200" y="112" font-size="13" fill="#1d4ed8" font-weight="bold">vent</text>
+
+      <text x="586" y="130" font-size="13" fill="#1C2430">Ratio vitesse du bateau / vitesse du vent</text>
+      <text x="586" y="150" font-size="13" fill="#334155">en fonction de l'angle au vent réel.</text>
+      <text x="586" y="200" font-size="12" fill="#475569">Pic ≈ 90-110° : un catamaran y double</text>
+      <text x="586" y="216" font-size="12" fill="#475569">la vitesse du vent réel. Le près serré</text>
+      <text x="586" y="232" font-size="12" fill="#475569">et le vent arrière pur sont bloqués.</text>
+    </svg>
+    <figcaption>Fig. 8 — Polaire de vitesse typique d'un catamaran de sport : le bateau dépasse la
+    vitesse du vent au reaching et le creux du vent arrière impose de tirer des bords.</figcaption>
+  </div>
+</section>
+
+<section class="carteforce" id="chiffres">
+  <h2><span class="num">3</span> Chiffres clés &amp; synthèse</h2>
+  <table>
+    <tr><th>Grandeur</th><th>Catamaran de sport (type F18)</th><th>Catamaran de course volant (type AC75-like*)</th><th>Remarque</th></tr>
+    <tr><td>Largeur</td><td>2,7 m</td><td>4 m et plus</td><td>Détermine le couple P×b</td></tr>
+    <tr><td>Poids</td><td>180-220 kg</td><td>plusieurs tonnes</td><td>Toujours minimisé</td></tr>
+    <tr><td>Surface de voile</td><td>~20 m² (+ gennaker)</td><td>sans cesse optimisée / foils</td><td>Limitée par la stabilité disponible</td></tr>
+    <tr><td>Vitesse max</td><td>20-25 nd</td><td>50 nd et plus</td><td>Ratio 2-4×</td></tr>
+    <tr><td>Vitesse du vent de navigation</td><td>3-25 nd</td><td>6-25 nd</td><td>Fenêtre de puissance</td></tr>
+  </table>
+  <p style="font-size:.85rem;color:#64748b">* les AC75 sont des monocoques à foils, comparés ici
+  parce qu'ils reprennent les mêmes concepts physiques ; les trimarans géants de la classe Ultim,
+  à la pointe de la course au large, exploitent les mêmes principes à plus grande échelle.</p>
+
+  <h3>L'essentiel en 5 points</h3>
+  <div class="lexique">
+    <div class="carte"><b>1.</b> La voile est une aile : la portance naît d'une différence de pression, pas du vent qui « pousse ».</div>
+    <div class="carte"><b>2.</b> Le vent apparent gagne en force et se redresse vers l'avant à mesure que le bateau accélère : moteur auto-entretenu du multicoque.</div>
+    <div class="carte"><b>3.</b> Deux coques fines minimisent surface mouillée et traînée de vagues ; la vitesse de carène est repoussée, pas abolie.</div>
+    <div class="carte"><b>4.</b> Les foils échangent de la surface mouillée contre de la portance : décollage au croisement des courbes de traînée.</div>
+    <div class="carte"><b>5.</b> La stabilité vient de la largeur (P × b), pas du lest : plus rapide, mais chavirement brutal possible.</div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="auteur">Gabin Bourderioux</div>
+  <div class="auteur-sous">Aérodynamique &amp; hydrodynamique du catamaran — page pédagogique illustrée.</div>
+  <a href="index.html" style="color:#E8D48B">← Retour à l'accueil</a> ·  · 
+  
+  <button id="bascule-theme" class="btn-theme" type="button"></button>
+</footer>
+
+</body>
+</html>

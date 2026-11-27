@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio interactif — Laboratoire du catamaran</title>
+<meta name="description" content="Laboratoire interactif expérimental : aérodynamique, hydrodynamique, foils et navigation du catamaran.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><meta name="theme-color" content="#1C2430"><link rel="stylesheet" href="style.css"><script src="darkmode.js"></script><script src="stats.js" defer></script>
+<style>
+:root{--lab-accent:#d5a900;--lab-blue:#1787a8}
+.lab{max-width:1320px;margin:auto;padding:22px 18px 70px}
+.prototype-ribbon{position:sticky;top:0;z-index:90;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;background:var(--marine,#1C2430);border-bottom:2px solid #FFCC00;box-shadow:0 4px 16px rgba(0,0,0,.14)}
+.prototype-ribbon span{color:#E8D48B;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.prototype-ribbon a{color:#fff;text-decoration:none;padding:6px 11px;border:1px solid rgba(255,255,255,.25);border-radius:8px;font-size:.86rem;font-weight:700}
+.prototype-ribbon a:hover,.prototype-ribbon a:first-of-type{background:#FFCC00;color:#1C2430}
+.lab-intro{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin:8px 0 18px}
+.lab-intro h2{margin:0}.lab-intro p{max-width:760px;margin:6px 0}
+.lab-nav{position:sticky;top:50px;z-index:30;display:flex;gap:6px;flex-wrap:wrap;padding:9px;background:var(--carte);border:1px solid var(--bordure);border-radius:12px;box-shadow:var(--ombre)}
+.lab-nav a{color:var(--txt);text-decoration:none;font-weight:700;font-size:.9rem;padding:7px 10px;border-radius:8px}
+.lab-nav a:hover{background:var(--bleu-clair)}
+.lab-card{background:var(--carte);border:1px solid var(--bordure);border-radius:15px;padding:20px;margin:16px 0;box-shadow:var(--ombre);scroll-margin-top:115px}
+.lab-card h2{font-size:1.35rem;margin-bottom:8px}
+.lab-card h3{margin:14px 0 8px}
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.lab-two{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.85fr);gap:16px}
+.lab-control{background:var(--fond);border:1px solid var(--bordure);border-radius:10px;padding:11px 12px;min-width:0}
+.lab-control label{display:flex;justify-content:space-between;gap:10px;font-weight:700;color:var(--titre);font-size:.92rem}
+.lab-control output{color:var(--bleu);white-space:nowrap;font-variant-numeric:tabular-nums}
+.lab-control input[type=range]{width:100%;accent-color:var(--cyan);margin:10px 0 2px}
+.lab-control small,.lab-muted{color:var(--gris);font-size:.82rem}
+.lab-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin:14px 0}
+.lab-metric{background:var(--fond);border:1px solid var(--bordure);border-radius:10px;padding:12px}
+.lab-metric small{display:block;color:var(--gris);font-size:.8rem}
+.lab-metric strong{display:block;color:var(--titre);font-size:1.35rem;font-variant-numeric:tabular-nums}
+.lab-stage{height:480px;min-height:340px;border:1px solid var(--bordure);border-radius:12px;overflow:hidden;background:linear-gradient(#dceaf0,#f4f6f1)}
+.lab-stage canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+.lab-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.lab-btn{border:0;border-radius:8px;background:var(--marine);color:white;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}
+.lab-btn.alt{background:var(--carte);border:1px solid var(--bordure);color:var(--txt)}
+.lab-btn.warn{background:#8c2638}.lab-btn:disabled{opacity:.5;cursor:not-allowed}
+.lab-plot{background:var(--figure-fond);border:1px solid var(--bordure);border-radius:10px;padding:10px;min-width:0}
+.lab-plot canvas{width:100%;height:230px;display:block}
+.lab-note{border-left:4px solid var(--corail);background:var(--err-fond);padding:12px;border-radius:8px;margin:12px 0}
+.lab-info{border-left:4px solid var(--vert);background:var(--ok-fond);padding:12px;border-radius:8px;margin:12px 0}
+.lab-status{display:inline-flex;align-items:center;gap:7px;border-radius:30px;background:var(--bleu-clair);padding:6px 11px;font-size:.85rem;font-weight:800}
+.lab-dot{width:8px;height:8px;border-radius:50%;background:#059669}
+.lab-table-wrap{overflow:auto}.lab-table{width:100%;border-collapse:collapse;min-width:650px}.lab-table th,.lab-table td{padding:9px;text-align:left;border-bottom:1px solid var(--bordure);font-size:.9rem}.lab-table th{background:var(--marine);color:white}.lab-table button{border:1px solid var(--bordure);border-radius:6px;padding:5px 8px;background:var(--carte);color:var(--txt);cursor:pointer;margin:2px}
+.lab-select{background:var(--carte);color:var(--txt);border:1px solid var(--bordure);padding:8px;border-radius:8px;max-width:100%}
+.lab-formula{font-family:Georgia,serif;background:var(--marine);color:#ffdc55;border-radius:9px;padding:12px;text-align:center;margin:10px 0}
+.lab-legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--gris);font-size:.82rem;margin-top:8px}
+.lab-legend span:before{content:"";display:inline-block;width:10px;height:4px;background:var(--swatch);margin:0 6px 2px 0}
+@media(max-width:800px){.lab-two{grid-template-columns:1fr}.lab-stage{height:390px}.lab-nav{top:48px}}
+@media(max-width:600px){.lab{padding:14px 9px 45px}.lab-card{padding:13px}.lab-stage{height:330px}.lab-nav{top:80px;gap:2px}.lab-nav a{font-size:.78rem;padding:7px 6px}.lab-intro h2{font-size:1.25rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero hero--page"><div class="badge">Laboratoire expérimental · bêta</div><h1>Studio interactif du catamaran</h1><p>Modélise les interactions entre le vent, les voiles, les coques et les foils. Modifie les paramètres et observe leurs effets.</p></header>
+<div class="prototype-ribbon"><span>BÊTA — des erreurs ou dysfonctionnements peuvent survenir</span><a href="index.html">Accueil du site</a><a href="jeu-3d.html">Jeu 3D</a></div>
+<main class="lab">
+<div class="lab-intro"><div><h2>Centre de simulation</h2><p>Un environnement de manipulation et de comparaison. Les résultats sont calculés localement dans ton navigateur.</p></div><span class="lab-status"><i class="lab-dot"></i> Modèle pédagogique actif</span></div>
+<nav class="lab-nav"><a href="#modele">Vue 3D</a><a href="#aero">Aérodynamique</a><a href="#hydro">Hydrodynamique</a><a href="#navigation">Navigation</a><a href="#donnees">Données</a><a href="#historique">Historique</a></nav>
+
+<section id="modele" class="lab-card"><h2>1. Modèle 3D manipulable</h2><p>Fais glisser pour tourner autour du bateau, utilise la molette ou le pincement pour zoomer. Les réglages des autres panneaux modifient aussi le modèle.</p>
+<div class="lab-two"><div><div id="lab3d" class="lab-stage" aria-label="Modèle 3D du catamaran"></div><div class="lab-legend"><span style="--swatch:#f08a24">Air : lignes de courant et particules animées</span><span style="--swatch:#087fae">Eau : écoulement autour des coques et foils</span></div><div class="lab-actions"><button class="lab-btn alt" id="viewReset">Réinitialiser la caméra</button><button class="lab-btn alt" id="viewTop">Vue de dessus</button><button class="lab-btn alt" id="viewSide">Vue de côté</button><button class="lab-btn alt" id="viewFront">Vue de face</button></div><p class="lab-muted">Modèle géométrique schématique : il illustre les organes du bateau, pas la géométrie certifiée d'un catamaran précis.</p></div>
+<div><h3>Configuration du bateau</h3><div class="lab-grid">
+<div class="lab-control"><label for="sailArea">Surface de voile <output id="sailAreaVal"></output></label><input id="sailArea" type="range" min="12" max="45" value="28" step="1"></div>
+<div class="lab-control"><label for="sailTrim">Réglage de voile <output id="sailTrimVal"></output></label><input id="sailTrim" type="range" min="0" max="45" value="18" step="1"></div>
+<div class="lab-control"><label for="foilInc">Incidence des foils <output id="foilIncVal"></output></label><input id="foilInc" type="range" min="-5" max="18" value="5" step=".5"></div>
+<div class="lab-control"><label for="rudderAng">Angle des safrans <output id="rudderAngVal"></output></label><input id="rudderAng" type="range" min="-30" max="30" value="0" step="1"></div>
+</div></div></div></section>
+
+<section id="aero" class="lab-card"><h2>2. Laboratoire aérodynamique</h2><p>Le vent apparent dépend du vent réel et de la vitesse du bateau. Modifie le vent et l'orientation pour observer la variation des forces estimées.</p>
+<div class="lab-grid">
+<div class="lab-control"><label for="windSpeed">Vent réel <output id="windSpeedVal"></output></label><input id="windSpeed" type="range" min="1" max="30" value="12" step=".5"></div>
+<div class="lab-control"><label for="windAngle">Angle du vent réel <output id="windAngleVal"></output></label><input id="windAngle" type="range" min="0" max="180" value="55" step="1"></div>
+<div class="lab-control"><label for="airDensity">Masse volumique de l'air <output id="airDensityVal"></output></label><input id="airDensity" type="range" min="1.10" max="1.30" value="1.225" step=".005"></div>
+</div>
+<div class="lab-metrics">
+<div class="lab-metric"><small>Vent apparent</small><strong id="apparentSpeed">—</strong><small>m/s</small></div>
+<div class="lab-metric"><small>Angle apparent</small><strong id="apparentAngle">—</strong><small>° par rapport à l'axe</small></div>
+<div class="lab-metric"><small>Coefficient Cl voile</small><strong id="sailCl">—</strong></div>
+<div class="lab-metric"><small>Portance aérodynamique</small><strong id="airLift">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Traînée aérodynamique</small><strong id="airDrag">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Force propulsive estimée</small><strong id="driveForce">—</strong><small>N</small></div>
+</div>
+<div class="lab-plot"><canvas id="aeroPlot" height="230" aria-label="Courbes estimées des coefficients de portance et de traînée selon l'incidence"></canvas><div class="lab-legend"><span style="--swatch:#15966a">Cl : portance</span><span style="--swatch:#d5a900">Cd : traînée</span></div></div>
+<div class="lab-note"><b>Hypothèses :</b> modèle de voile simplifié, écoulement incompressible et coefficients pédagogiques. Le réglage de voile est utilisé comme approximation de l'incidence effective. Ce n'est pas une polaire mesurée d'une voile réelle.</div>
+</section>
+
+<section id="hydro" class="lab-card"><h2>3. Laboratoire hydrodynamique</h2><p>Étudie l'effet de la vitesse, de la surface immergée et de l'incidence des foils. La portance évolue avec le carré de la vitesse relative à l'eau.</p>
+<div class="lab-grid">
+<div class="lab-control"><label for="boatSpeed">Vitesse du bateau <output id="boatSpeedVal"></output></label><input id="boatSpeed" type="range" min="0" max="30" value="12" step=".5"></div>
+<div class="lab-control"><label for="foilArea">Surface portante totale <output id="foilAreaVal"></output></label><input id="foilArea" type="range" min=".15" max="1.5" value=".65" step=".05"></div>
+<div class="lab-control"><label for="waterDensity">Masse volumique de l'eau <output id="waterDensityVal"></output></label><input id="waterDensity" type="range" min="990" max="1030" value="1025" step="1"></div>
+<div class="lab-control"><label for="hullDrag">Coefficient de traînée de coque <output id="hullDragVal"></output></label><input id="hullDrag" type="range" min=".3" max="2.5" value="1.1" step=".05"></div>
+<div class="lab-control"><label for="boatMass">Masse totale <output id="boatMassVal"></output></label><input id="boatMass" type="range" min="350" max="900" value="550" step="10"></div>
+</div>
+<div class="lab-metrics">
+<div class="lab-metric"><small>Coefficient Cl foil</small><strong id="foilCl">—</strong></div>
+<div class="lab-metric"><small>Portance des foils</small><strong id="foilLift">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Traînée des foils</small><strong id="foilDrag">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Traînée estimée des coques</small><strong id="hullResistance">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Poids du bateau</small><strong id="boatWeight">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Rapport portance / poids</small><strong id="liftRatio">—</strong></div>
+</div>
+<div class="lab-plot"><canvas id="hydroPlot" height="230" aria-label="Portance et traînée hydrodynamiques en fonction de la vitesse"></canvas><div class="lab-legend"><span style="--swatch:#1787a8">Portance foil</span><span style="--swatch:#d5a900">Traînée totale</span></div></div>
+<div class="lab-note"><b>Limites :</b> le modèle ne résout pas l'écoulement autour du profil, la ventilation, la cavitation, les effets de surface libre, ni les interactions entre appendices. Le rapport portance/poids est un indicateur simplifié, pas une prédiction certaine du décollage.</div>
+</section>
+
+<section id="navigation" class="lab-card"><h2>4. Simulateur de navigation</h2><p>Lance une évolution temporelle simplifiée. La vitesse évolue sous l'effet de la propulsion estimée, des résistances et de la masse choisie. Le modèle représente une navigation rectiligne, sans vagues ni manœuvres.</p>
+<div class="lab-actions"><button class="lab-btn" id="simStart">Démarrer</button><button class="lab-btn alt" id="simPause">Pause</button><button class="lab-btn alt" id="simReset">Réinitialiser la simulation</button><button class="lab-btn alt" id="presetLight">Scénario petit temps</button><button class="lab-btn alt" id="presetStrong">Scénario vent soutenu</button><button class="lab-btn alt" id="presetFoil">Scénario réglage foils</button></div>
+<div class="lab-metrics">
+<div class="lab-metric"><small>Temps simulé</small><strong id="simTime">0,0</strong><small>s</small></div>
+<div class="lab-metric"><small>Vitesse simulée</small><strong id="simSpeed">12,0</strong><small>m/s</small></div>
+<div class="lab-metric"><small>Accélération estimée</small><strong id="simAccel">—</strong><small>m/s²</small></div>
+<div class="lab-metric"><small>État indicatif</small><strong id="flightState">Navigation</strong></div>
+</div>
+<div class="lab-plot"><canvas id="navPlot" height="230" aria-label="Évolution de la vitesse au cours du temps"></canvas></div>
+<div class="lab-info" id="simExplanation">La simulation est à l'arrêt. Modifie les paramètres, puis démarre pour observer la tendance calculée.</div>
+</section>
+
+<section id="donnees" class="lab-card"><h2>5. Tableau de bord et interprétation</h2><p>Les indicateurs ci-dessous sont recalculés à chaque modification. Ils aident à comparer les ordres de grandeur et les tendances.</p>
+<div class="lab-metrics">
+<div class="lab-metric"><small>Force vélique résultante</small><strong id="totalAero">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Résistance hydrodynamique</small><strong id="totalHydro">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Différence propulsion - résistance</small><strong id="netForce">—</strong><small>N</small></div>
+<div class="lab-metric"><small>Gîte indicative</small><strong id="heel">—</strong><small>°</small></div>
+</div>
+<div class="lab-two"><div class="lab-plot"><canvas id="forcePlot" height="230" aria-label="Comparaison des forces calculées"></canvas></div><div><h3>Lecture du résultat</h3><p id="interpretation">—</p><p class="lab-muted">Les forces sont des estimations issues des équations simplifiées affichées dans ce laboratoire. Elles ne constituent pas une validation de sécurité ou de performance.</p></div></div>
+<div class="lab-formula">q = ½ ρ V² &nbsp; · &nbsp; F = q × S × C</div>
+<p class="lab-muted">q : pression dynamique · ρ : masse volumique · V : vitesse relative du fluide · S : surface de référence · C : coefficient aérodynamique ou hydrodynamique.</p>
+</section>
+
+<section id="historique" class="lab-card"><h2>6. Historique, sauvegarde et comparaison</h2><p>Enregistre une configuration dans le navigateur, recharge-la ou compare deux essais. L'historique reste local à ce navigateur et n'est pas synchronisé entre appareils.</p>
+<div class="lab-grid"><div class="lab-control"><label for="experimentName">Nom de l'essai</label><input id="experimentName" maxlength="60" placeholder="Ex. Vent 15 nœuds, foils 5°" style="width:100%;padding:9px;border:1px solid var(--bordure);border-radius:8px;background:var(--carte);color:var(--txt)"></div><div class="lab-control"><label for="compareA">Premier essai</label><select class="lab-select" id="compareA"><option value="">Choisir un essai</option></select></div><div class="lab-control"><label for="compareB">Deuxième essai</label><select class="lab-select" id="compareB"><option value="">Choisir un essai</option></select></div></div>
+<div class="lab-actions"><button class="lab-btn" id="saveExperiment">Enregistrer la configuration</button><button class="lab-btn alt" id="compareExperiments">Comparer</button><button class="lab-btn alt" id="exportHistory">Exporter JSON</button><button class="lab-btn warn" id="clearHistory">Effacer l'historique</button></div>
+<div id="compareResult" class="lab-info" hidden></div>
+<div class="lab-table-wrap"><table class="lab-table"><thead><tr><th>Essai</th><th>Vent</th><th>Vitesse</th><th>Voile</th><th>Incidence foil</th><th>Portance foil</th><th>Actions</th></tr></thead><tbody id="historyRows"><tr><td colspan="7">Aucun essai enregistré.</td></tr></tbody></table></div>
+</section>
+<div class="lab-note"><b>À retenir :</b> ce Studio est un outil d'exploration pédagogique. Les valeurs dépendent d'hypothèses simplifiées et ne doivent pas servir à dimensionner un bateau, régler un foil réel ou prendre une décision de sécurité en mer.</div>
+</main>
+<footer><div class="auteur">Studio interactif · laboratoire expérimental</div><a href="index.html" style="color:#E8D48B">Retour au site copié</a> · <a href="index.html" style="color:#E8D48B">Accueil du site</a><button id="bascule-theme" class="btn-theme" type="button"></button></footer>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+const $=id=>document.getElementById(id), num=(id)=>Number($(id).value), fmt=(v,d=1)=>Number(v).toLocaleString('fr-FR',{maximumFractionDigits:d});
+const ids=['sailArea','sailTrim','foilInc','rudderAng','windSpeed','windAngle','airDensity','boatSpeed','foilArea','waterDensity','hullDrag','boatMass'];
+const defaults={sailArea:28,sailTrim:18,foilInc:5,rudderAng:0,windSpeed:12,windAngle:55,airDensity:1.225,boatSpeed:12,foilArea:.65,waterDensity:1025,hullDrag:1.1,boatMass:550};
+let last={},sim={running:false,time:0,speed:12,accel:0,history:[]},scene3d=null;
+function coeff(a){const stall=Math.max(.35,1-Math.max(0,a-13)*.055),cl=Math.max(-.35,Math.min(1.4,.11+.095*a))*stall,cd=.014+.018*cl*cl+Math.max(0,a-12)*.0028+Math.max(0,-a-3)*.002;return{cl,cd};}
+function calc(){
+ const wind=num('windSpeed'),wa=num('windAngle')*Math.PI/180,boat=num('boatSpeed'),rhoA=num('airDensity'),rhoW=num('waterDensity'),area=num('sailArea'),trim=num('sailTrim'),foilA=num('foilArea'),fi=num('foilInc'),mass=num('boatMass');
+ const wx=wind*Math.cos(wa)-boat,wz=wind*Math.sin(wa),app=Math.hypot(wx,wz),appAngle=Math.atan2(Math.abs(wz),Math.abs(wx))*180/Math.PI;
+ const aoa=Math.max(-5,Math.min(22,appAngle-trim)),sc=coeff(aoa),qa=.5*rhoA*app*app,airL=qa*area*sc.cl,airD=qa*area*sc.cd;
+ const drive=Math.max(0,airL*Math.sin(appAngle*Math.PI/180)*.82+airD*Math.cos(appAngle*Math.PI/180)*.3);
+ const hc=coeff(fi),qh=.5*rhoW*boat*boat,foilL=qh*foilA*hc.cl,foilD=qh*foilA*(.012+.02*hc.cl*hc.cl),hullR=.5*rhoW*boat*boat*.85*num('hullDrag');
+ const weight=mass*9.81,ratio=foilL/weight,hydro=foilD+hullR,net=drive-hydro,heel=Math.min(35,Math.max(0,airL*.7/(mass*9.81*.9)*57.3));
+ return{wind,boat,area,trim,app,appAngle,aoa,sc,airL,airD,drive,fi,foilA,hc,foilL,foilD,hullR,weight,ratio,hydro,net,heel,mass,rhoW};
+}
+function drawPlot(canvas,series,labels,maxY){
+ const ctx=canvas.getContext('2d'),w=canvas.clientWidth||600,h=230,dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+ const L=42,R=12,T=16,B=30,pw=w-L-R,ph=h-T-B;ctx.font='11px system-ui';ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--gris')||'#64748b';ctx.strokeStyle=getComputedStyle(document.body).getPropertyValue('--bordure')||'#ddd';ctx.lineWidth=1;
+ for(let i=0;i<=4;i++){let y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(fmt(maxY*(1-i/4),0),3,y+4);}
+ series.forEach(s=>{ctx.beginPath();ctx.strokeStyle=s.color;ctx.lineWidth=2.5;s.data.forEach((v,i)=>{const x=L+(s.data.length<=1?0:i/(s.data.length-1))*pw,y=T+ph*(1-Math.max(0,Math.min(maxY,v))/maxY);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();});
+ ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--gris')||'#64748b';ctx.fillText(labels?.[0]||'0',L,h-8);ctx.fillText(labels?.[1]||'',w-R-35,h-8);
+}
+function refresh(){
+ const c=calc();last=c;
+ const display={sailArea:['m²',0],sailTrim:['°',0],foilInc:['°',1],rudderAng:['°',0],windSpeed:['m/s',1],windAngle:['°',0],airDensity:['kg/m³',3],boatSpeed:['m/s',1],foilArea:['m²',2],waterDensity:['kg/m³',0],hullDrag:['',2],boatMass:['kg',0]};
+ ids.forEach(id=>{const [unit,d]=display[id];$(id+'Val').textContent=fmt(num(id),d)+(unit?' '+unit:'')});
+ const put=(id,v,d=1)=>$(id).textContent=fmt(v,d);
+ put('apparentSpeed',c.app);put('apparentAngle',c.appAngle);put('sailCl',c.sc.cl,2);put('airLift',c.airL,0);put('airDrag',c.airD,0);put('driveForce',c.drive,0);
+ put('foilCl',c.hc.cl,2);put('foilLift',c.foilL,0);put('foilDrag',c.foilD,0);put('hullResistance',c.hullR,0);put('boatWeight',c.weight,0);put('liftRatio',c.ratio,2);
+ put('totalAero',Math.hypot(c.airL,c.airD),0);put('totalHydro',c.hydro,0);put('netForce',c.net,0);put('heel',c.heel,1);
+ const maxA=Math.max(10,c.airL*1.25),maxH=Math.max(10,c.foilL*1.2,c.hydro*1.2);
+ const aeroL=[],aeroD=[];for(let a=-5;a<=22;a+=.5){let k=coeff(a);aeroL.push((k.cl+.4)/1.8*maxA);aeroD.push(k.cd/.12*maxA);}
+ drawPlot($('aeroPlot'),[{data:aeroL,color:'#15966a'},{data:aeroD,color:'#d5a900'}],['−5° incidence','22°'],maxA);
+ const speeds=Array.from({length:16},(_,i)=>i*2),lift=speeds.map(v=>.5*c.rhoW*v*v*c.foilA*c.hc.cl),drag=speeds.map(v=>.5*c.rhoW*v*v*(c.foilA*(.012+.02*c.hc.cl*c.hc.cl)+.85*num('hullDrag')));
+ drawPlot($('hydroPlot'),[{data:lift,color:'#1787a8'},{data:drag,color:'#d5a900'}],['0 m/s','30 m/s'],Math.max(10,...lift,...drag)*1.12);
+ drawPlot($('forcePlot'),[{data:[Math.max(0,c.drive)],color:'#15966a'},{data:[c.hydro],color:'#d5a900'}],['Propulsion','Résistance'],Math.max(10,c.drive,c.hydro)*1.2);
+ $('interpretation').textContent=c.ratio>=1?'Dans ce modèle simplifié, la portance calculée des foils atteint ou dépasse le poids total. Cela indique un potentiel de soutien important, sans garantir le décollage réel.': 'Dans ce modèle simplifié, la portance calculée des foils reste inférieure au poids total. Augmenter la vitesse ou modifier la surface et l’incidence change cette estimation.';
+ if(scene3d) updateBoat3D(c);
+ $('boatSpeedVal').setAttribute('aria-live','polite');
+}
+ids.forEach(id=>$(id).addEventListener('input',()=>{refresh();if(!sim.running){sim.speed=num('boatSpeed');updateSimDisplay();}}));
+function updateSimDisplay(){ $('simTime').textContent=fmt(sim.time,1);$('simSpeed').textContent=fmt(sim.speed,1);$('simAccel').textContent=fmt(sim.accel,2); }
+function updateNavPlot(){const hist=sim.history.slice(-100);drawPlot($('navPlot'),[{data:hist.map(x=>x.v),color:'#1787a8'}],['Début','Temps simulé'],Math.max(5,...hist.map(x=>x.v))*1.12);}
+function tickSim(){if(!sim.running)return;const dt=.05;sim.time+=dt;const c=calc(),v=sim.speed;const rho=num('waterDensity'),drag=.5*rho*v*v*(.85*num('hullDrag')+num('foilArea')*.025);sim.accel=(c.drive-drag)/num('boatMass');sim.speed=Math.max(0,Math.min(35,sim.speed+sim.accel*dt));sim.history.push({t:sim.time,v:sim.speed});if(sim.history.length>160)sim.history.shift();$('boatSpeed').value=sim.speed;refresh();updateSimDisplay();updateNavPlot();const flight=calc().ratio;$('flightState').textContent=flight>=1?'Soutien théorique':'Sur l’eau';$('simExplanation').textContent='Accélération calculée : '+fmt(sim.accel,2)+' m/s². Cette évolution dépend des coefficients simplifiés du modèle et ne prédit pas la vitesse réelle d’un bateau.';if(sim.time<180&&sim.running)requestAnimationFrame(tickSim);else sim.running=false;}
+$('simStart').onclick=()=>{if(!sim.running){sim.running=true;requestAnimationFrame(tickSim);}};
+$('simPause').onclick=()=>{sim.running=false;};
+$('simReset').onclick=()=>{sim.running=false;sim.time=0;sim.speed=num('boatSpeed');sim.accel=0;sim.history=[];updateSimDisplay();updateNavPlot();$('flightState').textContent='Navigation';$('simExplanation').textContent='Simulation réinitialisée.';};
+function preset(o){sim.running=false;Object.entries(o).forEach(([k,v])=>$(k).value=v);sim.speed=num('boatSpeed');sim.time=0;sim.history=[];updateSimDisplay();updateNavPlot();refresh();}
+$('presetLight').onclick=()=>preset({windSpeed:5,windAngle:65,boatSpeed:4,sailArea:28,sailTrim:22,foilInc:4});
+$('presetStrong').onclick=()=>preset({windSpeed:22,windAngle:45,boatSpeed:16,sailArea:32,sailTrim:15,foilInc:6});
+$('presetFoil').onclick=()=>preset({windSpeed:14,windAngle:55,boatSpeed:14,foilInc:9,foilArea:.85});
+const KEY='catamaranLabHistoryV2';const readHistory=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+function snapshot(){const o={};ids.forEach(id=>o[id]=num(id));const c=calc();o.foilLift=c.foilL;o.drive=c.drive;o.date=new Date().toISOString();o.name=$('experimentName').value.trim()||'Essai '+(readHistory().length+1);return o;}
+function renderHistory(){const list=readHistory(),body=$('historyRows');body.replaceChildren();if(!list.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=7;td.textContent='Aucun essai enregistré.';tr.append(td);body.append(tr);}list.forEach((s,i)=>{const tr=document.createElement('tr');[s.name,fmt(s.windSpeed,1)+' m/s',fmt(s.boatSpeed,1)+' m/s',s.sailArea+' m²',s.foilInc+'°',fmt(s.foilLift,0)+' N'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});const td=document.createElement('td'),load=document.createElement('button'),del=document.createElement('button');load.textContent='Charger';load.onclick=()=>{ids.forEach(id=>$(id).value=s[id]);refresh();};del.textContent='Supprimer';del.onclick=()=>{const h=readHistory();h.splice(i,1);localStorage.setItem(KEY,JSON.stringify(h));renderHistory();};td.append(load,del);tr.append(td);body.append(tr);});['compareA','compareB'].forEach(id=>{const sel=$(id),old=sel.value;sel.replaceChildren(new Option('Choisir un essai',''));list.forEach((s,i)=>sel.add(new Option(s.name+' (#'+(i+1)+')',String(i))));if(old!==''&&Number(old)<list.length)sel.value=old;});}
+$('saveExperiment').onclick=()=>{const h=readHistory();h.push(snapshot());localStorage.setItem(KEY,JSON.stringify(h));$('experimentName').value='';renderHistory();};
+$('compareExperiments').onclick=()=>{const h=readHistory(),a=h[Number($('compareA').value)],b=h[Number($('compareB').value)],out=$('compareResult');if(!a||!b){out.hidden=false;out.textContent='Sélectionne deux essais enregistrés pour les comparer.';return;}out.hidden=false;out.textContent='Comparaison « '+a.name+' » / « '+b.name+' » : vitesse '+fmt(a.boatSpeed,1)+' contre '+fmt(b.boatSpeed,1)+' m/s ; portance foil '+fmt(a.foilLift,0)+' contre '+fmt(b.foilLift,0)+' N ; propulsion '+fmt(a.drive,0)+' contre '+fmt(b.drive,0)+' N.';};
+$('exportHistory').onclick=()=>{const blob=new Blob([JSON.stringify(readHistory(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='historique-studio-catamaran.json';a.click();URL.revokeObjectURL(url);};
+$('clearHistory').onclick=()=>{if(confirm('Effacer tous les essais enregistrés dans ce navigateur ?')){localStorage.removeItem(KEY);renderHistory();$('compareResult').hidden=true;}};
+renderHistory();sim.speed=num('boatSpeed');updateSimDisplay();updateNavPlot();refresh();
+
+try{
+ const host=$('lab3d'),scene=new THREE.Scene();scene.background=new THREE.Color(0xeaf0f2);scene.fog=new THREE.Fog(0xeaf0f2,18,42);
+ const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(9,7,10);
+ const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;host.appendChild(renderer.domElement);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1.2,0);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x8293a5,2));const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(6,10,7);scene.add(sun);
+ const water=new THREE.Mesh(new THREE.PlaneGeometry(35,25),new THREE.MeshStandardMaterial({color:0x9bc8d4,transparent:true,opacity:.42,roughness:.5}));water.rotation.x=-Math.PI/2;water.position.y=-.65;scene.add(water);
+ const grid=new THREE.GridHelper(24,24,0x9caeb7,0xcbd6da);grid.position.y=-.62;scene.add(grid);
+ const boat=new THREE.Group();scene.add(boat);
+ const dark=new THREE.MeshStandardMaterial({color:0x1c2b3a,metalness:.18,roughness:.5}),gold=new THREE.MeshStandardMaterial({color:0xd0a400,metalness:.25,roughness:.4}),deckMat=new THREE.MeshStandardMaterial({color:0xe5e9e9,roughness:.8}),sailMat=new THREE.MeshStandardMaterial({color:0xffd447,side:THREE.DoubleSide,roughness:.75}),glass=new THREE.MeshStandardMaterial({color:0x5c8799,transparent:true,opacity:.55});
+ const hulls=[],foils=[],rudders=[];
+ for(const z of [-1.75,1.75]){const hull=new THREE.Mesh(new THREE.CapsuleGeometry(.25,5.4,8,18),dark);hull.rotation.z=Math.PI/2;hull.position.set(0,0,z);boat.add(hull);hulls.push(hull);const deck=new THREE.Mesh(new THREE.BoxGeometry(5.8,.12,.58),deckMat);deck.position.set(0,.35,z);boat.add(deck);}
+ for(const x of [-1.9,1.9]){const beam=new THREE.Mesh(new THREE.BoxGeometry(.24,.18,4.2),dark);beam.position.set(x,.48,0);boat.add(beam);}
+ const trampoline=new THREE.Mesh(new THREE.BoxGeometry(3.9,.05,2.8),glass);trampoline.position.set(0,.42,0);boat.add(trampoline);
+ const mast=new THREE.Mesh(new THREE.CylinderGeometry(.045,.065,6.6,14),dark);mast.position.set(-.35,3.55,0);boat.add(mast);
+ const sail=new THREE.Mesh(new THREE.BufferGeometry(),sailMat);boat.add(sail);
+ const boom=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.1,10),dark);boom.rotation.z=Math.PI/2;boom.position.set(1.15,.85,0);boat.add(boom);
+ for(const z of [-1.75,1.75]){const fg=new THREE.Group();fg.position.set(.55,-.05,z);const strut=new THREE.Mesh(new THREE.BoxGeometry(.09,1.15,.1),gold);strut.position.y=-.48;fg.add(strut);const wing=new THREE.Mesh(new THREE.BoxGeometry(1.25,.09,.28),gold);wing.position.y=-1.05;fg.add(wing);boat.add(fg);foils.push(fg);const rg=new THREE.Group();rg.position.set(2.7,-.02,z);const blade=new THREE.Mesh(new THREE.BoxGeometry(.1,.95,.18),dark);blade.position.y=-.42;rg.add(blade);boat.add(rg);rudders.push(rg);}
+ 
+// Visualisation pédagogique des fluides : lignes de courant + particules animées.
+ const fluidRoot=new THREE.Group();scene.add(fluidRoot);
+ const airFlow=new THREE.Group(),waterFlow=new THREE.Group();fluidRoot.add(airFlow,waterFlow);
+ const flowSystems=[];
+ function buildFlow(group,paths,color,radius,count){
+   const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.58});
+   const particleMat=new THREE.MeshBasicMaterial({color});
+   paths.forEach((points,index)=>{
+     const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));
+     const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,64,radius,6,false),material);group.add(tube);
+     const particles=[];
+     for(let j=0;j<count;j++){
+       const dot=new THREE.Mesh(new THREE.SphereGeometry(radius*2.7,8,8),particleMat);
+       group.add(dot);particles.push({mesh:dot,offset:j/count+index*.071});
+     }
+     flowSystems.push({curve,particles});
+   });
+ }
+ const airPaths=[];
+ for(let i=0;i<8;i++){
+   const y=1.35+i*.62,z=-2.9+(i%4)*1.9;
+   airPaths.push([[-5,y,z],[-2.8,y+.05,z],[-1.25,y+.22,z*.82],[.2,y+.12,z*.72],[2.5,y+.03,z],[5,y,z]]);
+ }
+ buildFlow(airFlow,airPaths,0xf08a24,.018,5);
+ const waterPaths=[];
+ for(const z of [-2.5,-1.75,-1,1,1.75,2.5]){
+   const zz=z;
+   waterPaths.push([[5,-.43,zz], [3.1,-.48,zz*.96],[1.1,-.5,zz*.9],[-1.2,-.5,zz*.9],[-3.2,-.47,zz*.96],[-5,-.43,zz]]);
+ }
+ buildFlow(waterFlow,waterPaths,0x087fae,.022,6);
+ const flowClock=new THREE.Clock();
+ function animateFlows(){
+   const t=flowClock.getElapsedTime();
+   flowSystems.forEach(system=>system.particles.forEach(p=>{
+     const u=(t*.12+p.offset)%1;
+     p.mesh.position.copy(system.curve.getPointAt(u));
+   }));
+ }
+ 
+ const arrows=[];function makeArrow(color){const a=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(0,2,0),2,color,.35,.2);boat.add(a);arrows.push(a);return a;}const windArrow=makeArrow(0x2674c8),liftArrow=makeArrow(0x15966a);
+ function updateBoat3D(c){airFlow.rotation.y=num('windAngle')*Math.PI/180;waterFlow.rotation.y=Math.PI;const trim=num('sailTrim')*Math.PI/180,fa=num('foilInc')*Math.PI/180,ra=num('rudderAng')*Math.PI/180;const len=2.5;const verts=[-.35,6.75,0,-.35,.65,0,Math.cos(trim)*len,1.05,Math.sin(trim)*len];sail.geometry.dispose();sail.geometry=new THREE.BufferGeometry();sail.geometry.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));sail.geometry.setIndex([0,1,2]);sail.geometry.computeVertexNormals();foils.forEach(g=>g.rotation.z=fa);rudders.forEach(g=>g.rotation.y=ra);const speed=sim.running?sim.speed:num('boatSpeed');boat.position.y=-.02+Math.max(0,c.ratio-.25)*.22;boat.rotation.z=Math.min(.18,c.heel*Math.PI/180);windArrow.position.set(-3,2.2,0);windArrow.setDirection(new THREE.Vector3(-Math.cos(num('windAngle')*Math.PI/180),0,-Math.sin(num('windAngle')*Math.PI/180)).normalize());windArrow.setLength(1.4+num('windSpeed')/12,.28,.16);liftArrow.position.set(.6,.5,-2.5);liftArrow.setDirection(new THREE.Vector3(0,1,0));liftArrow.setLength(Math.min(2,c.ratio*1.5),.25,.14);}
+ scene3d={update:updateBoat3D};
+ function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}new ResizeObserver(resize).observe(host);resize();
+ $('viewReset').onclick=()=>{camera.position.set(9,7,10);controls.target.set(0,1.2,0);controls.update();};$('viewTop').onclick=()=>{camera.position.set(0,16,.01);controls.target.set(0,0,0);controls.update();};$('viewSide').onclick=()=>{camera.position.set(13,2,0);controls.target.set(0,1,0);controls.update();};$('viewFront').onclick=()=>{camera.position.set(0,3,14);controls.target.set(0,1,0);controls.update();};
+ function animate(){requestAnimationFrame(animate);controls.update();animateFlows();renderer.render(scene,camera);}animate();updateBoat3D(calc());
+}catch(err){$('lab3d').textContent='Le modèle 3D n’a pas pu être chargé. Vérifie la connexion internet et la prise en charge WebGL. Détail : '+err.message;}
+window.addEventListener('resize',()=>{refresh();updateNavPlot();});
+</script>
+</body></html>
