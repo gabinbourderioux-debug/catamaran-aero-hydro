@@ -675,7 +675,7 @@
         <button class="tab-btn" data-tab="foils" role="tab"><span class="tab-dot"></span>Foils &amp; Équilibre</button>
         <button class="tab-btn" data-tab="polars" role="tab"><span class="tab-dot"></span>Polaire &amp; VMG</button>
         <button class="tab-btn" data-tab="trim" role="tab"><span class="tab-dot"></span>Réglage Voiles</button>
-        <button class="tab-btn" data-tab="buoys" role="tab"><span class="tab-dot"></span>Mini-Jeu Bouées</button>
+        <a class="tab-btn" href="jeu.html"><span class="tab-dot"></span>Jeu 2D / 3D</a>
         <button class="tab-btn" data-tab="glossary-quiz" role="tab"><span class="tab-dot"></span>Glossaire &amp; QCM</button>
       </nav>
     </div>
@@ -1102,54 +1102,17 @@
       </div>
     </section>
 
-    <!-- 6. MINI-JEU BOUÉES -->
-    <section class="tab-panel" id="panel-buoys" role="tabpanel">
+    <!-- Le jeu est centralisé dans sa page dédiée pour partager un seul état du bateau. -->
+    <section class="tab-panel" id="panel-game-link" role="tabpanel">
       <div class="section-head">
-        <h2>Mini-Jeu Bouées : Parcours tactique avec rafales &amp; bascules</h2>
-        <p>Enchaînez les bouées au vent et sous le vent tout en gérant le scénario « Rafales &amp; Bascule ». Utilisez les flèches clavier ou les boutons tactiles.</p>
+        <h2>Jeu de navigation 2D / 3D</h2>
+        <p>Le jeu de bouées et la navigation sont réunis dans une seule simulation. Changez de vue à tout moment : le même catamaran, sa position, son cap et sa progression sont conservés.</p>
       </div>
-
       <div class="card">
-        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px;">
-          <div class="btn-group" style="margin-top:0;">
-            <button type="button" class="btn" id="game-start-btn">Démarrer / Relancer</button>
-            <button type="button" class="btn btn-secondary" id="game-scenario-btn">Scénario Rafales &amp; Bascule : ON</button>
-          </div>
-          <div class="status-pills">
-            <div class="status-pill">Bouées : <strong id="game-buoys">0 / 4</strong></div>
-            <div class="status-pill">Score : <strong id="game-score">0</strong></div>
-            <div class="status-pill">Temps : <strong id="game-time">0.0s</strong></div>
-            <div class="status-pill">Vent : <strong id="game-wind-info">15 nds · 0°</strong></div>
-          </div>
-        </div>
-
-        <div class="canvas-box">
-          <canvas id="game-canvas" height="360"></canvas>
-        </div>
-
-        <div class="btn-group" style="justify-content:center;">
-          <button type="button" class="btn btn-secondary" id="ctrl-luff">↺ Lofer (vers le vent)</button>
-          <button type="button" class="btn btn-secondary" id="ctrl-tack">⇄ Virer / Empanner</button>
-          <button type="button" class="btn btn-secondary" id="ctrl-bear">↻ Abattre (sous le vent)</button>
-        </div>
-
-        <div class="callout" id="game-status-msg" style="margin-top:12px;">
-          Cliquez sur « Démarrer / Relancer » puis passez les 4 bouées dans l'ordre (évitez les bords de zone et anticipez les rafales).
-        </div>
-      </div>
-
-      <div class="summary-card">
-        <h3>En résumé / À retenir — Tactique de parcours</h3>
-        <div class="summary-grid">
-          <ul>
-            <li><strong>Bascule de vent :</strong> Une bascule refusante vous force à lofer ou virer ; une bascule adonnante vous rapproche de la marque.</li>
-            <li><strong>Rafales :</strong> Elles apportent une accélération mais augmentent la pression sur le gréement et l'assiette.</li>
-            <li><strong>Anticipation :</strong> Initiez votre virement ou empannage avant d'être collé à la bouée.</li>
-          </ul>
-          <div class="mistake-box">
-            <strong>Erreur classique à éviter</strong>
-            Empanner plein vent arrière sous rafale sans contrôler l'angle : le risque d'empannage brutal et de perte de trajectoire est maximal.
-          </div>
+        <h3>Une simulation, deux vues synchronisées</h3>
+        <p>La vue 2D permet de lire facilement le parcours et les trajectoires. La vue 3D donne une représentation immersive du même bateau. Les réglages de vent, de courant, les manœuvres et le passage des bouées restent communs.</p>
+        <div class="btn-group">
+          <a class="btn" href="jeu.html">Ouvrir le jeu 2D / 3D →</a>
         </div>
       </div>
     </section>
@@ -1207,7 +1170,6 @@
         "foils",
         "polars",
         "trim",
-        "buoys",
         "glossary-quiz"
       ];
 
@@ -1322,8 +1284,7 @@
         "physics-canvas",
         "foil-canvas",
         "polar-canvas",
-        "trim-canvas",
-        "game-canvas"
+        "trim-canvas"
       ];
 
       const HAUTEURS_INITIALES = {};
@@ -2164,210 +2125,6 @@
       /* =====================================================================
          8. ONGLET 6 : MINI-JEU BOUÉES (PARCOURS + RAFALES & BASCULE)
          ===================================================================== */
-      const gameState = {
-        running: false,
-        scenarioOn: true,
-        elapsed: 0,
-        score: 0,
-        buoyIndex: 0,
-        windAngleDeg: 0, // 0 = vent venant du haut
-        windSpeed: 15,
-        boat: { x: 140, y: 340, heading: -0.4, speed: 6.5 },
-        buoys: [],
-        lastTimestamp: 0,
-        keys: {}
-      };
-
-      function createBuoys(width, height) {
-        return [
-          { x: width * 0.72, y: height * 0.24, label: "1" },
-          { x: width * 0.28, y: height * 0.28, label: "2" },
-          { x: width * 0.76, y: height * 0.74, label: "3" },
-          { x: width * 0.26, y: height * 0.72, label: "4" }
-        ];
-      }
-
-      function resetGame() {
-        const canvas = document.getElementById("game-canvas");
-        const w = canvas ? canvas.clientWidth || 720 : 720;
-        const h = parseInt(canvas?.getAttribute("height"), 10) || 430;
-        gameState.buoys = createBuoys(w, h);
-        gameState.boat = { x: w * 0.5, y: h * 0.85, heading: -0.5, speed: 6.2 };
-        gameState.buoyIndex = 0;
-        gameState.score = 0;
-        gameState.elapsed = 0;
-        gameState.windAngleDeg = 0;
-        gameState.windSpeed = 15;
-        gameState.running = true;
-        gameState.lastTimestamp = performance.now();
-        document.getElementById("game-status-msg").className = "callout";
-        document.getElementById("game-status-msg").textContent = "Course lancée ! Dirigez le catamaran vers la bouée n°1.";
-      }
-
-      document.getElementById("game-start-btn").addEventListener("click", () => {
-        resetGame();
-        showToast("Mini-jeu démarré !");
-      });
-
-      document.getElementById("game-scenario-btn").addEventListener("click", (e) => {
-        gameState.scenarioOn = !gameState.scenarioOn;
-        e.target.textContent = `Scénario Rafales & Bascule : ${gameState.scenarioOn ? "ON" : "OFF"}`;
-      });
-
-      function steerBoat(deltaHeading) {
-        gameState.boat.heading += deltaHeading;
-      }
-
-      document.getElementById("ctrl-luff").addEventListener("click", () => steerBoat(-0.22));
-      document.getElementById("ctrl-bear").addEventListener("click", () => steerBoat(0.22));
-      document.getElementById("ctrl-tack").addEventListener("click", () => {
-        gameState.boat.heading += Math.PI * 0.65;
-      });
-
-      window.addEventListener("keydown", (e) => {
-        if (appState.activeTab !== "buoys") return;
-        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
-          e.preventDefault();
-          gameState.keys[e.key] = true;
-        }
-      });
-
-      window.addEventListener("keyup", (e) => {
-        gameState.keys[e.key] = false;
-      });
-
-      function stepGame(now) {
-        const canvas = document.getElementById("game-canvas");
-        if (!canvas) return;
-        const w = canvas.clientWidth || 720;
-        const h = parseInt(canvas.getAttribute("height"), 10) || 430;
-        if (!gameState.buoys.length) {
-          gameState.buoys = createBuoys(w, h);
-          gameState.boat.x = w * 0.5;
-          gameState.boat.y = h * 0.85;
-        }
-
-        const dt = Math.min(0.08, gameState.lastTimestamp ? (now - gameState.lastTimestamp) / 1000 : 0.016);
-        gameState.lastTimestamp = now;
-
-        if (gameState.running) {
-          gameState.elapsed += dt;
-
-          if (gameState.scenarioOn) {
-            // Bascule de vent sinusoïdale + rafales périodiques
-            gameState.windAngleDeg = Math.round(Math.sin(gameState.elapsed * 0.55) * 18);
-            const gust = Math.max(0, Math.sin(gameState.elapsed * 1.4)) * 9;
-            gameState.windSpeed = Math.round(14 + gust);
-          } else {
-            gameState.windAngleDeg = 0;
-            gameState.windSpeed = 15;
-          }
-
-          const turnSpeed = 2.1 * dt;
-          if (gameState.keys["ArrowLeft"]) gameState.boat.heading -= turnSpeed;
-          if (gameState.keys["ArrowRight"]) gameState.boat.heading += turnSpeed;
-          if (gameState.keys["ArrowUp"]) gameState.boat.speed = Math.min(13, gameState.boat.speed + 4 * dt);
-          if (gameState.keys["ArrowDown"]) gameState.boat.speed = Math.max(3.5, gameState.boat.speed - 4 * dt);
-
-          // Vitesse influencée par la force du vent
-          const targetSpd = 4.5 + (gameState.windSpeed / 24) * 6.5;
-          gameState.boat.speed += (targetSpd - gameState.boat.speed) * 0.04;
-
-          const pxPerSec = gameState.boat.speed * 11;
-          gameState.boat.x += Math.sin(gameState.boat.heading) * pxPerSec * dt;
-          gameState.boat.y -= Math.cos(gameState.boat.heading) * pxPerSec * dt;
-
-          // Rebond doux sur les bords de la zone
-          if (gameState.boat.x < 24 || gameState.boat.x > w - 24) {
-            gameState.boat.x = Math.max(24, Math.min(w - 24, gameState.boat.x));
-            gameState.boat.heading = -gameState.boat.heading;
-            gameState.score = Math.max(0, gameState.score - 15);
-          }
-          if (gameState.boat.y < 24 || gameState.boat.y > h - 24) {
-            gameState.boat.y = Math.max(24, Math.min(h - 24, gameState.boat.y));
-            gameState.boat.heading = Math.PI - gameState.boat.heading;
-            gameState.score = Math.max(0, gameState.score - 15);
-          }
-
-          // Validation de la bouée courante
-          const activeBuoy = gameState.buoys[gameState.buoyIndex];
-          if (activeBuoy) {
-            const dist = Math.hypot(gameState.boat.x - activeBuoy.x, gameState.boat.y - activeBuoy.y);
-            if (dist < 28) {
-              gameState.buoyIndex += 1;
-              gameState.score += 100;
-              if (gameState.buoyIndex >= gameState.buoys.length) {
-                gameState.running = false;
-                const bonus = Math.max(0, Math.round(300 - gameState.elapsed * 4));
-                gameState.score += bonus;
-                const msg = document.getElementById("game-status-msg");
-                msg.className = "callout ok";
-                msg.textContent = `Parcours terminé en ${gameState.elapsed.toFixed(1)}s ! Score final : ${gameState.score} pts (bonus rapidité +${bonus}).`;
-              } else {
-                const msg = document.getElementById("game-status-msg");
-                msg.className = "callout ok";
-                msg.textContent = `Bouée n°${gameState.buoyIndex} validée ! Cap sur la bouée n°${gameState.buoyIndex + 1}.`;
-              }
-            }
-          }
-        }
-
-        // Rendu du jeu
-        const { width, height, ctx } = fitCanvasToContainer(canvas);
-        ctx.clearRect(0, 0, width, height);
-
-        // Indicateur de vent en haut à gauche
-        const windRad = (gameState.windAngleDeg * Math.PI) / 180;
-        drawArrow(ctx, 48, 22, 48 + Math.sin(windRad) * 26, 22 + Math.cos(windRad) * 26, "#22d3ee", 2.5, "Vent");
-
-        // Bouées
-        gameState.buoys.forEach((b, idx) => {
-          const isCurrent = idx === gameState.buoyIndex && gameState.running;
-          const isDone = idx < gameState.buoyIndex;
-
-          if (isCurrent) {
-            ctx.strokeStyle = "rgba(251, 191, 36, 0.45)";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(b.x, b.y, 26, 0, Math.PI * 2);
-            ctx.stroke();
-          }
-
-          ctx.fillStyle = isDone ? "#34d399" : isCurrent ? "#fbbf24" : "#64748b";
-          ctx.beginPath();
-          ctx.arc(b.x, b.y, 11, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = "#04101f";
-          ctx.font = "700 11px sans-serif";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText(b.label, b.x, b.y);
-          ctx.textAlign = "left";
-          ctx.textBaseline = "alphabetic";
-        });
-
-        // Catamaran du joueur
-        ctx.save();
-        ctx.translate(gameState.boat.x, gameState.boat.y);
-        ctx.rotate(gameState.boat.heading);
-        ctx.fillStyle = "#22d3ee";
-        ctx.fillRect(-11, -14, 5, 28);
-        ctx.fillRect(6, -14, 5, 28);
-        ctx.fillStyle = "#f8fafc";
-        ctx.fillRect(-11, -4, 22, 4);
-        ctx.restore();
-
-        document.getElementById("game-buoys").textContent = `${gameState.buoyIndex} / ${gameState.buoys.length}`;
-        document.getElementById("game-score").textContent = `${gameState.score}`;
-        document.getElementById("game-time").textContent = `${gameState.elapsed.toFixed(1)}s`;
-        document.getElementById("game-wind-info").textContent =
-          `${gameState.windSpeed} nds · ${gameState.windAngleDeg >= 0 ? "+" : ""}${gameState.windAngleDeg}°`;
-      }
-
-      /* =====================================================================
-         9. ONGLET 7 : GLOSSAIRE & QCM INTERACTIF
-         ===================================================================== */
       const GLOSSARY_TERMS = [
         {
           term: "VMG (Velocity Made Good)",
@@ -2650,18 +2407,12 @@
           case "trim":
             renderTrim();
             break;
-          case "buoys":
-            stepGame(performance.now());
-            break;
           default:
             break;
         }
       }
 
       function animationLoop(timestamp) {
-        if (appState.activeTab === "buoys") {
-          stepGame(timestamp);
-        }
         requestAnimationFrame(animationLoop);
       }
 
