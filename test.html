@@ -136,9 +136,9 @@ footer{margin-top:55px}
   const HASH=2085926382;
   const store={html:'zoneTest-html',css:'zoneTest-css',js:'zoneTest-js'};
   const starter={
-    html:'<main class="carte">\\n  <h1>Mon premier test</h1>\\n  <p>Modifie ce texte pour commencer.</p>\\n  <button id="action">Clique ici</button>\\n  <p id="message"></p>\\n</main>',
-    css:'body {\\n  font-family: system-ui, sans-serif;\\n  background: #f1f5f9;\\n  padding: 24px;\\n}\\n.carte {\\n  max-width: 520px;\\n  margin: 30px auto;\\n  padding: 24px;\\n  background: white;\\n  border-radius: 14px;\\n}\\nbutton {\\n  padding: 10px 16px;\\n  cursor: pointer;\\n}',
-    js:"document.getElementById('action').addEventListener('click', () => {\\n  document.getElementById('message').textContent = 'Ça fonctionne !';\\n});"
+    html:'<main class="carte">\n  <h1>Mon premier test</h1>\n  <p>Modifie ce texte pour commencer.</p>\n  <button id="action">Clique ici</button>\n  <p id="message"></p>\n</main>',
+    css:'body {\n  font-family: system-ui, sans-serif;\n  background: #f1f5f9;\n  padding: 24px;\n}\n.carte {\n  max-width: 520px;\n  margin: 30px auto;\n  padding: 24px;\n  background: white;\n  border-radius: 14px;\n}\nbutton {\n  padding: 10px 16px;\n  cursor: pointer;\n}',
+    js:"document.getElementById('action').addEventListener('click', () => {\n  document.getElementById('message').textContent = 'Ça fonctionne !';\n});"
   };
   const lock=document.getElementById('lock');
   const workspace=document.getElementById('workspace');
