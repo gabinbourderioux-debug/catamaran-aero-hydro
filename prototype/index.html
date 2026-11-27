@@ -44,7 +44,7 @@
   <p>Pourquoi un catamaran vole-t-il sur l'eau ? Un catamaran rapide est le siège d'un conflit permanent
   entre deux fluides : l'air, qui pousse par la voile, et l'eau, qui freine par les coques.</p>
 </header>
-<div class="prototype-ribbon"><span>Copie de test · indépendante</span><a href="../test.html">Retour zone test</a><a href="index.html">Accueil de la copie</a><a href="experience.html">Studio interactif</a></div>
+<div class="prototype-ribbon"><span>Copie de test · indépendante</span><a href="../test.html">Retour zone test</a><a href="index.html">Accueil</a><a href="#navigation-copie" data-open-simulations>Simulations</a><a href="experience.html">Studio interactif</a></div>
 
 <main class="conteneur">
 
@@ -172,7 +172,14 @@
 
 
 <script>
-document.querySelectorAll('[data-copy-tab]').forEach(function(tab){
+
+document.querySelectorAll('[data-open-simulations]').forEach(function(link){
+  link.addEventListener('click',function(){
+    const tab=document.querySelector('[data-copy-tab="simulations"]');
+    if(tab) tab.click();
+  });
+});
+\ndocument.querySelectorAll('[data-copy-tab]').forEach(function(tab){
   tab.addEventListener('click',function(){
     document.querySelectorAll('[data-copy-tab]').forEach(function(button){
       const active=button===tab;
