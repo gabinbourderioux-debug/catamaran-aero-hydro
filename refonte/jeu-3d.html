@@ -332,7 +332,8 @@ window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},
    const sun=new THREE.DirectionalLight(0xfff0d2,2.5);
    sun.position.set(-35,55,25);sun.castShadow=true;scene.add(sun);
    const waterMat=new THREE.MeshStandardMaterial({color:0x167da0,roughness:.43,metalness:.08});
-   const sea=new THREE.Mesh(new THREE.PlaneGeometry(155,132,1,1),waterMat);
+   const seaGeo=new THREE.PlaneGeometry(155,132,110,90);
+   const sea=new THREE.Mesh(seaGeo,waterMat);
    sea.rotation.x=-Math.PI/2;sea.position.y=-.9;sea.receiveShadow=true;scene.add(sea);
    const grid=new THREE.GridHelper(150,30,0x9adbea,0x438fa9);
    grid.position.set(0,-.82,0);scene.add(grid);
@@ -362,15 +363,52 @@ window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},
    mast.position.set(0,3.5,0);mast.castShadow=true;boat.add(mast);
    const boom=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,3.4,8),trimMat);
    boom.rotation.z=Math.PI/2;boom.position.set(1.5,.85,0);boat.add(boom);
-   const sailGeo=new THREE.BufferGeometry();
-   sailGeo.setAttribute('position',new THREE.Float32BufferAttribute([0,.9,0,0,6.8,0,3.1,1,0],3));
-   sailGeo.computeVertexNormals();
-   const sail=new THREE.Mesh(sailGeo,sailMat);sail.castShadow=true;boat.add(sail);
+   // Grand-voile maillée : creux et vrillage recalculés selon le vent apparent.
+   const sailGeo=new THREE.BufferGeometry(),sailRows=24,sailCols=14,sailVerts=[],sailIndices=[];
+   for(let r=0;r<=sailRows;r++)for(let c=0;c<=sailCols;c++)sailVerts.push(0,0,0);
+   for(let r=0;r<sailRows;r++)for(let c=0;c<sailCols;c++){const a=r*(sailCols+1)+c,b=a+1,d=(r+1)*(sailCols+1)+c,e=d+1;sailIndices.push(a,d,b,b,d,e);}
+   sailGeo.setAttribute('position',new THREE.Float32BufferAttribute(sailVerts,3));sailGeo.setIndex(sailIndices);
+   const sail=new THREE.Mesh(sailGeo,sailMat);sail.castShadow=true;sail.receiveShadow=true;boat.add(sail);
+   const sailPanelMat=new THREE.LineBasicMaterial({color:0xb8b4a7,transparent:true,opacity:.48});
+   const sailSeams=[];
+   for(let r=1;r<8;r++){const points=[];for(let c=0;c<=12;c++)points.push(new THREE.Vector3());const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),sailPanelMat);boat.add(line);sailSeams.push({line,r});}
+   function shapeSail(camber=.22,twist=.08){
+    const arr=sailGeo.attributes.position.array;let k=0;
+    for(let r=0;r<=sailRows;r++){const v=r/sailRows;for(let c=0;c<=sailCols;c++){const t=c/sailCols;
+     const chord=3.1*t*(1-v),x=chord+twist*v*v*(t-.5),y=.9+v*5.9,z=camber*Math.sin(Math.PI*t)*Math.sin(Math.PI*v)+twist*v*v*(t-.5)*.45;
+     arr[k++]=x;arr[k++]=y;arr[k++]=z;
+    }}
+    sailGeo.attributes.position.needsUpdate=true;sailGeo.computeVertexNormals();
+    for(const seam of sailSeams){const pts=[];const v=seam.r/8;for(let c=0;c<=12;c++){const t=c/12;pts.push(new THREE.Vector3(3.1*t*(1-v)+twist*v*v*(t-.5),.9+v*5.9,camber*Math.sin(Math.PI*t)*Math.sin(Math.PI*v)+twist*v*v*(t-.5)*.45));}seam.line.geometry.setFromPoints(pts);}
+   }
+   shapeSail();
+   // Accastillage, trampoline tressé, barres de liaison et gréement dormant.
+   const ropeMat=new THREE.LineBasicMaterial({color:0xe9e3d3,transparent:true,opacity:.78});
+   function rope(a,b,mat=ropeMat){const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]),mat);boat.add(line);return line;}
+   for(const z of [-1.35,1.35]){
+    addBox(boat,.7,.08,.72,trimMat,-.1,.34,z);
+    addBox(boat,.42,.12,.34,hullMat,1.45,.38,z);
+    rope([0,6.9,0],[1.55,.9,z*.78]);
+   }
+   const netMat=new THREE.LineBasicMaterial({color:0x536d78,transparent:true,opacity:.55});
+   for(let x=-1.25;x<=1.26;x+=.18)rope([x,.27,-1.2],[x,.27,1.2],netMat);
+   for(let z=-1.2;z<=1.21;z+=.18)rope([-1.25,.27,z],[1.25,.27,z],netMat);
+   const mastFoot=new THREE.Mesh(new THREE.CylinderGeometry(.16,.19,.18,16),foilMat);mastFoot.position.set(0,.35,0);boat.add(mastFoot);
+   const vang=rope([1.5,.9,0],[.45,1.5,0],trimMat);
+   const forestay=rope([0,6.8,0],[-.65,.25,0]);
+   const shrouds=[rope([0,6.7,0],[-1.2,.3,-1.3]),rope([0,6.7,0],[-1.2,.3,1.3])];
+   const jibMat=new THREE.MeshStandardMaterial({color:0xd9e4e8,side:THREE.DoubleSide,transparent:true,opacity:.82,roughness:.78});
+   const jibGeo=new THREE.BufferGeometry();jibGeo.setAttribute('position',new THREE.Float32BufferAttribute([-.65,.35,0,-.05,5.9,0,-1.65,.5,0],3));jibGeo.computeVertexNormals();
+   const jib=new THREE.Mesh(jibGeo,jibMat);jib.castShadow=true;boat.add(jib);
    const foilMat=new THREE.MeshStandardMaterial({color:0x9caeb7,metalness:.65,roughness:.28});
    for(const z of [-1.35,1.35]){
      const foil=new THREE.Mesh(new THREE.BoxGeometry(.12,1.3,.12),foilMat);
      foil.position.set(0,-.35,z);boat.add(foil);
    }
+   // Eau texturée et sillages discrets autour des coques.
+   const wakeMat=new THREE.MeshBasicMaterial({color:0xb8e6f0,transparent:true,opacity:.28,side:THREE.DoubleSide});
+   const wakes=[];
+   for(const z of [-1.35,1.35]){const g=new THREE.Mesh(new THREE.RingGeometry(.65,1.5,48),wakeMat);g.rotation.x=-Math.PI/2;g.position.set(0,-.78,z);scene.add(g);wakes.push(g);}
    const buoys=[];
    for(let i=0;i<4;i++){
      const g=new THREE.Group();
@@ -393,6 +431,12 @@ window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},
      latest=s;
      boat.position.set((s.x-300)*.12,.1,-(s.y-440)*.12);
      boat.rotation.y=s.heading+Math.PI;
+     const windSpeed=Math.hypot(s.wind.x,s.wind.y),windAngle=Math.atan2(s.wind.y,s.wind.x)-(s.heading||0);
+     const camber=Math.max(.08,Math.min(.48,.12+windSpeed*.012+Math.abs(Math.sin(windAngle))*.22));
+     const twist=Math.max(.025,Math.min(.24,.035+Math.abs(Math.cos(windAngle))*.12+windSpeed*.003));
+     shapeSail(camber,twist);
+     boom.rotation.z=Math.PI/2-Math.max(-.55,Math.min(.55,Math.sin(windAngle)*.42));
+     wakes.forEach((g,i)=>{g.position.x=boat.position.x+Math.sin((performance.now()/900)+i)*.16;g.position.z=boat.position.z+(-1+2*i)*1.35;});
      buoys.forEach((g,i)=>{
        const p=s.marks[i];if(!p)return;
        g.position.set((p.x-300)*.12,0,-(p.y-440)*.12);
@@ -422,7 +466,13 @@ window.__jeu={polaire,allureNom,tick:(dt)=>{tick(dt,tCourse);dessine(tCourse);},
    }
    if('ResizeObserver' in window)new ResizeObserver(resize).observe(canvas);
    window.addEventListener('resize',resize);resize();
-   function render(){requestAnimationFrame(render);renderer.render(scene,camera);}
+   function render(){
+     requestAnimationFrame(render);
+     const t=performance.now()*.00055,pa=seaGeo.attributes.position;
+     for(let i=0;i<pa.count;i++){const x=pa.getX(i),z=pa.getY(i);pa.setZ(i,Math.sin(x*.17+t)*.075+Math.cos(z*.21-t*1.25)*.055+Math.sin((x+z)*.09+t*.7)*.035);}
+     pa.needsUpdate=true;seaGeo.computeVertexNormals();
+     renderer.render(scene,camera);
+   }
    render();
    status.textContent='Vue 3D active · glisser pour tourner · molette ou pincement pour zoomer · double-clic pour réinitialiser';
    canvas.addEventListener('touchstart',()=>{}, {passive:true});
