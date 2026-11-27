@@ -157,7 +157,7 @@ footer{margin-top:55px}
     const js=values.js||'';
     const openScript='<scr'+'ipt>';
     const closeScript='<'+'/scr'+'ipt>';
-    const safeJs=js.replace(/<\\/script/gi,'<\\\\/script');
+    const safeJs=js.replace(/<\/script/gi,'<\\/script');
     const doc='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;font-family:system-ui,sans-serif;color:#172536}'+css+'</style></head><body>'+html+openScript+'try{'+safeJs+'}catch(e){const p=document.createElement("pre");p.style.cssText="color:#b42318;white-space:pre-wrap";p.textContent="Erreur JavaScript : "+e;document.body.appendChild(p)}'+closeScript+'</body></html>';
     document.getElementById('preview').srcdoc=doc;
     document.getElementById('preview-status').textContent='Aperçu mis à jour';
