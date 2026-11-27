@@ -48,7 +48,7 @@
 @media(max-width:800px){.lab-two{grid-template-columns:1fr}.lab-stage{height:390px}.lab-nav{top:48px}}
 @media(max-width:600px){.lab{padding:14px 9px 45px}.lab-card{padding:13px}.lab-stage{height:330px}.lab-nav{top:80px;gap:2px}.lab-nav a{font-size:.78rem;padding:7px 6px}.lab-intro h2{font-size:1.25rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
-</style>
+@media(max-width:700px){#modele iframe{height:1180px!important}}\n</style>
 </head>
 <body>
 <header class="hero hero--page"><div class="badge">Laboratoire expérimental · bêta</div><h1>Studio interactif du catamaran</h1><p>Modélise les interactions entre le vent, les voiles, les coques et les foils. Modifie les paramètres et observe leurs effets.</p></header>
@@ -75,14 +75,18 @@
 <div class="lab-intro"><div><h2>Centre de simulation</h2><p>Un environnement de manipulation et de comparaison. Les résultats sont calculés localement dans ton navigateur.</p></div><span class="lab-status"><i class="lab-dot"></i> Modèle pédagogique actif</span></div>
 <nav class="lab-nav"><a href="#modele">Vue 3D</a><a href="#aero">Aérodynamique</a><a href="#hydro">Hydrodynamique</a><a href="#navigation">Navigation</a><a href="#donnees">Données</a><a href="#historique">Historique</a></nav>
 
-<section id="modele" class="lab-card"><h2>1. Modèle 3D manipulable</h2><p>Fais glisser pour tourner autour du bateau, utilise la molette ou le pincement pour zoomer. Les réglages des autres panneaux modifient aussi le modèle.</p>
-<div class="lab-two"><div><div id="lab3d" class="lab-stage" aria-label="Modèle 3D du catamaran"></div><div class="lab-legend"><span style="--swatch:#f08a24">Air : lignes de courant et particules animées</span><span style="--swatch:#087fae">Eau : écoulement autour des coques et foils</span></div><div class="lab-actions"><button class="lab-btn alt" id="viewReset">Réinitialiser la caméra</button><button class="lab-btn alt" id="viewTop">Vue de dessus</button><button class="lab-btn alt" id="viewSide">Vue de côté</button><button class="lab-btn alt" id="viewFront">Vue de face</button></div><p class="lab-muted">Modèle géométrique schématique : il illustre les organes du bateau, pas la géométrie certifiée d'un catamaran précis.</p></div>
-<div><h3>Configuration du bateau</h3><div class="lab-grid">
-<div class="lab-control"><label for="sailArea">Surface de voile <output id="sailAreaVal"></output></label><input id="sailArea" type="range" min="12" max="45" value="28" step="1"></div>
-<div class="lab-control"><label for="sailTrim">Réglage de voile <output id="sailTrimVal"></output></label><input id="sailTrim" type="range" min="0" max="45" value="18" step="1"></div>
-<div class="lab-control"><label for="foilInc">Incidence des foils <output id="foilIncVal"></output></label><input id="foilInc" type="range" min="-5" max="18" value="5" step=".5"></div>
-<div class="lab-control"><label for="rudderAng">Angle des safrans <output id="rudderAngVal"></output></label><input id="rudderAng" type="range" min="-30" max="30" value="0" step="1"></div>
-</div></div></div></section>
+<section id="modele" class="lab-card">
+<h2>1. Modèle 3D interactif — écoulements des fluides</h2>
+<p>Fais glisser pour tourner autour du catamaran et utilise la molette ou le pincement pour zoomer. Modifie les réglages pour observer l'effet du vent, de la voile, des foils et des safrans sur les écoulements.</p>
+<iframe
+  src="labo.html#panel-3d"
+  title="Modèle 3D interactif du catamaran avec écoulements d'air et d'eau"
+  loading="eager"
+  allow="fullscreen"
+  style="display:block;width:100%;height:1050px;border:0;border-radius:12px;background:var(--carte);"
+></iframe>
+<p class="lab-muted">Orange : écoulement de l'air. Bleu : écoulement de l'eau. Modèle pédagogique simplifié, non issu d'un calcul CFD.</p>
+</section>
 
 <section id="aero" class="lab-card"><h2>2. Laboratoire aérodynamique</h2><p>Le vent apparent dépend du vent réel et de la vitesse du bateau. Modifie le vent et l'orientation pour observer la variation des forces estimées.</p>
 <div class="lab-grid">
