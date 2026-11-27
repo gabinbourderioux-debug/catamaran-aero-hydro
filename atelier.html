@@ -2,9 +2,6 @@
 <html lang="fr">
 <head>
 <script>
-  try {
-    if (sessionStorage.getItem('zoneTest-ok') !== '1') location.replace('test.html');
-  } catch (e) {}
   if (!window.structuredClone) window.structuredClone = function (o) { return JSON.parse(JSON.stringify(o)); };
   if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.roundRect) {
     CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
