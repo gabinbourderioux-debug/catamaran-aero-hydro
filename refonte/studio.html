@@ -187,10 +187,7 @@
 <footer><div class="auteur">Studio interactif · laboratoire expérimental</div><a href="index.html" style="color:#E8D48B">Retour au site copié</a> · <a href="index.html" style="color:#E8D48B">Accueil du site</a><button id="bascule-theme" class="btn-theme" type="button"></button></footer>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
-<script type="module">
-import * as THREE from 'three';
-import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-const $=id=>document.getElementById(id), num=(id)=>Number($(id).value), fmt=(v,d=1)=>Number(v).toLocaleString('fr-FR',{maximumFractionDigits:d});
+<script>const $=id=>document.getElementById(id), num=(id)=>Number($(id).value), fmt=(v,d=1)=>Number(v).toLocaleString('fr-FR',{maximumFractionDigits:d});
 const ids=['sailArea','sailTrim','foilInc','rudderAng','windSpeed','windAngle','airDensity','boatSpeed','foilArea','waterDensity','hullDrag','boatMass'];
 const defaults={sailArea:28,sailTrim:18,foilInc:5,rudderAng:0,windSpeed:12,windAngle:55,airDensity:1.225,boatSpeed:12,foilArea:.65,waterDensity:1025,hullDrag:1.1,boatMass:550};
 let last={},sim={running:false,time:0,speed:12,accel:0,history:[]},scene3d=null;
