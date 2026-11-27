@@ -66,6 +66,7 @@ footer{margin-top:55px}
 </header>
 
 
+<div class="site-copy-access"><a href="refonte/index.html">Ouvrir le site recopié →</a></div>
 <main class="zone">
   <section class="lock" id="lock" aria-labelledby="lock-title">
     <h2 id="lock-title">Accéder à l’atelier</h2>
@@ -158,7 +159,8 @@ footer{margin-top:55px}
     const openScript='<scr'+'ipt>';
     const closeScript='<'+'/scr'+'ipt>';
     const safeJs=js.replace(/<\/script/gi,'<\\/script');
-    const doc='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;font-family:system-ui,sans-serif;color:#172536}'+css+'</style></head><body>'+html+openScript+'try{'+safeJs+'}catch(e){const p=document.createElement("pre");p.style.cssText="color:#b42318;white-space:pre-wrap";p.textContent="Erreur JavaScript : "+e;document.body.appendChild(p)}'+closeScript+'</body></html>';
+    const doc='<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:12px;font-family:system-ui,sans-serif;color:#172536}'+css+'.site-copy-access{max-width:1220px;margin:18px auto 0;padding:0 22px;text-align:right}.site-copy-access a{display:inline-block;background:#0c7895;color:#fff;text-decoration:none;padding:11px 16px;border-radius:9px;font-weight:650;font-size:.9rem}.site-copy-access a:hover{filter:brightness(.92)}@media(max-width:480px){.site-copy-access{padding:0 13px}}
+</style></head><body>'+html+openScript+'try{'+safeJs+'}catch(e){const p=document.createElement("pre");p.style.cssText="color:#b42318;white-space:pre-wrap";p.textContent="Erreur JavaScript : "+e;document.body.appendChild(p)}'+closeScript+'</body></html>';
     document.getElementById('preview').srcdoc=doc;
     document.getElementById('preview-status').textContent='Aperçu mis à jour';
   }
